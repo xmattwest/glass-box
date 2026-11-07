@@ -2437,7 +2437,7 @@ LFM3's final normalization is embedding_norm, not norm.
 
 Installed glass-box CLI implementation; lfm3-research is a compatibility alias. Prefer the command-line interface over parser internals. check requires the instruments extra; examples/validate/report are dependency-free.
 
-Source: [src/lfm3lab/research/cli.py](../../src/lfm3lab/research/cli.py); SHA-256 `3b50a3349faf29c9adede6aaf197cb940d858de273cda4d560b341c4717258b2`.
+Source: [src/lfm3lab/research/cli.py](../../src/lfm3lab/research/cli.py); SHA-256 `3fb78118a48b1a3d0eba44f36eaec5eb3cc7dced4fa17b36ef95f68e02f5e9fd`.
 
 
 ### lfm3lab.research.cli.parser
@@ -2465,7 +2465,7 @@ Execute CLI arguments and print JSON results/errors.
 
 Documented return contract: Exit-code int.
 
-run exits 0 complete, 1 failed/interrupted/error, 3 incomplete. report exits 0 even when its saved evidence contains failures. run/serve can use real models; validate/report/examples cannot.
+run exits 0 complete, 1 failed/interrupted/error, 3 incomplete. report exits 0 even when its saved evidence contains failures. validate returns schema-only validation diagnostics; native coordinates and tokenization are not checked. examples exports two protocols, a synthetic walkthrough and a model-free identity-audit helper. run/serve can use real models; validate/report/examples cannot.
 
 
 ## lfm3lab.research.checks

@@ -96,7 +96,7 @@ def main(argv=None):
             source_examples = Path(__file__).resolve().parents[3] / "examples" / "mechanistic"
             bundled = files("lfm3lab.research").joinpath("examples")
             source = bundled if bundled.is_dir() else source_examples
-            names = ("code_retrieval.json", "tool_continuation.json", "fake_walkthrough.py")
+            names = ("code_retrieval.json", "tool_continuation.json", "fake_walkthrough.py", "audit_controls.py")
             dest = Path(args.output)
             if any((dest / name).exists() for name in names):
                 raise FileExistsError("Bundled examples would overwrite an existing file; choose a new output directory")
@@ -108,7 +108,9 @@ def main(argv=None):
             _emit({"ok": True, "synthetic_walkthrough": True, "files": [str(dest / name) for name in names]})
         elif args.command == "validate":
             study = _study(args.study)
-            _emit({"ok": True, "study_id": study.id, "fingerprint": study.fingerprint})
+            _emit({"ok": True, "study_id": study.id, "fingerprint": study.fingerprint,
+                   "validation": {"level": "schema", "native_coordinates": "not_checked",
+                                  "tokenization": "not_checked", "model_loaded": False}})
         elif args.command == "report":
             from .report import build_report
             _emit(build_report(args.output))

@@ -61,10 +61,14 @@ Deliberate changes:
 - Added explicit Apache decoder attribution after owner license selection and
   rewrote docs for the library. Historical scores and studio links are absent.
 
-The example JSON bytes and fingerprints are unchanged. The retrieval example's
-nested control comparisons remain metadata, not report contrasts. Promoting them
-to `metadata.secondary_comparisons` would amend a frozen protocol, so it is
-documented rather than silently done.
+The initial extraction preserved the example JSON bytes and fingerprints.
+Following consumer first-use feedback, retrieval example v2 explicitly moves
+secondary comparisons to `metadata.secondary_comparisons`, with a new study ID
+and fingerprint. Existing v1 protocols and receipts must remain unchanged and
+cannot resume as v2. The walkthrough adds an opt-in compact summary and the export
+includes a model-free identity-audit helper. Synthetic arithmetic and run_demo
+remain unchanged; the source manifest retains the original provenance hashes and
+marks the changed CLI entry point rather than claiming its body is preserved.
 
 ## Local verification
 

@@ -97,9 +97,10 @@
         "ScoreFixture": "f59e6decf66d9617518bc0a3411ae86d77afae26c53042db6e6786c40919d8d5",
         "serving": "b6689e90235e351945f614af3e83bcd7871746f268c8bccc9365f0d4e1cbcd52",
         "http": "2aded52732b48fdcbad7ed7aeebfc80dc48fe9ae019328ea6baadae8438aa97e",
-        "WorkerChecks": "dddcabb7a34c192830078ebd1daa326142244df6b553882caf047a589b5a4a92",
         "run_checks": "e17126efb1021cf41a12429adc71595636acd8408f0a32dbc2159009d6662419"
-      }
+      },
+      "post_extraction_changes": "WorkerChecks updates only the expected exported file set to include audit_controls.py; transport and numerical fixtures remain unchanged.",
+      "changed_extracted_symbol_ast_sha256": {"WorkerChecks": "dddcabb7a34c192830078ebd1daa326142244df6b553882caf047a589b5a4a92"}
     },
     {
       "source": "src/lfm3lab/research/checks.py",
@@ -213,7 +214,8 @@
       "source": "examples/mechanistic/code_retrieval.json",
       "destination": "examples/mechanistic/code_retrieval.json",
       "source_sha256": "591acbb9f11d6b517afb23d4b0774647fbb78058a8a73f1b73e6b8057be8f846",
-      "selection": "full module"
+      "selection": "full module",
+      "post_extraction_changes": "v2 gives the explicit secondary-comparison amendment a new study ID and fingerprint; original v1 evidence is not rewritten."
     },
     {
       "source": "examples/mechanistic/tool_continuation.json",
@@ -228,9 +230,10 @@
       "selection": "full module",
       "unchanged_symbol_ast_sha256": {
         "FakeBackend": "d1561ac2efcc36f199f24c5ed2e9a5c6815750fc7d145b6f4e7c41d5ef3f06c9",
-        "run_demo": "939264a0e7eab0ab3b5b09a0a7c1f5253db583c3270ea387b477caa3087d35d5",
-        "main": "13ec19c3b632264c3b82a63cb2d1e7d6808fa9d76cb13b3ec1ac780ceb30f3ea"
-      }
+        "run_demo": "939264a0e7eab0ab3b5b09a0a7c1f5253db583c3270ea387b477caa3087d35d5"
+      },
+      "post_extraction_changes": "main adds opt-in compact summaries and explicit direct-score accounting; FakeBackend and run_demo remain unchanged.",
+      "changed_extracted_symbol_ast_sha256": {"main": "13ec19c3b632264c3b82a63cb2d1e7d6808fa9d76cb13b3ec1ac780ceb30f3ea"}
     },
     {
       "source": "src/lfm3lab/model.py",

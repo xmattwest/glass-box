@@ -13,22 +13,24 @@ and failure handling. [The documentation index](index.html) links all formats.
 ```sh
 glass-box examples --output ./my-studies
 glass-box validate ./my-studies/code_retrieval.json
-python3.12 ./my-studies/fake_walkthrough.py
+python3.12 ./my-studies/fake_walkthrough.py --output ./synthetic-demo --summary
+glass-box report ./synthetic-demo/code-retrieval-mechanics-v2
+python3.12 ./my-studies/audit_controls.py ./synthetic-demo/code-retrieval-mechanics-v2 --tolerance 0.000001
 ```
 
-The default walkthrough runs discovery and validation in a temporary directory,
-then discards the invented receipts. To keep them:
-
-```sh
-python3.12 ./my-studies/fake_walkthrough.py --output ./synthetic-demo
-glass-box report ./synthetic-demo/code-retrieval-mechanics-v1
-```
+This retains evidence for both example studies and prints a compact summary.
+Without `--output`, discovery and validation run in a temporary directory that is
+discarded on exit. Without `--summary`, stdout contains all nested reports.
+Use a new output directory for a fresh walkthrough; use `run_study` for resumption.
+The summary separates journaled trial calls from one direct smoke score per study.
 
 The visible synthetic holdout runs only with `--include-holdout`. These scores
 and token IDs are programmed arithmetic. They test orchestration, not attention,
 tokenization, convolution, residual dynamics or model behavior. Example export
 refuses to overwrite existing files. `glass-box check` requires the
 `instruments` extra; validation, export, fake walkthrough and reports do not.
+The retrieval example is now v2: operative secondary comparisons changed its
+fingerprint. Keep v1 evidence unchanged and choose a new output for v2.
 
 ## Python pieces
 
@@ -155,6 +157,10 @@ includes teacher-forced predictor tokens: prompt plus all but the last supplied
 continuation token. The time budget stops new trials, not an in-flight call.
 An interrupted trial charges its remaining time reservation and is not retried.
 This is bounded resumption, not exactly-once distributed execution.
+These limits apply only to `run_study` attempts. Free-standing session scores,
+probes, sweeps, reference/model setup and paid host runtime need separate budgets.
+A score can include additional reference/donor passes; an attempt is not a count
+of GPU forward passes or a spending cap.
 
 Resume verifies protocol and backend identity, journal chaining and raw receipt
 hashes. Started pairs, successful or not, are never silently rescored. Changed
@@ -165,7 +171,7 @@ outside the bundle if tamper evidence matters.
 
 Reports pair conditions with the explicit baseline and retain failed, interrupted
 and missing counts. Use `metadata.secondary_comparisons` for predeclared
-`[[left_id, right_id]]` contrasts. The older example's nested
+`[[left_id, right_id]]` contrasts. Older protocols' nested
 `metadata.controls.secondary_comparisons` is descriptive metadata only; the
 runner does not promote it into report contrasts. Freeze an amended protocol
 before moving it. Controls are declarations, not automatically passed tests.
@@ -174,6 +180,47 @@ CLI `run` exits 0 when the requested split is complete, 1 for failed/interrupted
 trials, and 3 for an incomplete split. `report` can exit 0 while describing
 failures accurately. Standard errors describe paired-case variability, not token
 uncertainty or population evidence from two examples.
+
+### Audit identity controls without rescoring
+
+The exported `audit_controls.py` calls public `build_report` to verify receipts,
+then compares each declared `metadata.controls.identity_pairs` pair by case.
+It never interprets the primary baseline delta as a no-op error: for example,
+`corrupt_identity` must be compared with `corrupt`, not `clean`.
+
+```sh
+python3.12 ./my-studies/audit_controls.py ./synthetic-demo/code-retrieval-mechanics-v2 --tolerance 0.000001
+```
+
+The tolerance is an explicit, predetermined absolute score tolerance in objective
+units, not a value parsed from prose or chosen after seeing errors. The fixture
+uses 1e-6; this does not calibrate real BF16 accuracy. Use repeated `--split` flags
+to select splits; discovery and validation are the default. Exit 0 means all
+selected declared identity pairs passed, 1 means a violation or request/evidence
+error, and 2 means unavailable pairs or no selected cases. Raw errors, reference
+statuses, dtype, hashes and trial missingness remain visible. An identity pass
+does not certify other trials, generated correctness or scientific validity.
+
+### Before real-model work
+
+1. Freeze exact cases, target/foil texts or supplied continuations, splits, edits,
+   objectives, contrasts and numerical tolerances. `validate` reports only schema
+   validity: no native bounds, tokenizer, model or GPU validation.
+2. On an authorized instrument environment, validate each patch with
+   `PatchSpec.from_value` without loading weights. Do not guess layer families.
+3. Approve the host, pinned checkpoint/custom code, dependency/model downloads if
+   needed, dtype, trial budget, setup allowance, billing cap and teardown policy.
+   The library does not provision hosts or enforce a billing cap.
+4. The adapter enforces exact target/foil single-token resolution, predictor token
+   limits and donor/receiver token counts during scoring. A schema-valid protocol
+   may still fail here. Record failures; do not substitute tokens, truncate or
+   realign silently. Any amendment requires a new study/output.
+5. Execute discovery separately. Inspect identity errors and complete denominators
+   before validation. Retain null results; do not select a validation comparison
+   after seeing it. Keep holdout unused until explicitly requested.
+6. Verify saved evidence, retain trusted journal heads outside the worker, close
+   sessions and drain worker requests before unloading. Copy evidence before
+   terminating the host; confirm termination rather than merely disconnecting.
 
 ## Local loading and remote transport
 

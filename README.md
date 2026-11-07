@@ -13,12 +13,26 @@ Python 3.12 on macOS or Linux. From this checkout:
 python3.12 -m pip install .
 glass-box examples --output ./my-studies
 glass-box validate ./my-studies/code_retrieval.json
-python3.12 ./my-studies/fake_walkthrough.py
+python3.12 ./my-studies/fake_walkthrough.py --output ./synthetic-demo --summary
+glass-box report ./synthetic-demo/code-retrieval-mechanics-v2
+python3.12 ./my-studies/audit_controls.py ./synthetic-demo/code-retrieval-mechanics-v2 --tolerance 0.000001
 ```
 
 This runs invented fixture arithmetic, not LFM3. It needs no weights, API key,
 PyTorch or worker. After installing the local wheel, the same commands work
 outside the checkout. This project is not yet published to a package index.
+
+The output directory retains `protocol.json`, `journal.jsonl`, `raw/*.json` and
+derived `report.json`/`report.md` for each study. Reports verify saved hashes;
+they do not rescore. The audit checks declared identity pairs against the explicit
+fixture tolerance, not generated correctness. Holdout stays unrun. Without
+`--output`, the walkthrough discards temporary receipts; omit `--summary` only
+if you want all nested reports on stdout. Use a new output for a fresh walkthrough.
+
+`validate` means schema-valid, not tokenizer- or model-ready. The demo also makes
+one direct smoke score per study outside its Study budget; the summary counts
+those separately. Direct session operations, loading and billing are not metered
+by a Study. See the guide's [preflight checklist](docs/library-guide.md#before-real-model-work).
 
 ## What is included
 

@@ -1,5 +1,5 @@
 {
-  "id": "code-retrieval-mechanics-v1",
+  "id": "code-retrieval-mechanics-v2",
   "question": "Does replacing a predefined mid-layer residual state from a clean donor change the fixed next-token margin for retrieving a supplied arbitrary one-character code from a corrupted prompt?",
   "prediction": "Identity scaling should preserve the margin within a declared dtype tolerance. Corrupting the supplied code is predicted to reduce the original target-minus-foil margin, and clean mid-state replacement may restore part of it. Null or opposite effects remain valid outcomes; no unit was discovered from data.",
   "objective": {"kind": "token_margin", "reduction": "sum"},
@@ -26,7 +26,9 @@
     "status": "unrun mechanics demo; no model findings",
     "initial_adapter": "LiquidAI/LFM3-1.7B@40ebe0aa6662c9d40389c2f5d565b6a2c6aebacd",
     "protocol": "All targets, foils, conditions, scopes, budgets and splits are fixed before execution. Run discovery first, validation separately, and holdout only by explicit request. Amendments require a new study ID/output; no retrospective candidate selection.",
-    "controls": {"no_op": ["identity", "corrupt_identity"], "correctness": [], "identity_pairs": [["identity", "clean"], ["corrupt_identity", "corrupt"]], "secondary_comparisons": [["clean_mid_donor", "corrupt"], ["clean_mid_donor", "clean"]]},
+    "controls": {"no_op": ["identity", "corrupt_identity"], "correctness": [], "identity_pairs": [["identity", "clean"], ["corrupt_identity", "corrupt"]]},
+    "secondary_comparisons": [["clean_mid_donor", "corrupt"], ["clean_mid_donor", "clean"]],
+    "amendment": "v2 explicitly moves comparison declarations to the operative metadata field. Existing v1 evidence must remain unchanged; use a new output directory.",
     "numerical_policy": "Identity absolute score tolerance is 0.000001 for synthetic CPU fixtures and 0.125 logit units for real BF16 runs, fixed before running. Record raw error even when within tolerance; do not infer absence of smaller effects.",
     "tokenization": "Digit strings are intended as exact single-token texts; the adapter must verify that, and equal clean/donor token counts, without truncation or silent alignment.",
     "limits": ["Two cases per split are illustrative, not a population estimate.", "A transplant or zero edit is engineered control, not discovery of a native circuit.", "A next-token logit margin does not demonstrate full code generation, reasoning or practical benefit.", "Holdout prompts are visible here; the boundary is procedural, not access control."]

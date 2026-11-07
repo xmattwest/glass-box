@@ -311,7 +311,7 @@ class WorkerChecks(unittest.TestCase):
             result = json.loads(stdout.getvalue())
             self.assertTrue(result["synthetic_walkthrough"])
             self.assertEqual({p.name for p in dest.iterdir()},
-                             {"code_retrieval.json", "tool_continuation.json", "fake_walkthrough.py"})
+                             {"code_retrieval.json", "tool_continuation.json", "fake_walkthrough.py", "audit_controls.py"})
             before = {p.name: p.read_bytes() for p in dest.iterdir()}
             with contextlib.redirect_stderr(io.StringIO()) as error:
                 self.assertEqual(cli.main(["examples", "--output", str(dest)]), 1)

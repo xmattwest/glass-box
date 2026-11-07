@@ -4557,7 +4557,7 @@
       "name": "lfm3lab.research.cli",
       "overview": "Installed glass-box CLI implementation; lfm3-research is a compatibility alias. Prefer the command-line interface over parser internals. check requires the instruments extra; examples/validate/report are dependency-free.",
       "source": "src/lfm3lab/research/cli.py",
-      "source_sha256": "3b50a3349faf29c9adede6aaf197cb940d858de273cda4d560b341c4717258b2",
+      "source_sha256": "3fb78118a48b1a3d0eba44f36eaec5eb3cc7dced4fa17b36ef95f68e02f5e9fd",
       "docstring": "Model-free defaults and explicit local/remote execution for fixed studies.\n\nRun exits: 0 = requested split complete (including zero cases), 1 = failed or\ninterrupted trials / command error, 3 = incomplete with missing trials. Failed\nor interrupted trials take precedence over missing trials. Reports remain JSON\non stdout; the model-free report command exits 0 even for partial/failed studies.",
       "exports": [],
       "symbols": [
@@ -4587,7 +4587,7 @@
           "contract": {
             "summary": "Execute CLI arguments and print JSON results/errors.",
             "returns": "Exit-code int",
-            "notes": "run exits 0 complete, 1 failed/interrupted/error, 3 incomplete. report exits 0 even when its saved evidence contains failures. run/serve can use real models; validate/report/examples cannot."
+            "notes": "run exits 0 complete, 1 failed/interrupted/error, 3 incomplete. report exits 0 even when its saved evidence contains failures. validate returns schema-only validation diagnostics; native coordinates and tokenization are not checked. examples exports two protocols, a synthetic walkthrough and a model-free identity-audit helper. run/serve can use real models; validate/report/examples cannot."
           },
           "signature": "main(argv=None)",
           "parameters": [

@@ -62,6 +62,7 @@ def run_checks() -> dict:
         assert all(n >= 2 for n in counts.values())
         assert len({c.prompt for c in study.cases}) == len(study.cases)
         assert study.question.strip() and study.prediction.strip()
+        assert not study.metadata.get("controls", {}).get("secondary_comparisons")
         assert "no model findings" in study.metadata["status"]
         assert study.budget.max_trials == len(study.cases) * len(study.conditions)
         assert study.budget.max_input_tokens <= 256 and study.budget.max_seconds <= 600
@@ -120,6 +121,9 @@ def run_checks() -> dict:
         with tempfile.TemporaryDirectory(prefix="mechanistic-examples-check-") as directory:
             result = module.run_demo(directory, include_holdout=True)
         assert result["synthetic"]
+        for entry in result["studies"]:
+            if entry["study_id"].startswith("code-"):
+                assert entry["report"]["splits"]["discovery"]["secondary_comparisons"]
         walkthrough = {"status": "passed", "synthetic": True,
                        "trial_calls": sum(s["trial_calls"] for s in result["studies"])}
     return {"ok": True, "model_free": True, "examples": summaries,

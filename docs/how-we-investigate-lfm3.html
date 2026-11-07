@@ -178,8 +178,11 @@ footer {margin-top:56px;padding-top:24px;border-top:1px solid var(--rule)}
 <p>After installing the local package with Python 3.12, export the two unrun protocols and their synthetic walkthrough. The same commands work outside the source checkout.</p>
 <pre><code>glass-box examples --output ./my-studies
 glass-box validate ./my-studies/code_retrieval.json
-python3.12 ./my-studies/fake_walkthrough.py</code></pre>
-<p>The walkthrough uses invented arithmetic and token IDs. It runs discovery and validation, resumes without new scores, builds reports and closes the session. It tests software plumbing, not LFM3 behavior.</p>
+python3.12 ./my-studies/fake_walkthrough.py --output ./synthetic-demo --summary
+glass-box report ./synthetic-demo/code-retrieval-mechanics-v2
+python3.12 ./my-studies/audit_controls.py ./synthetic-demo/code-retrieval-mechanics-v2 --tolerance 0.000001</code></pre>
+<p>The walkthrough uses invented arithmetic and token IDs. It runs discovery and validation, resumes without new scores, builds reports and closes the session. The output retains protocol, journal, raw receipts and JSON/Markdown reports. Without <code>--output</code>, temporary receipts are discarded. The summary counts direct smoke scores separately from budgeted trials. It tests software plumbing, not LFM3 behavior.</p>
+<p>The identity audit checks declared pairs against the explicit fixture tolerance without rescoring. It is not a correctness test. Protocol validation checks schema only, not tokenization or model readiness. See the <a href="library-guide.md#before-real-model-work">real-model preflight checklist</a>.</p>
 <p><a href="../README.md">Installation and development commands</a> · <a href="library-guide.md">Python API and operational limits</a> · <a href="release-checklist.md">First public-release checklist</a></p>
 <p><a href="api/index.html">Module-by-module API reference</a> · <a href="agents.md">Consumer-agent guide</a> · <a href="index.html">Documentation index</a></p>
 </section>

@@ -32,7 +32,7 @@ def main():
         names = archive.namelist()
         assert any(n.endswith("/licenses/LICENSE") for n in names)
         assert any(n.endswith("/licenses/NOTICE") for n in names)
-        assert len([n for n in names if n.startswith("lfm3lab/research/examples/")]) == 3
+        assert len([n for n in names if n.startswith("lfm3lab/research/examples/")]) == 4
         assert not any(n.endswith((".pyc", ".safetensors", ".pt", ".pem")) for n in names)
 
     with tempfile.TemporaryDirectory(prefix="glass-box-wheel-") as directory:
@@ -79,7 +79,9 @@ print(json.dumps({'installed_package': lfm3lab.__file__, 'no_numerical_imports':
         exported = root / "studies"
         run([str(cli), "examples", "--output", str(exported)])
         for name in ("code_retrieval.json", "tool_continuation.json"):
-            run([str(cli), "validate", str(exported / name)])
+            validated = json.loads(run([str(cli), "validate", str(exported / name)]))
+            assert validated["validation"]["level"] == "schema"
+            assert validated["validation"]["tokenization"] == "not_checked"
         # Repeat export must neither overwrite nor truncate the originals.
         before = {p.name: p.read_bytes() for p in exported.iterdir()}
         run([str(cli), "examples", "--output", str(exported)], expected=1)
@@ -92,6 +94,18 @@ print(json.dumps({'installed_package': lfm3lab.__file__, 'no_numerical_imports':
             output = root / "synthetic" / study["study_id"]
             report = json.loads(run([str(cli), "report", str(output)]))
             assert report["splits"]["holdout"]["started_trials"] == 0
+            audit = json.loads(run([str(python), "-I", str(exported / "audit_controls.py"),
+                                   str(output), "--tolerance", "0.000001"]))
+            assert audit["status"] == "passed" and audit["max_absolute_error"] == 0
+            if study["study_id"].startswith("code-"):
+                assert report["splits"]["discovery"]["secondary_comparisons"]
+            unavailable = json.loads(run([str(python), "-I", str(exported / "audit_controls.py"),
+                                         str(output), "--tolerance", "0.000001", "--split", "holdout"], expected=2))
+            assert unavailable["status"] == "incomplete"
+        compact = json.loads(run([str(python), "-I", str(exported / "fake_walkthrough.py"),
+                                  "--output", str(root / "compact"), "--summary"]))
+        assert compact["receipts_retained"]
+        assert sum(s["total_score_calls"] for s in compact["studies"]) == 42
         # The full numerical check should give an actionable missing-extra error.
         missing = subprocess.run([str(cli), "check"], cwd=root, env=env, capture_output=True, text=True)
         assert missing.returncode == 1 and "glass-box[instruments]" in missing.stderr

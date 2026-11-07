@@ -131,13 +131,32 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, help="Retain synthetic receipts here")
     parser.add_argument("--include-holdout", action="store_true",
-                        help="Explicitly execute the visible synthetic holdout split")
+                         help="Explicitly execute the visible synthetic holdout split")
+    parser.add_argument("--summary", action="store_true",
+                        help="Print compact JSON instead of all nested reports")
     args = parser.parse_args()
     if args.output:
         result = run_demo(args.output, include_holdout=args.include_holdout)
     else:
         with tempfile.TemporaryDirectory(prefix="mechanistic-example-") as directory:
             result = run_demo(directory, include_holdout=args.include_holdout)
+    if args.summary:
+        result = {
+            "synthetic": True, "warning": result["warning"],
+            "receipts_retained": args.output is not None,
+            "studies": [{
+                "study_id": study["study_id"], "splits": study["splits"],
+                "trial_calls": study["trial_calls"], "direct_score_calls": 1,
+                "total_score_calls": study["trial_calls"] + 1,
+                "resume_score_calls": 0,
+                "output": study["report"]["provenance"]["output"] if args.output else None,
+                "budget_used": study["report"]["budget_used"],
+                "split_status_counts": {
+                    name: data["status_counts"]
+                    for name, data in study["report"]["splits"].items()},
+                "verification": study["report"]["provenance"]["verification"],
+            } for study in result["studies"]],
+        }
     print(json.dumps(result, indent=2, allow_nan=False))
 
 

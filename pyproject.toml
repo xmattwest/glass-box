@@ -34,6 +34,7 @@ packages = ["src/lfm3lab"]
 "examples/mechanistic/code_retrieval.json" = "lfm3lab/research/examples/code_retrieval.json"
 "examples/mechanistic/tool_continuation.json" = "lfm3lab/research/examples/tool_continuation.json"
 "examples/mechanistic/fake_walkthrough.py" = "lfm3lab/research/examples/fake_walkthrough.py"
+"examples/mechanistic/audit_controls.py" = "lfm3lab/research/examples/audit_controls.py"
 "docs/agents.md" = "lfm3lab/docs/agents.md"
 "docs/library-guide.md" = "lfm3lab/docs/library-guide.md"
 "docs/api/reference.md" = "lfm3lab/docs/api/reference.md"

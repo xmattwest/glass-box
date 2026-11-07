@@ -78,11 +78,27 @@ For an executable CPU orchestration example after installation:
 ```sh
 glass-box examples --output ./my-studies
 glass-box validate ./my-studies/code_retrieval.json
-python3.12 ./my-studies/fake_walkthrough.py
+python3.12 ./my-studies/fake_walkthrough.py --output ./synthetic-demo --summary
+glass-box report ./synthetic-demo/code-retrieval-mechanics-v2
+python3.12 ./my-studies/audit_controls.py ./synthetic-demo/code-retrieval-mechanics-v2 --tolerance 0.000001
 ```
 
 The scores and token IDs are invented fixture arithmetic. Never cite them as model
 findings. Export refuses overwrite. The default walkthrough leaves holdout unused.
+`--output` retains receipts; omitting it discards the temporary evidence on exit.
+`--summary` counts direct smoke scores separately from journaled attempts. A fresh
+walkthrough needs a new output; use `run_study(..., resume=True)` to reuse evidence.
+The model-free audit verifies evidence and checks only declared identity pairs.
+Its tolerance must be fixed before results: exit 0 passed, 1 violation/error,
+2 unavailable pairs or no selected cases. It never turns missing pairs into passes.
+The exported v2 retrieval example has a new fingerprint and operative secondary
+comparisons; do not overwrite or resume existing v1 evidence with it.
+
+CLI `validate` explicitly labels schema-only validation. Native coordinates require
+`PatchSpec.from_value`; exact tokenization and alignment require the authorized
+adapter. Follow the [preflight checklist](library-guide.md#before-real-model-work)
+before calling a study model-ready. Neither validation nor a fixture authorizes
+model loading or compute.
 
 ## Backend operation payload contract
 
@@ -160,15 +176,16 @@ own identity control.
 - `run_study(study, session, output, split="discovery", resume=True)` scores only
   the explicitly requested split; holdout is a caller decision, not hidden data.
 - Budgets count attempts, including failed/interrupted calls, across all splits.
-  An in-flight call is not cancelled by the study time budget. Interrupted intent
+  Direct session operations, model setup and paid host time are outside this
+  accounting; bound them separately. An in-flight call is not cancelled by the study time budget. Interrupted intent
   consumes its reserved remaining time and is not automatically retried.
 - Never repair/overwrite immutable protocol, journal or raw receipts to resume.
   Protocol/backend mismatch or corrupted hashes means preserve output and
   diagnose, not retry. Changed objective/conditions/budget/identity needs a new
   output/protocol; runtime/source changes also affect adapter identity.
 - Reports retain raw signed paired deltas and failed/interrupted/missing counts.
-  Use `metadata.secondary_comparisons` for fixed [left, right] pairs; the old
-  example's nested controls.secondary_comparisons is metadata only.
+  Use `metadata.secondary_comparisons` for fixed [left, right] pairs; older
+  protocols' nested controls.secondary_comparisons remains descriptive metadata only.
 - Control labels are declarations, not automatic correctness or no-op validation.
   Retain identity errors, dtype and tolerances. Report uncertainty by paired case,
   not token; repeated inputs and tiny samples do not support population claims.
