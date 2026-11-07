@@ -31,8 +31,9 @@ if you want all nested reports on stdout. Use a new output for a fresh walkthrou
 
 `validate` means schema-valid, not tokenizer- or model-ready. The demo also makes
 one direct smoke score per study outside its Study budget; the summary counts
-those separately. Direct session operations, loading and billing are not metered
-by a Study. See the guide's [preflight checklist](docs/library-guide.md#before-real-model-work).
+those separately. Direct session operations and billing are not metered by a
+Study. Lazy loading inside a score attempt is charged to that attempt's elapsed
+time, but is not separately capped. See the guide's [preflight checklist](docs/library-guide.md#before-real-model-work).
 
 ## What is included
 

@@ -178,8 +178,10 @@ own identity control.
 - `run_study(study, session, output, split="discovery", resume=True)` scores only
   the explicitly requested split; holdout is a caller decision, not hidden data.
 - Budgets count attempts, including failed/interrupted calls, across all splits.
-  Direct session operations, model setup and paid host time are outside this
-  accounting; bound them separately. An in-flight call is not cancelled by the study time budget. Interrupted intent
+  Direct session operations, setup outside scoring and paid host time are outside
+  this accounting; bound them separately. Lazy loading/reference work inside a
+  score is charged to that attempt's elapsed time, not counted as extra trials.
+  An in-flight call is not cancelled by the study time budget. Interrupted intent
   consumes its reserved remaining time and is not automatically retried.
 - Never repair/overwrite immutable protocol, journal or raw receipts to resume.
   Protocol/backend mismatch or corrupted hashes means preserve output and

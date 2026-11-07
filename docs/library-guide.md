@@ -158,9 +158,10 @@ continuation token. The time budget stops new trials, not an in-flight call.
 An interrupted trial charges its remaining time reservation and is not retried.
 This is bounded resumption, not exactly-once distributed execution.
 These limits apply only to `run_study` attempts. Free-standing session scores,
-probes, sweeps, reference/model setup and paid host runtime need separate budgets.
-A score can include additional reference/donor passes; an attempt is not a count
-of GPU forward passes or a spending cap.
+probes, sweeps, setup outside scoring and paid host runtime need separate budgets.
+Lazy loading and reference/donor work inside a score are included in that
+attempt's elapsed charge, not counted as additional trials. An attempt is not a
+count of GPU forward passes or a spending cap, and setup has no separate hard cap.
 
 Resume verifies protocol and backend identity, journal chaining and raw receipt
 hashes. Started pairs, successful or not, are never silently rescored. Changed
