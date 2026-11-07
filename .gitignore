@@ -20,3 +20,42 @@ docs/verification-local.json
 *.bin
 *.pem
 *.key
+# Local research outputs, caches and orchestration state, not portable sources.
+/studies/
+/protocols-local/
+/cases-local/
+/analysis-local/
+/artifacts/
+/outputs/
+/runs/
+/logs/
+/runtime/
+/runtimes/
+/models/
+/checkpoints/
+/cloud-local/
+/notebooks/
+*.log
+.ipynb_checkpoints/
+# Browser and test-run local output; portable tests and assets remain eligible.
+/playwright-report/
+/test-results/
+/.playwright-cli/
+/.browser-local/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+# Local approvals, credentials and machine configuration.
+/approvals-local/
+/machine-local/
+/.local/
+/.claude/settings.local.json
+*.local.json
+*.local.toml
+*.local.yaml
+*.local.yml
+# Generated site staging and local publication tooling state.
+/.site/
+/.github-local/

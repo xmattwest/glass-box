@@ -1,0 +1,56 @@
+name: Publish documentation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'src/**'
+      - 'scripts/build_docs.py'
+      - 'scripts/build_site.py'
+      - 'README.md'
+      - 'LICENSE'
+      - 'NOTICE'
+      - 'llms*.txt'
+      - 'pyproject.toml'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: '3.12'
+      - name: Install documentation tools only
+        run: uv sync --group docs
+      - name: Check generated API documentation
+        run: uv run python scripts/build_docs.py --check
+      - name: Build the static site without model imports
+        run: uv run python scripts/build_site.py --output "${RUNNER_TEMP}/glass-box-site"
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/glass-box-site
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

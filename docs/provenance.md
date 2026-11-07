@@ -1,9 +1,11 @@
 # Code provenance and licensing
 
-The owner selected **Apache-2.0** for Glass-Box's original code during extraction.
-`LICENSE` contains the full text; `NOTICE` carries the retained attribution.
-This is a provenance audit, not a legal opinion or proof of every contributor's
-ownership. Confirm redistribution rights before public publication.
+The owner selected **Apache-2.0** for Glass-Box's original code during extraction
+and explicitly confirmed original-code redistribution rights during preparation
+for the first public GitHub publication. `LICENSE` contains the full text;
+`NOTICE` carries the retained attribution. The Apache-2.0 decoder attribution and
+separate model-license notice are retained. This is a provenance record, not a
+legal opinion or independent proof of every contributor's ownership.
 
 ## Extracted source
 
@@ -12,8 +14,8 @@ The reference is archive commit
 and contains no archive ancestors. [source-manifest.json](source-manifest.json)
 lists source paths, original SHA-256 hashes and the selection for every extracted
 file. The archive had no root LICENSE or NOTICE at that reference. An absence of
-a license does not establish ownership; the project owner's license selection
-is the authorization used here.
+a license does not establish ownership; the owner's explicit redistribution-rights
+confirmation and license selection are the authorization recorded here.
 
 The mechanistic modules contain no vendored third-party packages. One small
 adaptation deserves explicit attribution: `GlassboxHooks.mid_forward` mirrors
@@ -51,10 +53,13 @@ https://huggingface.co/LiquidAI/LFM3-1.7B/blob/40ebe0aa6662c9d40389c2f5d565b6a2c
 
 Both pinned URLs were inspected during this extraction. No weights were fetched.
 Library licensing does not license weights, tokenizer artifacts, model outputs
-or trademarks. Because the repository-level and file-header licenses differ,
-confirm that relying on the explicit Apache modeling-code header for this small
-adaptation is acceptable before public publication; do not call the whole model
-Apache-licensed or OSI open source.
+or trademarks. The owner confirmed retaining the explicit Apache modeling-code
+attribution for this small adaptation and the separate model-license notice for
+publication. Do not call the whole model Apache-licensed or OSI open source.
 
 Warm Precision was consulted for presentation principles and voice only. No
 workspace, fonts, assets, build tools or executable code were copied.
+
+Research ownership, installed-wheel provenance and separate execution/publication
+permissions are defined in [research-workflow.md](research-workflow.md). Public
+library publication does not authorize model use or private evidence publication.

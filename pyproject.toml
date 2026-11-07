@@ -18,6 +18,14 @@ classifiers = [
 instruments = ["torch>=2.9,<3"]
 local = ["torch>=2.9,<3", "transformers>=5.21,<6", "huggingface-hub>=1,<3"]
 
+[project.urls]
+Documentation = "https://xmattwest.github.io/glass-box/"
+Repository = "https://github.com/xmattwest/glass-box"
+Issues = "https://github.com/xmattwest/glass-box/issues"
+
+[dependency-groups]
+docs = ["Markdown==3.9"]
+
 [project.scripts]
 glass-box = "lfm3lab.research.cli:main"
 # Compatibility with scripts using the extracted library's original CLI.
@@ -37,6 +45,7 @@ packages = ["src/lfm3lab"]
 "examples/mechanistic/audit_controls.py" = "lfm3lab/research/examples/audit_controls.py"
 "docs/agents.md" = "lfm3lab/docs/agents.md"
 "docs/library-guide.md" = "lfm3lab/docs/library-guide.md"
+"docs/research-workflow.md" = "lfm3lab/docs/research-workflow.md"
 "docs/api/reference.md" = "lfm3lab/docs/api/reference.md"
 "docs/api/reference.json" = "lfm3lab/docs/api/reference.json"
 "llms-full.txt" = "lfm3lab/docs/llms-full.txt"

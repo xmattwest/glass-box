@@ -95,7 +95,8 @@ exec(compile(sys.argv[1], 'agent_protocol_example', 'exec'))
         for path, parser in parsed.items():
             for link in parser.links:
                 url = urlsplit(link)
-                self.assertFalse(url.scheme, f"Unexpected external dependency: {link}")
+                if url.scheme or url.netloc:
+                    continue
                 destination = (path.parent / unquote(url.path)).resolve() if url.path else path
                 self.assertTrue(destination.is_file(), f"Missing link in {path.name}: {link}")
                 if url.fragment and destination in parsed:

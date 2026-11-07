@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 240" role="img" aria-labelledby="title description">
+  <title id="title">From an activation question to a fixed, auditable study</title>
+  <desc id="description">Inspect with instruments, specify the question and controls, freeze the study, score declared trials, and audit saved receipts. The user chooses the hypothesis; the runner does not search for one.</desc>
+  <style>
+    text{font-family:Inter,Arial,sans-serif;fill:#0F0F0F}
+    .label{font-size:22px;font-weight:600;letter-spacing:-.4px}
+    .detail{font-size:16px;fill:#1E3447}
+    .step{font-size:13px;fill:#1E3447;letter-spacing:1.4px}
+    .node{fill:#FFFFF0;stroke:#2C3E50;stroke-width:2}
+    .route{fill:none;stroke:#2C3E50;stroke-width:2}
+  </style>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10" fill="#2C3E50"/></marker></defs>
+  <rect width="1000" height="240" rx="12" fill="#FFFFF0"/>
+  <path class="route" d="M190 104 H222 M386 104 H418 M582 104 H614 M778 104 H810" marker-end="url(#arrow)"/>
+  <rect class="node" x="26" y="52" width="164" height="104" rx="8"/>
+  <rect class="node" x="222" y="52" width="164" height="104" rx="8"/>
+  <rect x="418" y="52" width="164" height="104" rx="8" fill="#F39C12" stroke="#2C3E50" stroke-width="3"/>
+  <rect class="node" x="614" y="52" width="164" height="104" rx="8"/>
+  <rect class="node" x="810" y="52" width="164" height="104" rx="8"/>
+  <text class="step" x="108" y="34" text-anchor="middle">INSTRUMENTS</text>
+  <text class="step" x="304" y="34" text-anchor="middle">YOUR QUESTION</text>
+  <text class="step" x="500" y="34" text-anchor="middle">FIXED PROTOCOL</text>
+  <text class="step" x="696" y="34" text-anchor="middle">SESSION</text>
+  <text class="step" x="892" y="34" text-anchor="middle">SAVED EVIDENCE</text>
+  <text class="label" x="108" y="96" text-anchor="middle">Inspect</text>
+  <text class="detail" x="108" y="126" text-anchor="middle">Read activations</text>
+  <text class="label" x="304" y="96" text-anchor="middle">Specify</text>
+  <text class="detail" x="304" y="126" text-anchor="middle">Choose controls</text>
+  <text class="label" x="500" y="96" text-anchor="middle">Freeze</text>
+  <text x="500" y="126" font-size="16" text-anchor="middle">Cases, edits, budget</text>
+  <text class="label" x="696" y="96" text-anchor="middle">Score</text>
+  <text class="detail" x="696" y="126" text-anchor="middle">Declared trials only</text>
+  <text class="label" x="892" y="96" text-anchor="middle">Audit</text>
+  <text class="detail" x="892" y="126" text-anchor="middle">Verify and compare</text>
+  <text class="detail" x="500" y="204" text-anchor="middle">You choose the hypothesis. Glass-Box keeps the comparison and its receipts.</text>
+</svg>

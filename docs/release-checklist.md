@@ -1,12 +1,18 @@
 # First public release
 
-The deliverable is a usable **local** Glass-Box 0.1.0 wheel and source
-distribution. Creating a public remote, pushing, tagging a public release or
-uploading to a package index requires a separate owner decision.
+The selected first-publication destination is **`xmattwest/glass-box`** on GitHub.
+The owner confirmed original-code redistribution rights and retained Apache-2.0
+decoder attribution and the separate model-license notice. Publication preparation
+does not establish that a remote, pushed repository, release or public site exists.
+Record successful publication actions below only after they occur. Package-index
+upload, model execution and private evidence publication are separate decisions.
 
-## Local readiness
+## Historical local readiness
 
-- [x] Fresh Git repository, no archive ancestry or public remote.
+These checks describe the initial local extraction, not verification of subsequent
+publication-preparation edits. Re-run the exact-build gates below before release.
+
+- [x] Fresh Git repository with no archive ancestry; initially no public remote.
 - [x] Explicit dependency closure, original source hashes and unchanged numerical
   symbol checks. No results, credentials, weights, studio or cloud helpers.
 - [x] Root imports are model-free. Numerical and loading dependencies are extras.
@@ -20,44 +26,60 @@ uploading to a package index requires a separate owner decision.
 - [x] Human API module pages and consumer-agent guide; source-derived Markdown/JSON
   API and combined agent reference bundled in the wheel. Docs freshness and safe
   protocol examples are tested without model imports.
-- [x] Final staged-file and distribution audit passes for the exact release build.
-- [x] Installed-wheel smoke passes outside the checkout in fresh base and
-  instrument environments. Re-run after changes affecting package contents.
+- [x] Initial staged-file and distribution audit passed for that extraction build.
+- [x] Initial installed-wheel smoke passed outside the checkout in fresh base and
+  instrument environments. These historical results do not validate a new build.
 
 ## Commands before publication
 
 ```sh
-uv sync --extra instruments
+uv sync --extra instruments --group docs
 uv run python scripts/build_docs.py --check
 uv run glass-box check
 uv run python -m unittest discover -s tests -v
+uv run --group docs python scripts/build_site.py --output .site
 uv build
 uv run python scripts/wheel_smoke.py dist/glass_box-0.1.0-py3-none-any.whl
 # Stage only the intended library, docs, tests, guidance and build metadata.
-git add .gitignore .python-version AGENTS.md README.md LICENSE NOTICE pyproject.toml llms.txt llms-full.txt src examples docs tests scripts
+git add .gitignore .python-version AGENTS.md README.md LICENSE NOTICE pyproject.toml llms.txt llms-full.txt src examples docs tests scripts .github/workflows/check.yml .github/workflows/pages.yml
 uv run python scripts/release_audit.py dist/glass_box-0.1.0-py3-none-any.whl dist/glass_box-0.1.0.tar.gz
+# After authorized remote creation, append:
+# --expected-remote-url https://github.com/xmattwest/glass-box.git
 git diff --cached --check
 git diff --cached --stat
 ```
 
-The audit checks staged/working parity, explicit package membership, license
-metadata, source/resource byte parity, forbidden artifacts, machine paths and
-recognizable credential formats. It is not a full legal or secret-scanning
+The audit checks every indexed file, including unchanged files, staged/working
+parity, complete package membership, license metadata, source/resource byte parity,
+forbidden artifacts, machine paths and recognizable credential formats. It is not
+a full legal or secret-scanning
 guarantee. Review the actual staged diff and package lists. Never force-add
 ignored evidence or machine-local receipts.
 
-## Owner decisions still required
+## Publication gates and status
 
-- [ ] Confirm rights to redistribute the archive-derived original code and the
-  adapted decoder under the selected license. The upstream modeling file says
-  Apache-2.0; the model repository has separate LFM terms. See provenance.md.
-- [ ] Choose/confirm the public repository and package-index names; `glass-box`
-  is the local distribution name, not a claim that an index name is available.
-- [ ] Approve the public remote before creation or push.
-- [ ] Approve publication separately. Verify final license notices, contents and
-  checksum; add public URLs only after the destination is chosen.
-- [ ] If promising GPU support beyond the inherited contract, authorize and record
-  a bounded test of this exact source build. Historical receipts are insufficient.
+- [x] Owner confirmed original-code redistribution rights and selected Apache-2.0.
+  Retain decoder attribution and the separate model notice; see provenance.md.
+- [x] Owner selected `xmattwest/glass-box` for first public GitHub publication.
+  `glass-box` is the distribution name, not a package-index availability claim.
+- [ ] Review the exact staged diff, final notices, generated docs and distribution
+  contents after preparation changes. Sanitize personal content/machine paths, not
+  Git author/committer metadata, history or required public attribution.
+- [ ] Run model-free checks, build, installed-wheel smoke and final audit for the
+  exact publication build; record the source commit and wheel SHA-256.
+- [ ] Record remote creation and successful push to the selected GitHub destination.
+- [ ] Record a public site URL only after deployment succeeds; no live site is
+  claimed by this checklist.
+- [ ] Record tagging/release upload only if separately included in owner approval.
+- [ ] Package-index publication requires a separate destination and approval.
+
+Do not stage or publish private research, evidence, model assets, secrets, local
+approval records or machine configuration. The independent studies workspace is
+local/private with no remote by default. See
+[research-workflow.md](research-workflow.md) for installed-wheel consumption,
+exact research environment locks, immutable evidence and separate engineering,
+model/research and publication permissions. Historical GPU receipts do not validate
+this build; any new real-model test requires explicit bounded authorization.
 
 ## Recommended next feature, not yet implemented
 

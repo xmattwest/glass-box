@@ -1,16 +1,32 @@
 # Glass-Box
 
+**Inspect activations. Test a fixed hypothesis. Keep the evidence.**
+
 Glass-Box is a Python library for inspecting language-model activations, making
-targeted edits, and recording fixed, auditable studies. The instruments help you
-investigate; the study framework supplies protocols, sessions, execution,
-receipts and reports.
+scoped interventions, and recording fixed, auditable studies. You choose the
+question, cases, edits and controls. The runner executes the declared
+likelihood-scoring trials and retains what happened, including failures.
 
-## Try it without a model
+[**Explore the documentation**](https://xmattwest.github.io/glass-box/) ·
+[Visual walkthrough](https://xmattwest.github.io/glass-box/docs/how-we-investigate-lfm3.html) ·
+[API reference](https://xmattwest.github.io/glass-box/docs/api/) ·
+[Agent guide](docs/agents.md)
 
-Python 3.12 on macOS or Linux. From this checkout:
+![Inspect, specify, freeze, score and audit: the user chooses the hypothesis; Glass-Box keeps the comparison and its receipts.](docs/assets/workflow.svg)
+
+## Start without a model
+
+Python 3.12 on macOS or Linux. Install from this repository:
 
 ```sh
+git clone https://github.com/xmattwest/glass-box.git
+cd glass-box
 python3.12 -m pip install .
+```
+
+Run the complete study path with invented fixture arithmetic:
+
+```sh
 glass-box examples --output ./my-studies
 glass-box validate ./my-studies/code_retrieval.json
 python3.12 ./my-studies/fake_walkthrough.py --output ./synthetic-demo --summary
@@ -18,57 +34,68 @@ glass-box report ./synthetic-demo/code-retrieval-mechanics-v2
 python3.12 ./my-studies/audit_controls.py ./synthetic-demo/code-retrieval-mechanics-v2 --tolerance 0.000001
 ```
 
-This runs invented fixture arithmetic, not LFM3. It needs no weights, API key,
-PyTorch or worker. After installing the local wheel, the same commands work
-outside the checkout. This project is not yet published to a package index.
+No weights, API key, PyTorch or worker are needed. Synthetic scores test software,
+not model behavior. `--output` retains protocols, journals and raw receipts;
+`--summary` prints a compact view. Reports verify saved evidence without rescoring.
+Use a new output directory for a fresh walkthrough. Holdout stays unrun.
 
-The output directory retains `protocol.json`, `journal.jsonl`, `raw/*.json` and
-derived `report.json`/`report.md` for each study. Reports verify saved hashes;
-they do not rescore. The audit checks declared identity pairs against the explicit
-fixture tolerance, not generated correctness. Holdout stays unrun. Without
-`--output`, the walkthrough discards temporary receipts; omit `--summary` only
-if you want all nested reports on stdout. Use a new output for a fresh walkthrough.
+## What the library provides
 
-`validate` means schema-valid, not tokenizer- or model-ready. The demo also makes
-one direct smoke score per study outside its Study budget; the summary counts
-those separately. Direct session operations and billing are not metered by a
-Study. Lazy loading inside a score attempt is charged to that attempt's elapsed
-time, but is not separately capped. See the guide's [preflight checklist](docs/library-guide.md#before-real-model-work).
+| Instruments | Fixed studies | Evidence |
+| --- | --- | --- |
+| Activation probes, local gradient attribution, finite ablations, temporary patches and greedy generation with telemetry replay | Explicit cases, conditions, objectives, splits and budgets; serialized local/remote sessions | Protocol fingerprints, attempt journals, raw receipts, bounded resumption and hash-verified paired reports |
 
-## What is included
-
-- **Instruments:** activation probes, local gradient attribution, finite
-  ablations, temporary patches and greedy generation with telemetry replay.
-- **Fixed studies:** JSON/Python protocols, explicit splits and budgets,
-  local/remote sessions, resumption, hash-verified receipts and paired reports.
-- **Examples and CPU checks:** two unrun model protocols and a synthetic
-  walkthrough. No research results or model weights are bundled.
-
-The first adapter targets only
+The initial adapter targets
 `LiquidAI/LFM3-1.7B@40ebe0aa6662c9d40389c2f5d565b6a2c6aebacd`.
-Python imports retain the original `lfm3lab` namespace for compatibility.
-`lfm3-research` remains a CLI alias. No browser studio, cloud provisioning,
-automatic search or general model adapter is included.
+The distribution is `glass-box`; Python imports use `lfm3lab` for compatibility.
+`lfm3-research` remains a CLI alias.
 
 **A likelihood change is not generated correctness, a native circuit or a
-practical benefit.** Historical GPU receipts identify earlier source versions;
-they do not validate this extracted package. Current verification is CPU-only.
+practical benefit.** The study runner does not choose hypotheses, search for
+circuits, or evaluate generated answers automatically. No model weights,
+research results, browser application or cloud provisioning are bundled.
 
-## Installation options
+## Choose an installation
 
-| Install | Use |
+| Install from the checkout | Use |
 | --- | --- |
-| `pip install .` | Protocols, reports, synthetic examples, remote clients |
+| `pip install .` | Protocols, reports, synthetic examples and remote clients |
 | `pip install '.[instruments]'` | PyTorch instruments and the full CPU fixture suite |
 | `pip install '.[local]'` | Model loading on an explicitly authorized host |
 
-Installation and status do not load weights. A local session operation or CLI
-`run` can; loading executes the pinned checkpoint's custom code. CPU/MPS model
-loading requires an extra explicit opt-in. The worker transport connects to
-existing hardware and never rents it. Model terms are separate from the library
-license.
+Installation and status do not load weights. Local session operations can load
+the pinned checkpoint and execute its custom code. CPU/MPS loading requires an
+additional opt-in. The remote transport connects to existing hardware; it never
+rents it. Model terms are separate from the library license.
 
-## Development and guide
+`validate` checks schema only, not native coordinates, tokenization or GPU
+readiness. Study budgets count attempts, not GPU forward passes or provider
+billing. Direct calls and outside setup need separate bounds; lazy loading and
+reference work inside a score are charged to that attempt. Read the
+[real-model preflight checklist](docs/library-guide.md#before-real-model-work)
+before requesting execution.
+
+## Learn the interfaces
+
+- [Visual walkthrough](docs/how-we-investigate-lfm3.html): workflow, sites and predictor-position scopes.
+- [Library guide](docs/library-guide.md): Python usage, ownership, budgets and operational limits.
+- [API reference](docs/api/index.html): source-derived signatures, fields, methods and constants.
+- [Agent guide](docs/agents.md): smallest entry points, wire payloads, failure handling and claim limits.
+- [Documentation map](llms.txt): select only the references you need.
+
+Agent guides and the Markdown/JSON API are bundled in the wheel. Read them through
+`importlib.resources.files("lfm3lab").joinpath("docs")` without loading a model.
+The package is not published to a package index.
+
+## Contribute without mixing in experiments
+
+Keep library changes here and study plans, analysis, environments and evidence in
+a separate research workspace. A study should consume an identified installed
+wheel outside the checkout. Experimental friction becomes a reduced synthetic
+regression and a general library fix, not committed live receipts.
+
+See [research and library boundaries](docs/research-workflow.md) and
+[contributor instructions](AGENTS.md).
 
 ```sh
 uv sync --extra instruments
@@ -79,23 +106,17 @@ uv build
 uv run python scripts/wheel_smoke.py dist/glass_box-0.1.0-py3-none-any.whl
 ```
 
-Start at the [documentation index](docs/index.html) or
-[visual walkthrough](docs/how-we-investigate-lfm3.html).
-Use the [API reference](docs/api/index.html) to look up signatures, fields,
-methods and constants. Agents should read the [agent guide](docs/agents.md),
-then the [Markdown API](docs/api/reference.md); [llms.txt](llms.txt) indexes the
-docs and [llms-full.txt](llms-full.txt) combines them into one agent-readable file.
-These Markdown/JSON references are also bundled in the wheel, readable through
-`importlib.resources.files("lfm3lab").joinpath("docs")` without loading a model.
+Public CI uses model-free CPU checks. Historical GPU receipts identify their
+source build and runtime; they do not validate arbitrary versions or all
+instruments. Before publication, follow the
+[release checklist](docs/release-checklist.md).
+For documentation changes, see the [static site guide](docs/site-guide.md).
 
-Read the [library guide](docs/library-guide.md),
-[extraction and verification report](docs/extraction.md), and
-[first-release checklist](docs/release-checklist.md).
+## License and provenance
 
-Code license: [Apache-2.0](LICENSE), selected by the project owner.
-See [NOTICE](NOTICE) and [provenance](docs/provenance.md) for the decoder
-adaptation and separate model terms. No public remote has been created.
+[Apache-2.0](LICENSE). [NOTICE](NOTICE) retains decoder attribution; the model has
+separate terms. Read [code provenance](docs/provenance.md) and the
+[extraction report](docs/extraction.md).
 
-To rebuild the API pages and agent reference after an interface change, run
-`uv run python scripts/build_docs.py`. The standard-library generator parses
-source without importing it; `--check` catches stale generated documentation.
+Presentation follows Warm Precision principles: clear hierarchy, restrained
+color, readable type and specific claims. No design-system runtime is required.

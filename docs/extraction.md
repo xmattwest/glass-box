@@ -2,8 +2,9 @@
 
 Glass-Box is a small, library-only extraction of reference commit
 `af21465351079e72f5c1dc4ba7bd154f9d8b66df`. It starts in fresh local Git history.
-The research archive is only a read-only information source. No archive results
-or historical GPU receipts are copied or presented as validation of this package.
+Archive access is not implicitly authorized by this library. When explicitly
+authorized, it is read-only. No archive results or historical GPU receipts are
+copied or presented as validation of this package. Existing evidence stays intact.
 
 ## Actual dependency closure
 
@@ -114,8 +115,14 @@ agent/API documentation;
 the source distribution also contains portable docs, tests and audit scripts.
 
 The root library was relicensed only after the owner explicitly chose Apache-2.0.
-Confirm original-code rights and the adapted decoder's file-header licensing
-before public publication. No remote, public upload, live inference or paid
-worker is authorized by this extraction. The roadmap recommendation is the
-bounded inspect-to-study draft helper in the release checklist, not an implemented
-feature or an automatic circuit-search promise.
+During first-publication preparation, the owner confirmed original-code
+redistribution rights and retained the Apache-2.0 decoder attribution and separate
+model-license notice. The selected GitHub destination is `xmattwest/glass-box`;
+preparation alone does not establish that a remote, push, release or site is live.
+Publication status must be recorded only after the corresponding action succeeds.
+No model downloads, live inference, archive access, holdout access, paid worker or
+evidence publication is authorized by this preparation. See
+[research-workflow.md](research-workflow.md) for the private studies boundary and
+[release-checklist.md](release-checklist.md) for exact-build publication gates.
+The bounded inspect-to-study draft helper in the release checklist is a
+recommendation, not an implemented feature or automatic circuit-search promise.
