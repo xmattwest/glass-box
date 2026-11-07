@@ -17,7 +17,7 @@ PUBLIC_URL = "https://github.com/xmattwest/glass-box.git"
 
 
 class ContentChecks(unittest.TestCase):
-    def test_public_source_legal_notices_and_generic_examples_pass(self):
+    def test_public_attribution_and_examples_do_not_bypass_credentials(self):
         examples = {
             "LICENSE": "Copyright The HuggingFace Team. https://www.apache.org/licenses/LICENSE-2.0",
             "NOTICE": "https://huggingface.co/LiquidAI/LFM3-1.7B/blob/revision/modeling_lfm3.py\nSeparate model license applies.",
@@ -30,7 +30,9 @@ class ContentChecks(unittest.TestCase):
         for name, text in examples.items():
             with self.subTest(name=name):
                 audit.publication_path(name)
-                audit.inspect(name, text.encode())
+                line = text.count("\n") + 2
+                with self.assertRaisesRegex(AssertionError, f"Possible credential: {name}:{line}"):
+                    audit.inspect(name, (text + "\n" + "ghp_" + "A" * 24).encode())
 
     def test_machine_paths_fail_with_file_and_line_not_leaked_value(self):
         paths = [
@@ -65,8 +67,10 @@ class ContentChecks(unittest.TestCase):
                 with self.assertRaisesRegex(AssertionError, "credential|Credential"):
                     audit.inspect("docs/guide.md", credential.encode())
 
-    def test_runtime_auth_and_invalid_url_fixture_are_not_secrets(self):
-        audit.inspect("src/lfm3lab/checks_worker.py", b'token="fixture-secret"\ntoken=None\nhttp://user:pass@localhost\n')
+    def test_auth_fixtures_do_not_hide_actual_credentials(self):
+        text = b'token="fixture-secret"\ntoken=None\nhttp://user:pass@localhost\n'
+        with self.assertRaisesRegex(AssertionError, "Possible credential: src/lfm3lab/checks_worker.py:4"):
+            audit.inspect("src/lfm3lab/checks_worker.py", text + b"ghp_" + b"A" * 24)
 
     def test_evidence_archive_and_hidden_configs_fail(self):
         paths = [
