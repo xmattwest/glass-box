@@ -1,0 +1,22 @@
+Glass-Box
+
+The project owner selected Apache License 2.0 for the project's original code.
+
+GlassboxHooks.mid_forward in src/lfm3lab/glassbox.py adapts the operation order
+of Lfm3DecoderLayer.forward from modeling_lfm3.py at:
+https://huggingface.co/LiquidAI/LFM3-1.7B/blob/40ebe0aa6662c9d40389c2f5d565b6a2c6aebacd/modeling_lfm3.py
+
+Upstream notice: Copyright 2026 The HuggingFace Team. All rights reserved.
+Upstream code header: Licensed under the Apache License, Version 2.0.
+The adaptation intervenes on the actual midpoint residual, adds capture/scoping,
+and restores the block's forward implementation on exit. It retains the pinned
+sandwich-normalization and residual-addition order. The complete upstream model
+implementation is not vendored.
+
+Model weights and tokenizer artifacts are not distributed. The model repository
+has separate LFM Open License v1.0 terms, including a commercial-use threshold.
+The library license grants no rights to those artifacts or model trademarks.
+
+PyTorch, Transformers and Hugging Face Hub are external dependencies, not
+vendored source. The full Jacobian-lens fitter and its referenced implementation
+are not included; only the original sync and unembed helpers are retained.

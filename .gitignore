@@ -1,0 +1,22 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.DS_Store
+dist/
+build/
+# This is a library, not an application environment lock.
+uv.lock
+.env
+.env.*
+!.env.example
+# Study evidence and machine-local verification are not release artifacts.
+results/
+evidence/
+docs/verification-local.json
+*.safetensors
+*.pt
+*.pth
+*.bin
+*.pem
+*.key

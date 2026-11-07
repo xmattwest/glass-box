@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Glass-Box instruments and the path from an activation hypothesis to a fixed, auditable study. Model-free examples, one pinned LFM3 adapter.">
+<meta name="warm-precision-profile" content="Dawn State 2.2.0; locally authored presentation, system font fallbacks">
+<link rel="icon" href="data:,">
+<title>Glass-Box, explained</title>
+<style>
+:root {--canvas:#FFFFF0;--well:#F5EEDC;--ink:#0F0F0F;--secondary:#1E3447;--structure:#2C3E50;--focus:#F39C12;--rule:rgb(44 62 80 / .22)}
+* {box-sizing:border-box}
+body {margin:0;background:var(--canvas);color:var(--ink);font:400 1.125rem/1.65 Inter,Arial,sans-serif}
+a {color:var(--structure);text-underline-offset:3px}
+a:hover {text-decoration-thickness:2px}
+:focus-visible {outline:3px solid var(--structure);outline-offset:4px}
+.skip {position:absolute;top:-100px;left:24px;padding:8px 16px;background:var(--structure);color:var(--canvas)}
+.skip:focus {top:8px}
+main {max-width:1040px;margin:auto;padding:64px 24px 80px}
+header {border-bottom:1px solid var(--rule);padding-bottom:32px}
+.kicker {color:var(--secondary);font-size:.75rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+h1 {font:600 2.5rem/1.15 Newsreader,Georgia,serif;letter-spacing:-.04em;margin:12px 0 24px}
+h2 {font-size:1.5rem;line-height:1.3;letter-spacing:-.02em;margin:0 0 20px}
+h3 {font-size:1.125rem;line-height:1.3;letter-spacing:-.02em;margin:0 0 12px}
+p {max-width:66ch;margin:0 0 18px}
+.lede {font-size:1.25rem;line-height:1.5}
+nav {display:flex;flex-wrap:wrap;gap:8px 24px;margin-top:24px;font-size:1rem}
+nav a {display:inline-flex;align-items:center;min-height:44px}
+section {padding-top:56px}
+.steps {list-style:none;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:20px;margin:28px 0 20px}
+.steps li {border-top:2px solid var(--structure);padding-top:16px;min-width:0}
+.steps b {display:block;font-size:1rem;line-height:1.4;margin-bottom:8px}
+.steps span {display:block;font-size:.875rem;line-height:1.5;color:var(--secondary)}
+.steps .fixed {border-top:3px solid var(--structure)}
+.fixed b {background:var(--focus);border:2px solid var(--structure);border-radius:8px;padding:8px;margin-top:-10px;color:var(--ink)}
+.caption {font-size:.875rem;line-height:1.5;color:var(--secondary);max-width:80ch}
+.anatomy {display:grid;grid-template-columns:minmax(280px,360px) minmax(0,1fr);gap:48px;align-items:start;margin:24px 0}
+figure {margin:0}
+svg {display:block;width:100%;height:auto;font-family:Inter,Arial,sans-serif}
+svg text {fill:var(--ink);font-size:16px}
+svg .small {font-size:14px;fill:var(--secondary)}
+svg rect,svg circle {stroke:var(--structure);stroke-width:2;fill:var(--canvas)}
+svg .mid {fill:var(--focus)}
+svg path {stroke:var(--structure);stroke-width:2;fill:none}
+dl {margin:0}
+dt {font-weight:600;margin:20px 0 8px}
+dd {margin:0 0 20px}
+code {font:.9em/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;overflow-wrap:anywhere}
+pre {max-width:100%;overflow-x:auto;background:var(--well);padding:20px 24px;border-left:2px solid var(--structure);font-size:.875rem;line-height:1.55}
+pre code {overflow-wrap:normal;white-space:pre}
+.scroll {max-width:100%;overflow-x:auto}
+table {border-collapse:collapse;width:100%;font-size:1rem;margin:16px 0 20px;font-variant-numeric:tabular-nums}
+th,td {padding:12px 16px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+thead th {border-bottom:2px solid var(--structure)}
+.scopes {min-width:640px}
+.scopes td {text-align:center}
+.scopes th {max-width:150px}
+.selected {background:var(--structure);color:var(--canvas)}
+.note {border-left:3px solid var(--structure);padding:16px 24px;background:var(--well);margin:28px 0;max-width:760px}
+.note p:last-child {margin:0}
+details {border-top:1px solid var(--rule);padding-top:16px;margin:24px 0}
+summary {min-height:44px;cursor:pointer;color:var(--structure);font-weight:600}
+footer {margin-top:56px;padding-top:24px;border-top:1px solid var(--rule)}
+@media (max-width:720px) {
+ main {padding-top:32px}
+ .steps {grid-template-columns:1fr;gap:16px}
+ .steps li {display:grid;grid-template-columns:minmax(100px,34%) 1fr;gap:16px;padding-top:12px}
+ .steps b {margin:0}
+ .fixed b {margin:0;padding:4px}
+ .anatomy {grid-template-columns:1fr;gap:24px}
+ .anatomy figure {max-width:360px}
+ th,td {padding:10px 12px}
+}
+@media print {main {padding:24px} .skip,nav {display:none} section {padding-top:28px} details {break-inside:avoid}}
+</style>
+</head>
+<body>
+<a class="skip" href="#content">Skip to the guide</a>
+<main id="content">
+<header>
+<p class="kicker">Python library · first pinned adapter: LFM3-1.7B</p>
+<h1>Glass-Box, explained</h1>
+<p class="lede">Inspect a language model, form a hypothesis, make a targeted activation edit, then freeze the comparison into an auditable study.</p>
+<p style="margin-top:20px">Glass-Box supplies the instruments. The study framework supplies protocols, sessions, execution, receipts and reports. Start with a synthetic example before connecting a model.</p>
+<nav aria-label="Guide sections">
+<a href="#workflow">From clue to study</a><a href="#anatomy">Where to edit</a><a href="#scopes">When to edit</a><a href="#calls">Five calls</a><a href="#try">Try without weights</a>
+</nav>
+</header>
+<section id="workflow">
+<h2>A clue becomes a fixed comparison</h2>
+<p>You choose the hypothesis and controls. The runner executes the declared trials; it does not choose the next question for you.</p>
+<ol class="steps" aria-label="Investigation sequence">
+<li><b>1. Inspect</b><span>Probe a prompt, read local sensitivity or measure an ablation.</span></li>
+<li><b>2. Hypothesize</b><span>Write the question and prediction. Choose the score and controls.</span></li>
+<li class="fixed"><b>3. Freeze a Study</b><span>Fix cases, edits, splits and budget before execution.</span></li>
+<li><b>4. Execute</b><span>Journal intent, raw response and completion or failure.</span></li>
+<li><b>5. Audit</b><span>Verify hashes, compare pairs and retain missing denominators.</span></li>
+</ol>
+<p class="caption">Software workflow, not a discovered model circuit. The current study runner automates fixed likelihood-scoring trials, not automatic hypothesis search.</p>
+<details><summary>How the software pieces connect</summary>
+<p><code>Study → runner → session/backend → receipts → report</code></p>
+<p>A local backend owns a lazily loaded model. A remote backend sends the same JSON operations to an existing worker. Reports read saved evidence without loading weights.</p>
+<p>Protocol fingerprints reject changed studies on resume. Source/runtime identity prevents silently mixing implementations. Budgets count starts and failures; a time limit prevents new calls but does not cancel an in-flight operation. Interrupted attempts are charged and not silently retried.</p>
+</details>
+</section>
+<section id="anatomy">
+<h2>A midpoint edit changes both the MLP input and its skip path</h2>
+<p>The initial adapter targets one pinned LFM3-1.7B instruct model. Each of its 24 blocks has an attention or convolution operator and an MLP, a feed-forward transformation.</p>
+<div class="anatomy">
+<figure>
+<svg viewBox="0 0 340 450" role="img" aria-labelledby="block-title block-description">
+<title id="block-title">One decoder block with two residual skip paths</title>
+<desc id="block-description">The input feeds a normalized operator and bypasses it into an addition. The midpoint feeds a normalized MLP and bypasses it into a second addition. A midpoint replacement affects both branches. Norms are summarized, not omitted from the computation.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10" style="fill:var(--structure);stroke:none"/></marker></defs>
+<rect x="80" y="10" width="180" height="42" rx="8"/><text x="170" y="37" text-anchor="middle">res.in</text>
+<path d="M170 52 V87" marker-end="url(#arrow)"/>
+<path d="M80 31 H30 V170 H153" marker-end="url(#arrow)"/>
+<rect x="80" y="88" width="180" height="52" rx="8"/><text x="170" y="110" text-anchor="middle">Operator + norms</text><text class="small" x="170" y="130" text-anchor="middle">Attention or convolution</text>
+<path d="M170 140 V155" marker-end="url(#arrow)"/>
+<circle cx="170" cy="170" r="14"/><text x="170" y="176" text-anchor="middle">+</text>
+<path d="M170 184 V199" marker-end="url(#arrow)"/>
+<rect class="mid" x="80" y="200" width="180" height="42" rx="8"/><text x="170" y="227" text-anchor="middle">res.mid: edit here</text>
+<path d="M170 242 V279" marker-end="url(#arrow)"/>
+<path d="M260 221 H310 V362 H187" marker-end="url(#arrow)"/>
+<rect x="80" y="280" width="180" height="52" rx="8"/><text x="170" y="311" text-anchor="middle">MLP + norms</text>
+<path d="M170 332 V347" marker-end="url(#arrow)"/>
+<circle cx="170" cy="362" r="14"/><text x="170" y="368" text-anchor="middle">+</text>
+<path d="M170 376 V391" marker-end="url(#arrow)"/>
+<rect x="80" y="392" width="180" height="42" rx="8"/><text x="170" y="419" text-anchor="middle">res.out</text>
+</svg>
+<figcaption class="caption">Implementation schematic for the pinned decoder. Operator/MLP normalization stages are grouped for readability; both skip paths remain visible. No causal circuit is claimed.</figcaption>
+</figure>
+<div>
+<h3>One address system</h3>
+<dl>
+<dt><code>L2.h0</code> · attention head</dt><dd>176 heads across 6 global- and 5 sliding-attention blocks. Gate clamping and output scaling are different operations.</dd>
+<dt><code>L0.c0</code> · convolution channel</dt><dd>26,624 channels across 13 conv blocks. Seven kernel taps describe lags 0–6, not seven editable channels.</dd>
+<dt><code>L0.n0</code> · MLP neuron</dt><dd>184,320 neurons across 24 MLPs. Mean scaling needs an explicit calibrated mean.</dd>
+<dt><code>L12.res.mid</code> · residual checkpoint</dt><dd>72 in/mid/out names describe 49 physical checkpoints. One block's output is the next block's input.</dd>
+</dl>
+</div>
+</div>
+<p class="caption">Counts: pinned adapter's layer layout and coordinate bounds. Architecture counts are not inference results from this extraction.</p>
+<p><code>Unit</code> names a site. <code>PatchSpec</code> describes an edit. <code>GlassboxHooks</code> applies it temporarily and removes hooks on exit, including exceptions. It changes activations, not trained weights.</p>
+</section>
+<section id="scopes">
+<h2>Scope selects predictor positions</h2>
+<p>The final prompt token predicts answer token zero. <code>boundary</code> selects that position; <code>prompt</code> excludes it. The timeline below is illustrative, not measured tokenization.</p>
+<div class="scroll" role="region" aria-label="Scope selection table, scroll horizontally on narrow screens" tabindex="0">
+<table class="scopes">
+<thead><tr><th scope="col">Scope</th><th scope="col">Earlier prompt</th><th scope="col">Final prompt<br>boundary</th><th scope="col">Next 3 predictors</th><th scope="col">Remaining answer predictors</th></tr></thead>
+<tbody>
+<tr><th scope="row"><code>prompt</code></th><td class="selected">Yes</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><th scope="row"><code>boundary</code></th><td>No</td><td class="selected">Yes</td><td>No</td><td>No</td></tr>
+<tr><th scope="row"><code>first4</code></th><td>No</td><td class="selected">Yes</td><td class="selected">Yes</td><td>No</td></tr>
+<tr><th scope="row"><code>answer</code></th><td>No</td><td class="selected">Yes</td><td class="selected">Yes</td><td class="selected">Yes</td></tr>
+<tr><th scope="row"><code>all</code></th><td class="selected">Yes</td><td class="selected">Yes</td><td class="selected">Yes</td><td class="selected">Yes</td></tr>
+</tbody></table>
+</div>
+<p>A clean-state donor must have the same token count as the receiver. Matching is by absolute position, not meaning. Clean-source donors work for <code>score</code> and <code>probe</code>, not <code>generate</code>.</p>
+<details><summary>Native and frozen normalization are different conditions</summary>
+<p>Native normalization is the default. Frozen mode fixes only post-operator and post-FFN RMS denominators from an unpatched pass on the same receiver input. It does not freeze final normalization or use donor denominators. Frozen mode is engineered and needs its own identity control.</p>
+</details>
+</section>
+<section id="calls">
+<h2>Five calls answer different questions</h2>
+<dl>
+<dt><code>probe</code> · what is active?</dt><dd>Internal readings, projections and optional source-token routing. A high projection is not proof that a unit is necessary.</dd>
+<dt><code>attribute</code> · what is locally sensitive?</dt><dd>Activation × gradient for a fixed target-minus-foil logit margin. Local sensitivity does not predict every consequence of a large edit.</dd>
+<dt><code>sweep</code> · what changes under ablation?</dt><dd>Finite zero edits to selected heads, operators, MLPs or blocks. Signed deltas are condition-specific intervention effects.</dd>
+<dt><code>score</code> · how does fixed likelihood change?</dt><dd>A token margin, token log probability or supplied-continuation log probability. Teacher forcing scores text you supply, not text the model chooses.</dd>
+<dt><code>generate</code> · what tokens does it choose?</dt><dd>Greedy cached continuation with telemetry replay. This alone is not a benchmark or correctness harness.</dd>
+</dl>
+<div class="note"><p><strong>A likelihood change is not an answer-quality result.</strong> It does not establish generated correctness, a native circuit or practical benefit. Those need their own fixed tests and evidence.</p></div>
+</section>
+<section id="try">
+<h2>Try the full study path without weights</h2>
+<p>After installing the local package with Python 3.12, export the two unrun protocols and their synthetic walkthrough. The same commands work outside the source checkout.</p>
+<pre><code>glass-box examples --output ./my-studies
+glass-box validate ./my-studies/code_retrieval.json
+python3.12 ./my-studies/fake_walkthrough.py</code></pre>
+<p>The walkthrough uses invented arithmetic and token IDs. It runs discovery and validation, resumes without new scores, builds reports and closes the session. It tests software plumbing, not LFM3 behavior.</p>
+<p><a href="../README.md">Installation and development commands</a> · <a href="library-guide.md">Python API and operational limits</a> · <a href="release-checklist.md">First public-release checklist</a></p>
+</section>
+<footer>
+<details><summary>Sources, verification and what changed</summary>
+<p>Initial adapter: <code>LiquidAI/LFM3-1.7B@40ebe0aa6662c9d40389c2f5d565b6a2c6aebacd</code>. Source extraction: <code>af21465</code>. See the <a href="extraction.md">extraction report</a> and <a href="provenance.md">code provenance</a>.</p>
+<p>Current checks use synthetic CPU modules and loopback transport. No real inference or paid worker was used. Historical GPU receipts identify earlier source versions, not live validation of this extracted package. Hashes check integrity relative to the recorded chain, not experiment honesty.</p>
+<p>This page retains the archive explainer's conceptual workflow, block anatomy, scopes and operation distinctions. Pilot scores, recovery plots, GPU receipts and studio links were removed. There are no model findings here.</p>
+<p>Warm Precision informs hierarchy, color roles and voice. The page is locally authored; no workspace, fonts or assets were copied. Named font stacks fall back to system fonts without network requests. <a href="how-we-investigate-lfm3.md">Editable outline and editorial scope</a>.</p>
+</details>
+</footer>
+</main>
+</body>
+</html>

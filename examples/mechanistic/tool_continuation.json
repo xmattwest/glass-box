@@ -1,0 +1,31 @@
+{
+  "id": "tool-continuation-mechanics-v1",
+  "question": "Does predefined attention-head output scaling change the likelihood of explicit tool-name-plus-arguments continuations across distinct task requests?",
+  "prediction": "Scaling the selected head by one should preserve the objective within the declared dtype tolerance. Scaling by one half or zero may alter continuation likelihood; no effect direction is assumed and a likelihood shift is not evidence of correct tool selection or argument execution.",
+  "objective": {"kind": "continuation_logprob", "reduction": "mean"},
+  "baseline_id": "clean",
+  "seed": 24,
+  "budget": {"max_trials": 24, "max_seconds": 600, "max_input_tokens": 128},
+  "cases": [
+    {"id": "d-weather", "split": "discovery", "prompt": "Tools: weather(city), convert(value, unit). Request: get the weather in Oslo. Emit one JSON tool call and nothing else:\n", "continuation": "{\"name\":\"weather\",\"arguments\":{\"city\":\"Oslo\"}}"},
+    {"id": "d-convert", "split": "discovery", "prompt": "Tools: weather(city), convert(value, unit). Request: convert 12 to meters. Emit one JSON tool call and nothing else:\n", "continuation": "{\"name\":\"convert\",\"arguments\":{\"value\":12,\"unit\":\"meters\"}}"},
+    {"id": "v-add", "split": "validation", "prompt": "Available calls: add(a, b), lookup(key). User needs the sum of 3 and 8. Reply with exactly one JSON tool call:\n", "continuation": "{\"name\":\"add\",\"arguments\":{\"a\":3,\"b\":8}}"},
+    {"id": "v-lookup", "split": "validation", "prompt": "Available calls: add(a, b), lookup(key). User needs the stored value for key violet. Reply with exactly one JSON tool call:\n", "continuation": "{\"name\":\"lookup\",\"arguments\":{\"key\":\"violet\"}}"},
+    {"id": "h-catalog", "split": "holdout", "prompt": "API catalog(item) returns an item's record; search(query) finds matching documents. Fetch the record for item compass. Output only a JSON tool call:\n", "continuation": "{\"name\":\"catalog\",\"arguments\":{\"item\":\"compass\"}}"},
+    {"id": "h-search", "split": "holdout", "prompt": "API catalog(item) returns an item's record; search(query) finds matching documents. Find documents matching lunar geology. Output only a JSON tool call:\n", "continuation": "{\"name\":\"search\",\"arguments\":{\"query\":\"lunar geology\"}}"}
+  ],
+  "conditions": [
+    {"id": "clean", "patch": {}, "description": "Unpatched likelihood of the exact teacher-forced continuation."},
+    {"id": "identity", "patch": {"rules": [{"unit": "L2.h0", "op": "scale", "value": 1, "scope": "answer"}]}, "description": "Identity head scaling at all continuation predictor positions."},
+    {"id": "half_head", "patch": {"rules": [{"unit": "L2.h0", "op": "scale", "value": 0.5, "scope": "answer"}]}, "description": "Predefined head-output scaling, not an inferred tool-selection circuit."},
+    {"id": "zero_head", "patch": {"rules": [{"unit": "L2.h0", "op": "zero", "scope": "answer"}]}, "description": "Exact head-output ablation under the same fixed objective."}
+  ],
+  "metadata": {
+    "status": "unrun mechanics demo; no model findings",
+    "initial_adapter": "LiquidAI/LFM3-1.7B@40ebe0aa6662c9d40389c2f5d565b6a2c6aebacd",
+    "protocol": "Task requests and complete continuations, mean reduction, selected head, scopes and conditions are fixed in advance. Different tool vocabularies and prompts occupy validation and holdout. No candidate ranking or threshold is chosen from those outcomes; an amended protocol gets a new study ID/output.",
+    "controls": {"no_op": ["identity"], "correctness": [], "identity_pairs": [["identity", "clean"]]},
+    "numerical_policy": "Identity absolute score tolerance is 0.000001 for synthetic CPU fixtures and 0.125 mean logprob units for real BF16 runs, fixed before running. Preserve raw errors and dtype receipts.",
+    "limits": ["Teacher forcing scores the supplied string; it does not demonstrate generated tool choice, argument correctness, JSON validity of free generation or successful execution.", "Mean token logprob includes syntax and argument tokens, and is not a normalized probability over alternative tool calls.", "The predefined L2.h0 is only a mechanics coordinate, not a discovered specialized head.", "Two cases per split cannot establish generalization or practical benefit.", "Visible holdout data is a procedural boundary, not an inaccessible test set."]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "code-retrieval-mechanics-v1",
+  "question": "Does replacing a predefined mid-layer residual state from a clean donor change the fixed next-token margin for retrieving a supplied arbitrary one-character code from a corrupted prompt?",
+  "prediction": "Identity scaling should preserve the margin within a declared dtype tolerance. Corrupting the supplied code is predicted to reduce the original target-minus-foil margin, and clean mid-state replacement may restore part of it. Null or opposite effects remain valid outcomes; no unit was discovered from data.",
+  "objective": {"kind": "token_margin", "reduction": "sum"},
+  "baseline_id": "clean",
+  "seed": 24,
+  "budget": {"max_trials": 36, "max_seconds": 600, "max_input_tokens": 128},
+  "cases": [
+    {"id": "d-amber", "split": "discovery", "prompt": "Record: amber code = 7. Return only amber's code:\n", "corrupt_prompt": "Record: amber code = 2. Return only amber's code:\n", "target": "7", "foil": "2"},
+    {"id": "d-birch", "split": "discovery", "prompt": "Record: birch code = 4. Return only birch's code:\n", "corrupt_prompt": "Record: birch code = 9. Return only birch's code:\n", "target": "4", "foil": "9"},
+    {"id": "v-cobalt", "split": "validation", "prompt": "Lookup table: cobalt maps to 6; quartz maps to 1. The code for cobalt is:\n", "corrupt_prompt": "Lookup table: cobalt maps to 3; quartz maps to 1. The code for cobalt is:\n", "target": "6", "foil": "3"},
+    {"id": "v-delta", "split": "validation", "prompt": "Lookup table: delta maps to 8; fern maps to 0. The code for delta is:\n", "corrupt_prompt": "Lookup table: delta maps to 5; fern maps to 0. The code for delta is:\n", "target": "8", "foil": "5"},
+    {"id": "h-elm", "split": "holdout", "prompt": "In this invented registry, elm has code 9 and iris has code 4. Copy elm's code, with no explanation:\n", "corrupt_prompt": "In this invented registry, elm has code 1 and iris has code 4. Copy elm's code, with no explanation:\n", "target": "9", "foil": "1"},
+    {"id": "h-flint", "split": "holdout", "prompt": "In this invented registry, flint has code 3 and moss has code 8. Copy flint's code, with no explanation:\n", "corrupt_prompt": "In this invented registry, flint has code 0 and moss has code 8. Copy flint's code, with no explanation:\n", "target": "3", "foil": "0"}
+  ],
+  "conditions": [
+    {"id": "clean", "patch": {}, "description": "Unpatched original prompt; explicit primary baseline."},
+    {"id": "identity", "patch": {"rules": [{"unit": "L0.res.mid", "op": "scale", "value": 1, "scope": "all"}]}, "description": "Clean-path identity through the same mid hook."},
+    {"id": "corrupt", "input_variant": "corrupt", "patch": {}, "description": "Only the supplied code changes; target and foil stay fixed."},
+    {"id": "corrupt_identity", "input_variant": "corrupt", "patch": {"rules": [{"unit": "L0.res.mid", "op": "scale", "value": 1, "scope": "all"}]}, "description": "Corrupt-path no-op; compare with corrupt, not just clean."},
+    {"id": "clean_mid_donor", "input_variant": "corrupt", "patch": {"rules": [{"unit": "L0.res.mid", "op": "replace", "source": "clean", "scope": "all"}]}, "description": "Runner supplies the original prompt as donor. Predefined checkpoint, not a discovered retrieval circuit."},
+    {"id": "mid_zero", "patch": {"rules": [{"unit": "L0.res.mid", "op": "zero", "scope": "boundary"}]}, "description": "Broad disruption control on clean input; not a selective retrieval mechanism."}
+  ],
+  "metadata": {
+    "status": "unrun mechanics demo; no model findings",
+    "initial_adapter": "LiquidAI/LFM3-1.7B@40ebe0aa6662c9d40389c2f5d565b6a2c6aebacd",
+    "protocol": "All targets, foils, conditions, scopes, budgets and splits are fixed before execution. Run discovery first, validation separately, and holdout only by explicit request. Amendments require a new study ID/output; no retrospective candidate selection.",
+    "controls": {"no_op": ["identity", "corrupt_identity"], "correctness": [], "identity_pairs": [["identity", "clean"], ["corrupt_identity", "corrupt"]], "secondary_comparisons": [["clean_mid_donor", "corrupt"], ["clean_mid_donor", "clean"]]},
+    "numerical_policy": "Identity absolute score tolerance is 0.000001 for synthetic CPU fixtures and 0.125 logit units for real BF16 runs, fixed before running. Record raw error even when within tolerance; do not infer absence of smaller effects.",
+    "tokenization": "Digit strings are intended as exact single-token texts; the adapter must verify that, and equal clean/donor token counts, without truncation or silent alignment.",
+    "limits": ["Two cases per split are illustrative, not a population estimate.", "A transplant or zero edit is engineered control, not discovery of a native circuit.", "A next-token logit margin does not demonstrate full code generation, reasoning or practical benefit.", "Holdout prompts are visible here; the boundary is procedural, not access control."]
+  }
+}

@@ -1,0 +1,40 @@
+[project]
+name = "glass-box"
+version = "0.1.0"
+description = "Language-model instruments and fixed, auditable mechanistic studies"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+dependencies = []
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: POSIX",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.optional-dependencies]
+instruments = ["torch>=2.9,<3"]
+local = ["torch>=2.9,<3", "transformers>=5.21,<6", "huggingface-hub>=1,<3"]
+
+[project.scripts]
+glass-box = "lfm3lab.research.cli:main"
+# Compatibility with scripts using the extracted library's original CLI.
+lfm3-research = "lfm3lab.research.cli:main"
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/lfm3lab"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"examples/mechanistic/code_retrieval.json" = "lfm3lab/research/examples/code_retrieval.json"
+"examples/mechanistic/tool_continuation.json" = "lfm3lab/research/examples/tool_continuation.json"
+"examples/mechanistic/fake_walkthrough.py" = "lfm3lab/research/examples/fake_walkthrough.py"
+
+[tool.hatch.build.targets.sdist]
+only-include = ["pyproject.toml", "README.md", "LICENSE", "NOTICE", "AGENTS.md", "src/lfm3lab", "examples/mechanistic", "docs", "tests", "scripts"]
+exclude = ["**/__pycache__", "**/*.pyc", "docs/verification-local.json"]

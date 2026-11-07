@@ -1,0 +1,258 @@
+{
+  "reference_commit": "af21465351079e72f5c1dc4ba7bd154f9d8b66df",
+  "files": [
+    {
+      "source": "src/lfm3lab/glassbox.py",
+      "destination": "src/lfm3lab/glassbox.py",
+      "source_sha256": "3bee551d32efe32732f961693d3cb74d7bd82da3cabac4bcc8adcb7a5a782a6f",
+      "selection": "full module",
+      "unchanged_symbol_ast_sha256": {
+        "inference_lock": "22d6d9c5f64095ea0f43261b468c99e8e651735fecee1b5354ce5f5d40027313",
+        "release_memory": "4f6202983da786ad0b805d847fcf8b123010b7f5792acdb81ff75ae3566e97bd",
+        "Unit": "117dd0cb91d36cb75b5642a577f178e53e6b149dbc9e663a0659fd80111ea34d",
+        "PatchSpec": "a6e27bf4df2d3268edb52c73d3e2014f5e180bd51278262c818adbbb98f9d365",
+        "position_mask": "98b56cb91993ff6bbeee8aec6b17af94a85ddfb80446a401a8acefdff36c8fc4",
+        "edit_values": "350a64cf53b97d9d292eb81db9374d2239f1b9b5d8f226fb906d081c3f37a369",
+        "GlassboxHooks": "855cd1551eb0cb2343dece53bea21986ae707166046fb77779622b77521be251",
+        "architecture": "edb727d9c42f383e8898899050baf27fee461ef359d8e51005ab56580ea0bd0f",
+        "prepare_ids": "79ebaac92e3e4875076c85813bcb656183490d5b21902d8bcaf53dc9ef4bbd15",
+        "explicit_ids": "d5d9433919b00038a8c6ceff8081b5a7d0816648b744b305fafaf2e9fa666b58",
+        "resolve_pair": "fcbefebff08082b598b7e4401c917a76695b64761d5825295bb88ad178340581",
+        "token_summary": "15c7590dd46c10eb58869aa6cb40feef322f1fa472475be94374f678d19c3567",
+        "_reference": "fbdcd775d318a4525e89fb5daaadcf9bb944325f0fba15afb2155c7b3b1472f9",
+        "_at_position": "e7552a2e582e3e239d48be0095afc287f6ed94d7844f9f439a2b9fed679694bc",
+        "_lag_terms": "210ba7a1e1a9e7ffb91d0b1b058e86347eadeecfb303a31c35ca0baddea9e122",
+        "attention_mode": "a9f2f8fbfb51339e377771d6725402b6244c156848a50948b45291d41f748f13",
+        "run_glassbox_probe": "b019f5f264de8a21d5b13b7a9ff7fef0ecac665c83a2f9a9e880fb63cb9f80aa",
+        "run_gradient_attribution": "88ad0bbc17bd436e59e7518be910a999d9fa2de203dbef355f6d802f172bb147",
+        "run_head_ablation_sweep": "b08f7fbcbed8f5ae548ff049d63aec6006b16ec88fe5508fea2e3a647157be11",
+        "run_glassbox_generate": "30db0455e64a6750af8f3b958138a7e82eb0d6810a746af90392d3e99f325aff",
+        "synthetic_glassbox_checks": "c4a6fe5ad76a7ffe993ae3bf6b849a844588d61291b3fefb8c61167a66f1a4e6"
+      }
+    },
+    {
+      "source": "src/lfm3lab/research/__init__.py",
+      "destination": "src/lfm3lab/research/__init__.py",
+      "source_sha256": "6f3485fe3e6dacfbb76c4df0d7d33e58df03e06468f4a9766bd237882cb274ff",
+      "selection": "full module",
+      "unchanged_symbol_ast_sha256": {
+        "__getattr__": "c239b097bd30c2efe28b5b98bfccf733f902da6f9af2cb4a02f5fa91f9c4e55b"
+      }
+    },
+    {
+      "source": "src/lfm3lab/research/backends.py",
+      "destination": "src/lfm3lab/research/backends.py",
+      "source_sha256": "ecabe1f47d420cc782c4c5545176d40aef0c0b1b2771b95ba228fb47b64bdc8e",
+      "selection": "full module",
+      "unchanged_symbol_ast_sha256": {
+        "_implementation_identity": "f37dea0ea08cf8bf63cdb432b497663dd3cac5493db1eb92e05c56e90a8ce6a0",
+        "_device": "475aa9945c3bb4954b4ec0379e816ec2293bd8564039783ad58e26797fc45e34",
+        "_dtype": "0b8ce588390cf32707f6b600bbd1b9b2e7e0d394b33305b7194251e4b64d2cff",
+        "_clear_exception_frames": "ec28046b465d2f90f9737731ebe33ce25e21d96a810de0023b7d0724718f6ca3",
+        "LFM3Backend": "7edc25ff9f8d6f23ea6b79455bcaa68d4957707c96e39ed0fcb8529db4af0c61"
+      }
+    },
+    {
+      "source": "src/lfm3lab/research/checks_backend.py",
+      "destination": "src/lfm3lab/research/checks_backend.py",
+      "source_sha256": "dadea6723f10e73982e5ad117dc75d3e0455b57837f5b63535523328017f7a65",
+      "selection": "full module",
+      "unchanged_symbol_ast_sha256": {
+        "_tiny": "dd9dc8d0f70ca075f81b2f148ba3be45299424a02cfadc9d445c485e3c23c072",
+        "_FixtureBackend": "82ea84ac12b74526c2ffdb9b2eb730e008171db342526f623832d408235fcc03",
+        "_raises": "a561c8a5adf0d20ecb8ddd3f1ead46da3667a4301d9c0481ccb917fcdbedbd6b",
+        "run_identity_checks": "8537be054d2cdfee328d896b856a4efb953a056ea4d0a07edb7c5708d76618b0"
+      }
+    },
+    {
+      "source": "src/lfm3lab/research/checks_examples.py",
+      "destination": "src/lfm3lab/research/checks_examples.py",
+      "source_sha256": "4853be679ada5f7d41d540081bc0a61e2da8c9f64c7856d00c9765d470caa28b",
+      "selection": "full module",
+      "unchanged_symbol_ast_sha256": {
+        "_reject": "c4f28c6d25134f00bf44bbec9f765d2ac09a0911e776e997cbe4f38acbaacaa3",
+        "_patch_bounds": "c0bccb2c9fab4aa09a9c72d0937ff0ff6cbc3381e9173d0ba4fe74735cf66991"
+      }
+    },
+    {
+      "source": "src/lfm3lab/research/checks_runner.py",
+      "destination": "src/lfm3lab/research/checks_runner.py",
+      "source_sha256": "278724a10b0f61aa443e11a5fb9e430c098deb8ad3e4c3575dfaeef778a5ac49",
+      "selection": "full module",
+      "unchanged_symbol_ast_sha256": {
+        "FakeSession": "989674d6245e01102f63c0c1c60cb1cf03e2cf9227db4087b7821d9ed061f521",
+        "fixture": "63597d55e5a12f3443562fce09b2e34ac2dceb005e3d46d061d78cea6a0dd689",
+        "_lock_child": "6f4d86894b57cb7e106beec2a658e5bf52d71ac3e452d521b34c6f78d76962d6",
+        "RunnerChecks": "4225c5d5aaba9ba4370d66110eb658d645fc7c11d176c56fcd2ec66a70015838",
+        "run_checks": "057796ee4cb7130d731e312166648799cef376a529211cefb6c5557ca7517680"
+      }
+    },
+    {
+      "source": "src/lfm3lab/research/checks_worker.py",
+      "destination": "src/lfm3lab/research/checks_worker.py",
+      "source_sha256": "122a934aaefe829b71c577e215bee312edc8f353e022e1e4f3b96b3cfdab1b7a",
+      "selection": "full module",
+      "unchanged_symbol_ast_sha256": {
+        "FakeBackend": "a063303c64d167882b18765708b5c0937b8b7774a380e5034f0cbd105dc5eed5",
+        "ScoreFixture": "f59e6decf66d9617518bc0a3411ae86d77afae26c53042db6e6786c40919d8d5",
+        "serving": "b6689e90235e351945f614af3e83bcd7871746f268c8bccc9365f0d4e1cbcd52",
+        "http": "2aded52732b48fdcbad7ed7aeebfc80dc48fe9ae019328ea6baadae8438aa97e",
+        "WorkerChecks": "dddcabb7a34c192830078ebd1daa326142244df6b553882caf047a589b5a4a92",
+        "run_checks": "e17126efb1021cf41a12429adc71595636acd8408f0a32dbc2159009d6662419"
+      }
+    },
+    {
+      "source": "src/lfm3lab/research/checks.py",
+      "destination": "src/lfm3lab/research/checks.py",
+      "source_sha256": "8aa69fcc3c0a700b7d85c5f3d3de9020d9149bb3a0767ad1112408913a7a3324",
+      "selection": "full module",
+      "unchanged_symbol_ast_sha256": {
+        "schema_checks": "f1f4ed4d6ac5d0c712ba7b927126efa0a800e3ea49bf7a35cdd20ce73a9083f1"
+      }
+    },
+    {
+      "source": "src/lfm3lab/research/cli.py",
+      "destination": "src/lfm3lab/research/cli.py",
+      "source_sha256": "458233e4cad0de2e11410891604eaf206719362ef78e6eacba4c0c8b600bdf34",
+      "selection": "full module",
+      "unchanged_symbol_ast_sha256": {
+        "_emit": "36218ce2d870129cedddf5485bdbb9c88e802a7deb2da5dbe87fd77b78388542",
+        "_study": "d5bbc62c80d6c7133ccca91a0f9c317cb975e641424617bf515bdb9ed0a3bb28",
+        "_local": "c1554a5e523ab2a240b415498d7d5ea69e5c07cb573456249bedf14586296e54",
+        "_model_options": "1c7740ec53d2d8073e3b3ad326466ded77b40435911e2ceb8a8fbee79bdac11b",
+        "_Parser": "018d8202255d65dca1e5b3735f066524e2aa53b8e56f0690526d419fc701c348",
+        "parser": "08bd298dd73726dca171d684637181b375444ce471cc7be34eff79d0f13fc11e"
+      }
+    },
+    {
+      "source": "src/lfm3lab/research/report.py",
+      "destination": "src/lfm3lab/research/report.py",
+      "source_sha256": "90dbd1da976047ec65c1e048f7faa035a31aac0c09e26645cdc45548cb02ff46",
+      "selection": "full module",
+      "unchanged_symbol_ast_sha256": {
+        "_statistics": "bfec6d5a0348ae44f9c7ab87b176c17e9b74f092136683145caaba62a52b610f",
+        "_status": "4291bb89f51722abbe97c334b40a8d04a52883dbd23b6e5c73fdc04ad47de55b",
+        "_build_report_locked": "eb2847a95fc598a9189217af97ac9cae78939aab4dfb2e70182e41e43617cf6b",
+        "build_report": "e24bd38bdd78105795be5b05a362fd709acee426c78af79ddc974020eb28cbc0"
+      }
+    },
+    {
+      "source": "src/lfm3lab/research/runner.py",
+      "destination": "src/lfm3lab/research/runner.py",
+      "source_sha256": "a2b1850d14a35ccbe86ed5821fa90b77a9537eab733c04eb804c8a259997207f",
+      "selection": "full module",
+      "unchanged_symbol_ast_sha256": {
+        "score_payload": "455dd0570fbaea4ac56a815a596a1f12fb6ebc89b30468706d246b9061c81a9a",
+        "_validate_response": "62f3e2943ca9cf05557ab0cf493ef7627c2914bb97a505fd446a86518f51912d",
+        "run_study": "6ca86e8e9028b3dcf0457de8a0acdbaed5cf3a762cf4c583e4e56d9b072a96ad"
+      }
+    },
+    {
+      "source": "src/lfm3lab/research/schema.py",
+      "destination": "src/lfm3lab/research/schema.py",
+      "source_sha256": "aae1aec3b98817544ef1649bd899071479b2147a172ed3d4b073b19149f4ad19",
+      "selection": "full module",
+      "unchanged_symbol_ast_sha256": {
+        "canonical_json": "4908d899a5b9c0d08f58b1de08801b651d5f2bd886ba46309ad42745da3e1c07",
+        "fingerprint": "cef0888ff5de8e8f65fee587a840a0a9db8e8b69389269efefdc4bc2471e48ea",
+        "identifier": "b5285cf4f2fa8260e90e38581cd79579abd25ae25f2fe1518176d6eab699a70b",
+        "JsonSpec": "57105102262e5b68730b92f57519482408c672dd509db78caac030b6b335d1d1",
+        "Case": "ba0e165bc6bd195199309bc4fcadcfe624f1217fb5bbe97903f5eae900709b3a",
+        "Condition": "056c9d6b3063b6691be43e668d99b1ca47e737b9148c0df0015eca8f1709c7c2",
+        "Objective": "c09ef14e9e88637243e85e48c6c2b2b3eca63a9093e5c8d74ae9903bd81b6d1f",
+        "Budget": "1f6c79c6388e6a9b6468bf3c4fc3a89a898e565f27a019c01526c099020c2629",
+        "Study": "fc274437a31bbfbab58c17610873d1d1878a8e05ebc1a17f549304e884cb81f6"
+      }
+    },
+    {
+      "source": "src/lfm3lab/research/session.py",
+      "destination": "src/lfm3lab/research/session.py",
+      "source_sha256": "4896e1cbf242c39fcfd071c1f6e0514f1ff32e7069a6bc1b356a252fa38e6238",
+      "selection": "full module",
+      "unchanged_symbol_ast_sha256": {
+        "ResearchSession": "71be08241bf606ed89f20cf86436c4b4800ed3e49bb7d338b8a237b4b612012b"
+      }
+    },
+    {
+      "source": "src/lfm3lab/research/store.py",
+      "destination": "src/lfm3lab/research/store.py",
+      "source_sha256": "e3af110430c419f00c1eb79a7087f64dbe700c8c723f3881c6f5e58d27bdcb0e",
+      "selection": "full module",
+      "unchanged_symbol_ast_sha256": {
+        "EvidenceError": "c22cd20f49f5fd56d86d982fc880cce3ba267f4588abd02933c85330e235bb28",
+        "OutputLocked": "68e400378289dbde7f6fd9ff884b4923199917e0bf09c3a43da473a068b3fd0e",
+        "backend_identity": "43312d119b7425296cee5dad7477f8c837ca068d58645883828431000a5a6d23",
+        "output_lock": "24ca64f85485171b659b3d8e447e62a4f8224a37a46a63e20c5aa37a430b8acc",
+        "_sync_dir": "5d961784c93ae22d688d79684ac1e5af6e98eac5fc976bf0ff3b0d22db8f1d30",
+        "write_new_json": "e9536824c71511ff6cff6b9a685665b9eb3caae19ac999c5ff118e77310a3041",
+        "write_report_json": "558efba74b7636116e0e2cfc0f69bfef585070474ab8bb33706e51745066f9ff",
+        "trial_key": "0dfab2e4fe8e9ef13eea55048c754ac6f585a29e7a907a32f2bde78af7d93a20",
+        "EvidenceStore": "ee9be2f1bedccec9f610cdc042adfc47aaca077a7149094f06a22d07e4ce8604"
+      }
+    },
+    {
+      "source": "src/lfm3lab/research/worker.py",
+      "destination": "src/lfm3lab/research/worker.py",
+      "source_sha256": "f552037566853f87560bbacfd42bff6869b90f49dccc491c493226d356b7f603",
+      "selection": "full module",
+      "unchanged_symbol_ast_sha256": {
+        "_json": "ec27fa9b4f7b7fbde94425f2b1eac53726c8eeabb7e66462b6b94b540da5b324",
+        "_decode": "953523ae2ca62c0e83e055421264ad7f4dc5bcb434a12d38be26772321c11f1c",
+        "_request": "5a3532421c8009e39830818c5427697fcdd23cc52e9490cf3f04250e28076808",
+        "RemoteError": "1c61939e82261d39509b1d8d3cb8e271d09c2062afd383e7c5ad99a35de9ba00",
+        "_NoRedirect": "d00506dfe64dfaa04d20fe5434da61c187ace3bba3c845b30d4a75ba170ae31f",
+        "RemoteBackend": "bcfa4d5228ab7cbc10cbcd1490bb5d1657c34155186650fd237750e46272ee7b",
+        "_validate_token": "8edbbd784a2138a50dcccb5e4b7306ea61cde3da188191b42ebe1c9d45689cec",
+        "_loopback": "83510d09270fe0d93862b1ee6e6ed904451390ab10166a49bf9e7491265dc78d",
+        "ResearchHTTPServer": "2ed6a390abd1b9e43c0af74907df5c6a3b039e8233601e1582be13e51359f57c",
+        "_Handler": "8768ce31ccd350ec8499159ce4fcffecd7a568484d080f46a9a68b32259d96f7",
+        "create_server": "61aab9edf50a0f3a2320349d224209a57b7fa73c41b2b30dc035161b35610e9e"
+      }
+    },
+    {
+      "source": "examples/mechanistic/code_retrieval.json",
+      "destination": "examples/mechanistic/code_retrieval.json",
+      "source_sha256": "591acbb9f11d6b517afb23d4b0774647fbb78058a8a73f1b73e6b8057be8f846",
+      "selection": "full module"
+    },
+    {
+      "source": "examples/mechanistic/tool_continuation.json",
+      "destination": "examples/mechanistic/tool_continuation.json",
+      "source_sha256": "a317cc5e24008005d515d6a77adbc01cda48430b9becbb0f3a1448c1ae60a77e",
+      "selection": "full module"
+    },
+    {
+      "source": "examples/mechanistic/fake_walkthrough.py",
+      "destination": "examples/mechanistic/fake_walkthrough.py",
+      "source_sha256": "23f8a0f1538f286430b929a963ffa308547c90e1a163b267a0b87b8c50d30527",
+      "selection": "full module",
+      "unchanged_symbol_ast_sha256": {
+        "FakeBackend": "d1561ac2efcc36f199f24c5ed2e9a5c6815750fc7d145b6f4e7c41d5ef3f06c9",
+        "run_demo": "939264a0e7eab0ab3b5b09a0a7c1f5253db583c3270ea387b477caa3087d35d5",
+        "main": "13ec19c3b632264c3b82a63cb2d1e7d6808fa9d76cb13b3ec1ac780ceb30f3ea"
+      }
+    },
+    {
+      "source": "src/lfm3lab/model.py",
+      "destination": "src/lfm3lab/model.py",
+      "source_sha256": "eb1536b33dff3aca471d7f7d076b8c04f0f117dd6705bf51dda99fb1f4d4c147",
+      "selection": "MODELS, Loaded, pick_device, load; model dependencies deferred into load",
+      "unchanged_symbol_ast_sha256": {
+        "pick_device": "69d4e523bf57b3ffdad2e747549f1a1041e528965fe885021fcb91a4b8533cc4",
+        "Loaded": "02b7228ed8e37a6f1c14eea173444d5b7184ed15ac384229246dbc422cdbbd2a"
+      }
+    },
+    {
+      "source": "src/lfm3lab/jacobian_lens.py",
+      "destination": "src/lfm3lab/jacobian_lens.py",
+      "source_sha256": "de8cc0012c4d77507341629ce63ee9b3a159c66b5462aa8f02e6bce024c098fe",
+      "selection": "sync, unembed only; original import path retained",
+      "unchanged_symbol_ast_sha256": {
+        "sync": "d88e935ceb3e1e2cc85f92d83490c64e8cd083bc7fd8e0b3fc4600aea2c70ed9",
+        "unembed": "d37c83aca10fec01e847a2ec05b0f7be308b7a1b2fcd6d5769c3d192018340d3"
+      }
+    }
+  ],
+  "ast_hash_method": "SHA-256 of Python ast.dump(node, include_attributes=False); excludes module docstrings, comments and line numbers",
+  "ast_python_version": "3.12"
+}
