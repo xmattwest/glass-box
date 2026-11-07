@@ -72,7 +72,10 @@ ignored evidence or machine-local receipts.
 - [x] Created the authorized public remote and pushed the reviewed source.
 - [x] Deployed and browser-verified the public Pages site, including mobile layout,
   walkthrough, API navigation and rendered guides.
-- [ ] Record tagging/release upload only if separately included in owner approval.
+- [x] Published [v0.1.0](https://github.com/xmattwest/glass-box/releases/tag/v0.1.0)
+  from `09704181d123cb3262bf7489b3882790cda3a019`, with the wheel, source
+  distribution and `SHA256SUMS`. Downloaded files matched the independently retained
+  prepublication checksums. Do not replace published assets or move the release tag.
 - [ ] Package-index publication requires a separate destination and approval.
 
 Do not stage or publish private research, evidence, model assets, secrets, local
