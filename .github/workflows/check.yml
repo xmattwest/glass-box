@@ -34,6 +34,8 @@ jobs:
       - name: Build distributions
         run: uv build
       - name: Verify installed wheels outside the checkout
+        env:
+          UV_TORCH_BACKEND: cpu
         run: uv run python scripts/wheel_smoke.py dist/glass_box-0.1.0-py3-none-any.whl
       - name: Audit complete source index and distribution contents
         run: >-

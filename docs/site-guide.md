@@ -54,8 +54,11 @@ to GitHub. No model operations execute in a Pages build.
 
 `.github/workflows/check.yml` runs Python 3.12 CPU instruments, regression tests,
 static documentation, installed-wheel verification and the complete-index/package
-publication audit. Its PyTorch index supplies CPU wheels. No checkpoint, GPU
-worker, research credentials or study evidence is needed.
+publication audit. The Linux instruments extra routes only PyTorch through an
+explicit CPU index; build dependencies stay on PyPI. The offline installed-wheel
+smoke uses `UV_TORCH_BACKEND=cpu` to match that cached dependency source. No
+checkpoint, GPU worker, research credentials or study evidence is needed. Workflow
+actions are pinned to reviewed release commits.
 
 Repository publication and Pages enablement require explicit owner approval.
 Library publication does not authorize private research publication or model

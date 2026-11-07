@@ -1,11 +1,11 @@
 # First public release
 
-The selected first-publication destination is **`xmattwest/glass-box`** on GitHub.
+The public repository is [xmattwest/glass-box](https://github.com/xmattwest/glass-box).
 The owner confirmed original-code redistribution rights and retained Apache-2.0
-decoder attribution and the separate model-license notice. Publication preparation
-does not establish that a remote, pushed repository, release or public site exists.
-Record successful publication actions below only after they occur. Package-index
-upload, model execution and private evidence publication are separate decisions.
+decoder attribution and the separate model-license notice. The documentation site
+is [GitHub Pages](https://xmattwest.github.io/glass-box/).
+Package-index upload, model execution and private evidence publication remain
+separate decisions.
 
 ## Historical local readiness
 
@@ -62,14 +62,16 @@ ignored evidence or machine-local receipts.
   Retain decoder attribution and the separate model notice; see provenance.md.
 - [x] Owner selected `xmattwest/glass-box` for first public GitHub publication.
   `glass-box` is the distribution name, not a package-index availability claim.
-- [ ] Review the exact staged diff, final notices, generated docs and distribution
-  contents after preparation changes. Sanitize personal content/machine paths, not
-  Git author/committer metadata, history or required public attribution.
-- [ ] Run model-free checks, build, installed-wheel smoke and final audit for the
-  exact publication build; record the source commit and wheel SHA-256.
-- [ ] Record remote creation and successful push to the selected GitHub destination.
-- [ ] Record a public site URL only after deployment succeeds; no live site is
-  claimed by this checklist.
+- [x] Reviewed the exact indexed source, final notices, generated docs and
+  distribution contents. Personal content/machine paths are sanitized; Git
+  author/committer metadata, history and required attribution are retained.
+- [x] Model-free CPU contracts, 53 regression tests, installed-wheel smoke and the
+  full-index/distribution audit passed locally for the initial public snapshot
+  `be2145cca284469575f8eb195fe516bd156da90f`. Wheel SHA-256:
+  `e721bba8c408854747df2c5e1afd4dca8d93361e8d138d6148e24466382c2735`.
+- [x] Created the authorized public remote and pushed the reviewed source.
+- [x] Deployed and browser-verified the public Pages site, including mobile layout,
+  walkthrough, API navigation and rendered guides.
 - [ ] Record tagging/release upload only if separately included in owner approval.
 - [ ] Package-index publication requires a separate destination and approval.
 

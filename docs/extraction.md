@@ -117,9 +117,10 @@ the source distribution also contains portable docs, tests and audit scripts.
 The root library was relicensed only after the owner explicitly chose Apache-2.0.
 During first-publication preparation, the owner confirmed original-code
 redistribution rights and retained the Apache-2.0 decoder attribution and separate
-model-license notice. The selected GitHub destination is `xmattwest/glass-box`;
-preparation alone does not establish that a remote, push, release or site is live.
-Publication status must be recorded only after the corresponding action succeeds.
+model-license notice. The public repository is
+[xmattwest/glass-box](https://github.com/xmattwest/glass-box); its
+[documentation site](https://xmattwest.github.io/glass-box/) is deployed through
+GitHub Pages. Package-index and research-evidence publication are not included.
 No model downloads, live inference, archive access, holdout access, paid worker or
 evidence publication is authorized by this preparation. See
 [research-workflow.md](research-workflow.md) for the private studies boundary and
