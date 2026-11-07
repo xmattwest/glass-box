@@ -53,3 +53,13 @@ packages = ["src/lfm3lab"]
 [tool.hatch.build.targets.sdist]
 only-include = ["pyproject.toml", "README.md", "LICENSE", "NOTICE", "AGENTS.md", "llms.txt", "llms-full.txt", "src/lfm3lab", "examples/mechanistic", "docs", "tests", "scripts"]
 exclude = ["**/__pycache__", "**/*.pyc", "docs/verification-local.json"]
+
+# CPU fixtures use the CPU wheel on Linux; authorized local-model installs keep
+# their independently chosen runtime. Other packages always resolve from PyPI.
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu", extra = "instruments", marker = "sys_platform == 'linux'" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
