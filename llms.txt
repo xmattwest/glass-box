@@ -1,0 +1,31 @@
+# Glass-Box
+
+> Python instruments for model activations and fixed, auditable studies. Agents
+> are primary library users; the same interfaces have human-readable docs.
+
+Distribution: glass-box 0.1.0. Import namespace: lfm3lab. Initial adapter:
+LiquidAI/LFM3-1.7B at revision 40ebe0aa6662c9d40389c2f5d565b6a2c6aebacd.
+Do not infer compute/publication permission from examples or capabilities.
+
+## Read first
+
+- [Agent guide](docs/agents.md): library workflow, entry points, operation payloads, examples, safety and failures.
+- [Complete agent documentation](llms-full.txt): agent guide plus the generated full API in one text file.
+
+## API lookup
+
+- [API reference](docs/api/reference.md): source-derived signatures, fields, constants, methods and documented return contracts.
+- [Structured API inventory](docs/api/reference.json): machine-readable interface records and source hashes.
+- [Browsable API](docs/api/index.html): human module pages with local symbol search.
+
+## Human explanation and provenance
+
+- [Documentation index](docs/index.html): choose a guide for your task.
+- [Library guide](docs/library-guide.md): usage, sessions, intervention semantics and evidence.
+- [Visual walkthrough](docs/how-we-investigate-lfm3.html): inspect to fixed study, architecture and scopes.
+- [README](README.md): installation and model-free quick start.
+- [Provenance](docs/provenance.md): library license, decoder attribution and separate model terms.
+
+After wheel installation, use importlib.resources.files("lfm3lab").joinpath("docs")
+to read agents.md, library-guide.md, api/reference.md, api/reference.json and
+llms-full.txt. The library performs no model import or inference to read docs.

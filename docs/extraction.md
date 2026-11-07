@@ -90,7 +90,7 @@ when `--output` is used. Study evidence remains temporary or explicitly syntheti
 never part of the wheel. Public documentation summarizes software verification;
 the detailed local receipt is not a research finding.
 
-The final staged audit covers **38 files**, a **27-file wheel** and the portable
+The initial extraction's staged audit covered **38 files**, a **27-file wheel** and the portable
 source distribution. No hard-coded machine paths or recognizable credential
 formats were found. Wheel modules/resources, license notices and source
 distribution contents are checked byte-for-byte against the local sources.
@@ -105,7 +105,8 @@ intentional, so no Warm Precision font assets enter the package.
 
 Local artifacts are `dist/glass_box-0.1.0-py3-none-any.whl` and
 `dist/glass_box-0.1.0.tar.gz`. LICENSE and NOTICE travel with both. The wheel
-contains library modules, model-free checks and only the three example resources;
+contains library modules, model-free checks, three example resources and portable
+agent/API documentation;
 the source distribution also contains portable docs, tests and audit scripts.
 
 The root library was relicensed only after the owner explicitly chose Apache-2.0.

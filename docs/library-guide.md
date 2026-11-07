@@ -3,6 +3,11 @@
 Use Glass-Box to inspect a model and test a written hypothesis. Use a `Study` to
 freeze the comparison and retain what happened, including failures.
 
+For exact module interfaces, use the [API reference](api/index.html) or
+[Markdown API](api/reference.md). Agents should start with the
+[agent guide](agents.md), which explains entry-point selection, operation payloads
+and failure handling. [The documentation index](index.html) links all formats.
+
 ## Start with the model-free path
 
 ```sh

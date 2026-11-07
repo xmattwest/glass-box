@@ -57,13 +57,22 @@ license.
 
 ```sh
 uv sync --extra instruments
+uv run python scripts/build_docs.py --check
 uv run glass-box check
 uv run python -m unittest discover -s tests -v
 uv build
 uv run python scripts/wheel_smoke.py dist/glass_box-0.1.0-py3-none-any.whl
 ```
 
-Start with the [visual walkthrough](docs/how-we-investigate-lfm3.html).
+Start at the [documentation index](docs/index.html) or
+[visual walkthrough](docs/how-we-investigate-lfm3.html).
+Use the [API reference](docs/api/index.html) to look up signatures, fields,
+methods and constants. Agents should read the [agent guide](docs/agents.md),
+then the [Markdown API](docs/api/reference.md); [llms.txt](llms.txt) indexes the
+docs and [llms-full.txt](llms-full.txt) combines them into one agent-readable file.
+These Markdown/JSON references are also bundled in the wheel, readable through
+`importlib.resources.files("lfm3lab").joinpath("docs")` without loading a model.
+
 Read the [library guide](docs/library-guide.md),
 [extraction and verification report](docs/extraction.md), and
 [first-release checklist](docs/release-checklist.md).
@@ -71,3 +80,7 @@ Read the [library guide](docs/library-guide.md),
 Code license: [Apache-2.0](LICENSE), selected by the project owner.
 See [NOTICE](NOTICE) and [provenance](docs/provenance.md) for the decoder
 adaptation and separate model terms. No public remote has been created.
+
+To rebuild the API pages and agent reference after an interface change, run
+`uv run python scripts/build_docs.py`. The standard-library generator parses
+source without importing it; `--check` catches stale generated documentation.

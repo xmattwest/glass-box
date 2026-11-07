@@ -1,0 +1,4646 @@
+{
+  "format_version": 1,
+  "project": "glass-box",
+  "version": "0.1.0",
+  "generator": "static Python 3.12 AST; no library imports or inference",
+  "limits": "Declared public surface only. Return contracts are editorial, not inferred type annotations. Dataclass <factory> defaults create fresh objects. Private helpers and external inherited APIs are excluded.",
+  "lfm3_operation_payload_fields": {
+    "score": [
+      "chat",
+      "continuation",
+      "donor_prompt",
+      "foil",
+      "max_input_tokens",
+      "objective",
+      "patch",
+      "prompt",
+      "target",
+      "thinking"
+    ],
+    "probe": [
+      "chat",
+      "chosen_ids",
+      "donor_prompt",
+      "foil",
+      "input_ids",
+      "max_input_tokens",
+      "patch",
+      "pins",
+      "position",
+      "prompt",
+      "prompt_length",
+      "routing",
+      "target",
+      "thinking",
+      "top_k",
+      "trace_start",
+      "vocabulary_units"
+    ],
+    "attribute": [
+      "chat",
+      "foil",
+      "full_scores",
+      "input_ids",
+      "max_input_tokens",
+      "patch",
+      "position",
+      "prompt",
+      "prompt_length",
+      "target",
+      "thinking",
+      "top_k"
+    ],
+    "generate": [
+      "chat",
+      "foil",
+      "max_input_tokens",
+      "max_new_tokens",
+      "patch",
+      "pins",
+      "prompt",
+      "target",
+      "thinking",
+      "top_k"
+    ],
+    "sweep": [
+      "batch_size",
+      "chat",
+      "foil",
+      "max_input_tokens",
+      "mode",
+      "norm_mode",
+      "prompt",
+      "scope",
+      "target",
+      "thinking",
+      "units"
+    ]
+  },
+  "modules": [
+    {
+      "name": "lfm3lab",
+      "overview": "Lightweight compatibility namespace. Exposes __version__; use submodules, not root model-loading shortcuts.",
+      "source": "src/lfm3lab/__init__.py",
+      "source_sha256": "718886bb246078f99afc90a545ce75b241366bb8457a5b64c0caf1fe71548286",
+      "docstring": "Glass-Box compatibility namespace. Importing it loads no numerical stack.\n\nUse lfm3lab.glassbox for instruments and lfm3lab.research for fixed studies.\nUnrelated archive helpers and root-level model-loading shortcuts are not exported.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "lfm3lab.__version__",
+          "short_name": "__version__",
+          "kind": "constant",
+          "source": "src/lfm3lab/__init__.py",
+          "line": 7,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "'0.1.0'",
+          "alias_of": null
+        }
+      ]
+    },
+    {
+      "name": "lfm3lab.research",
+      "overview": "Convenience imports for protocols, sessions, study execution and reports. All imports are model-free.",
+      "source": "src/lfm3lab/research/__init__.py",
+      "source_sha256": "6f3485fe3e6dacfbb76c4df0d7d33e58df03e06468f4a9766bd237882cb274ff",
+      "docstring": "Reproducible mechanistic research. No model loading at import time.",
+      "exports": [
+        {
+          "name": "Budget",
+          "origin": "lfm3lab.research.schema.Budget"
+        },
+        {
+          "name": "Case",
+          "origin": "lfm3lab.research.schema.Case"
+        },
+        {
+          "name": "Condition",
+          "origin": "lfm3lab.research.schema.Condition"
+        },
+        {
+          "name": "Objective",
+          "origin": "lfm3lab.research.schema.Objective"
+        },
+        {
+          "name": "Study",
+          "origin": "lfm3lab.research.schema.Study"
+        },
+        {
+          "name": "ResearchSession",
+          "origin": "lfm3lab.research.session.ResearchSession"
+        },
+        {
+          "name": "run_study",
+          "origin": "lfm3lab.research.runner.run_study"
+        },
+        {
+          "name": "build_report",
+          "origin": "lfm3lab.research.report.build_report"
+        }
+      ],
+      "symbols": []
+    },
+    {
+      "name": "lfm3lab.research.schema",
+      "overview": "Versioned JSON protocols. Constructors expose fields; call validate() or from_dict() to validate the full protocol. Schema validation does not validate native coordinates or tokenize text.",
+      "source": "src/lfm3lab/research/schema.py",
+      "source_sha256": "aae1aec3b98817544ef1649bd899071479b2147a172ed3d4b073b19149f4ad19",
+      "docstring": "Versioned, JSON-only protocols for question-agnostic mechanistic studies.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "lfm3lab.research.schema.SCHEMA_VERSION",
+          "short_name": "SCHEMA_VERSION",
+          "kind": "constant",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 10,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "1",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.research.schema.SPLITS",
+          "short_name": "SPLITS",
+          "kind": "constant",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 11,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "('discovery', 'validation', 'holdout')",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.research.schema.OBJECTIVES",
+          "short_name": "OBJECTIVES",
+          "kind": "constant",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 12,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "('token_margin', 'token_logprob', 'continuation_logprob')",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.research.schema.canonical_json",
+          "short_name": "canonical_json",
+          "kind": "function",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 15,
+          "summary": "Serialize canonical sorted-key JSON with compact separators and nonfinite values forbidden.",
+          "docstring": null,
+          "contract": {
+            "summary": "Serialize canonical sorted-key JSON with compact separators and nonfinite values forbidden.",
+            "returns": "str",
+            "notes": "Raises ValueError for nonfinite numbers and TypeError for unsupported objects."
+          },
+          "signature": "canonical_json(value)",
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.research.schema.fingerprint",
+          "short_name": "fingerprint",
+          "kind": "function",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 19,
+          "summary": "Hash canonical JSON for a JSON-compatible value.",
+          "docstring": null,
+          "contract": {
+            "summary": "Hash canonical JSON for a JSON-compatible value.",
+            "returns": "64-character SHA-256 hex str"
+          },
+          "signature": "fingerprint(value)",
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.research.schema.identifier",
+          "short_name": "identifier",
+          "kind": "function",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 23,
+          "summary": "Validate a safe protocol identifier.",
+          "docstring": null,
+          "contract": {
+            "summary": "Validate a safe protocol identifier.",
+            "returns": "None; raises ValueError for invalid IDs"
+          },
+          "signature": "identifier(value)",
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.research.schema.JsonSpec",
+          "short_name": "JsonSpec",
+          "kind": "class",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 28,
+          "summary": "Serialization/validation mixin for the schema dataclasses; not a standalone study.",
+          "docstring": null,
+          "contract": {
+            "summary": "Serialization/validation mixin for the schema dataclasses; not a standalone study.",
+            "notes": "from_dict accepts a JSON dict or the same schema class, rejects unknown fields and returns a validated object. to_dict returns dataclass fields recursively. validate returns self after validation; failures normally raise ValueError (invalid non-JSON values can also raise TypeError)."
+          },
+          "signature": null,
+          "parameters": [],
+          "fields": [],
+          "instance_attributes": [],
+          "bases": [],
+          "decorators": []
+        },
+        {
+          "name": "lfm3lab.research.schema.JsonSpec.from_dict",
+          "short_name": "JsonSpec.from_dict",
+          "kind": "classmethod",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 30,
+          "summary": "Construct a validated schema instance from a dict or another instance of the same schema class.",
+          "docstring": null,
+          "contract": {
+            "summary": "Construct a validated schema instance from a dict or another instance of the same schema class.",
+            "returns": "Validated subclass instance; unknown fields/invalid specifications are rejected"
+          },
+          "signature": "JsonSpec.from_dict(value)",
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.schema.JsonSpec.to_dict",
+          "short_name": "JsonSpec.to_dict",
+          "kind": "method",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 41,
+          "summary": "Recursively serialize schema dataclass fields.",
+          "docstring": null,
+          "contract": {
+            "summary": "Recursively serialize schema dataclass fields.",
+            "returns": "dict"
+          },
+          "signature": "JsonSpec.to_dict()",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.schema.JsonSpec.validate",
+          "short_name": "JsonSpec.validate",
+          "kind": "method",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 44,
+          "summary": "Validate this object; returns the same instance or raises for invalid fields.",
+          "docstring": null,
+          "contract": {},
+          "signature": "JsonSpec.validate()",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Case",
+          "short_name": "Case",
+          "kind": "class",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 50,
+          "summary": "One clean prompt and a fixed target/foil or supplied continuation, assigned to an explicit split.",
+          "docstring": null,
+          "contract": {
+            "summary": "One clean prompt and a fixed target/foil or supplied continuation, assigned to an explicit split.",
+            "notes": "IDs use safe 1–96-character names. Token texts are exact and whitespace-sensitive. A Case alone may omit target/foil; Study validation requires them according to the objective. metadata must be a JSON dict."
+          },
+          "signature": "Case(id: str, prompt: str, target: int | str | None = None, foil: int | str | None = None, continuation: str | None = None, corrupt_prompt: str | None = None, split: str = 'discovery', metadata: dict = <factory>)",
+          "parameters": [
+            {
+              "name": "id",
+              "kind": "positional-or-keyword",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "prompt",
+              "kind": "positional-or-keyword",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "target",
+              "kind": "positional-or-keyword",
+              "annotation": "int | str | None",
+              "default": "None",
+              "factory": null
+            },
+            {
+              "name": "foil",
+              "kind": "positional-or-keyword",
+              "annotation": "int | str | None",
+              "default": "None",
+              "factory": null
+            },
+            {
+              "name": "continuation",
+              "kind": "positional-or-keyword",
+              "annotation": "str | None",
+              "default": "None",
+              "factory": null
+            },
+            {
+              "name": "corrupt_prompt",
+              "kind": "positional-or-keyword",
+              "annotation": "str | None",
+              "default": "None",
+              "factory": null
+            },
+            {
+              "name": "split",
+              "kind": "positional-or-keyword",
+              "annotation": "str",
+              "default": "'discovery'",
+              "factory": null
+            },
+            {
+              "name": "metadata",
+              "kind": "positional-or-keyword",
+              "annotation": "dict",
+              "default": "<factory>",
+              "factory": "dict"
+            }
+          ],
+          "fields": [
+            {
+              "name": "id",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "prompt",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "target",
+              "annotation": "int | str | None",
+              "default": "None",
+              "factory": null
+            },
+            {
+              "name": "foil",
+              "annotation": "int | str | None",
+              "default": "None",
+              "factory": null
+            },
+            {
+              "name": "continuation",
+              "annotation": "str | None",
+              "default": "None",
+              "factory": null
+            },
+            {
+              "name": "corrupt_prompt",
+              "annotation": "str | None",
+              "default": "None",
+              "factory": null
+            },
+            {
+              "name": "split",
+              "annotation": "str",
+              "default": "'discovery'",
+              "factory": null
+            },
+            {
+              "name": "metadata",
+              "annotation": "dict",
+              "default": "field(default_factory=dict)",
+              "factory": "dict"
+            }
+          ],
+          "instance_attributes": [],
+          "bases": [
+            "JsonSpec"
+          ],
+          "decorators": [
+            "dataclass"
+          ]
+        },
+        {
+          "name": "lfm3lab.research.schema.Case.validate",
+          "short_name": "Case.validate",
+          "kind": "method",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 60,
+          "summary": "Validate this object; returns the same instance or raises for invalid fields.",
+          "docstring": null,
+          "contract": {},
+          "signature": "Case.validate()",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Case.from_dict",
+          "short_name": "Case.from_dict",
+          "kind": "classmethod",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 30,
+          "summary": "Inherited schema from_dict; see JsonSpec serialization/validation contract.",
+          "docstring": null,
+          "contract": {},
+          "signature": "Case.from_dict(value)",
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": "lfm3lab.research.schema.JsonSpec"
+        },
+        {
+          "name": "lfm3lab.research.schema.Case.to_dict",
+          "short_name": "Case.to_dict",
+          "kind": "method",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 41,
+          "summary": "Inherited schema to_dict; see JsonSpec serialization/validation contract.",
+          "docstring": null,
+          "contract": {},
+          "signature": "Case.to_dict()",
+          "parameters": [],
+          "inherited_from": "lfm3lab.research.schema.JsonSpec"
+        },
+        {
+          "name": "lfm3lab.research.schema.Case.id",
+          "short_name": "Case.id",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 51,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "id: str",
+          "annotation": "str",
+          "default": null,
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Case.prompt",
+          "short_name": "Case.prompt",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 52,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "prompt: str",
+          "annotation": "str",
+          "default": null,
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Case.target",
+          "short_name": "Case.target",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 53,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "target: int | str | None",
+          "annotation": "int | str | None",
+          "default": "None",
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Case.foil",
+          "short_name": "Case.foil",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 54,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "foil: int | str | None",
+          "annotation": "int | str | None",
+          "default": "None",
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Case.continuation",
+          "short_name": "Case.continuation",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 55,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "continuation: str | None",
+          "annotation": "str | None",
+          "default": "None",
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Case.corrupt_prompt",
+          "short_name": "Case.corrupt_prompt",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 56,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "corrupt_prompt: str | None",
+          "annotation": "str | None",
+          "default": "None",
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Case.split",
+          "short_name": "Case.split",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 57,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "split: str",
+          "annotation": "str",
+          "default": "'discovery'",
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Case.metadata",
+          "short_name": "Case.metadata",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 58,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "metadata: dict",
+          "annotation": "dict",
+          "default": "field(default_factory=dict)",
+          "factory": "dict"
+        },
+        {
+          "name": "lfm3lab.research.schema.Condition",
+          "short_name": "Condition",
+          "kind": "class",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 79,
+          "summary": "An input variant and an ordered patch for one fixed condition.",
+          "docstring": null,
+          "contract": {
+            "summary": "An input variant and an ordered patch for one fixed condition.",
+            "notes": "input_variant is clean or corrupt. patch accepts only rules and norm_mode; schema validation checks structure, not native unit/op bounds. Internal row coordinates are forbidden in studies."
+          },
+          "signature": "Condition(id: str, patch: dict = <factory>, input_variant: str = 'clean', description: str = '')",
+          "parameters": [
+            {
+              "name": "id",
+              "kind": "positional-or-keyword",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "patch",
+              "kind": "positional-or-keyword",
+              "annotation": "dict",
+              "default": "<factory>",
+              "factory": "dict"
+            },
+            {
+              "name": "input_variant",
+              "kind": "positional-or-keyword",
+              "annotation": "str",
+              "default": "'clean'",
+              "factory": null
+            },
+            {
+              "name": "description",
+              "kind": "positional-or-keyword",
+              "annotation": "str",
+              "default": "''",
+              "factory": null
+            }
+          ],
+          "fields": [
+            {
+              "name": "id",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "patch",
+              "annotation": "dict",
+              "default": "field(default_factory=dict)",
+              "factory": "dict"
+            },
+            {
+              "name": "input_variant",
+              "annotation": "str",
+              "default": "'clean'",
+              "factory": null
+            },
+            {
+              "name": "description",
+              "annotation": "str",
+              "default": "''",
+              "factory": null
+            }
+          ],
+          "instance_attributes": [],
+          "bases": [
+            "JsonSpec"
+          ],
+          "decorators": [
+            "dataclass"
+          ]
+        },
+        {
+          "name": "lfm3lab.research.schema.Condition.validate",
+          "short_name": "Condition.validate",
+          "kind": "method",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 85,
+          "summary": "Validate this object; returns the same instance or raises for invalid fields.",
+          "docstring": null,
+          "contract": {},
+          "signature": "Condition.validate()",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Condition.from_dict",
+          "short_name": "Condition.from_dict",
+          "kind": "classmethod",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 30,
+          "summary": "Inherited schema from_dict; see JsonSpec serialization/validation contract.",
+          "docstring": null,
+          "contract": {},
+          "signature": "Condition.from_dict(value)",
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": "lfm3lab.research.schema.JsonSpec"
+        },
+        {
+          "name": "lfm3lab.research.schema.Condition.to_dict",
+          "short_name": "Condition.to_dict",
+          "kind": "method",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 41,
+          "summary": "Inherited schema to_dict; see JsonSpec serialization/validation contract.",
+          "docstring": null,
+          "contract": {},
+          "signature": "Condition.to_dict()",
+          "parameters": [],
+          "inherited_from": "lfm3lab.research.schema.JsonSpec"
+        },
+        {
+          "name": "lfm3lab.research.schema.Condition.id",
+          "short_name": "Condition.id",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 80,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "id: str",
+          "annotation": "str",
+          "default": null,
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Condition.patch",
+          "short_name": "Condition.patch",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 81,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "patch: dict",
+          "annotation": "dict",
+          "default": "field(default_factory=dict)",
+          "factory": "dict"
+        },
+        {
+          "name": "lfm3lab.research.schema.Condition.input_variant",
+          "short_name": "Condition.input_variant",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 82,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "input_variant: str",
+          "annotation": "str",
+          "default": "'clean'",
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Condition.description",
+          "short_name": "Condition.description",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 83,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "description: str",
+          "annotation": "str",
+          "default": "''",
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Objective",
+          "short_name": "Objective",
+          "kind": "class",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 107,
+          "summary": "A fixed likelihood objective and its reduction.",
+          "docstring": null,
+          "contract": {
+            "summary": "A fixed likelihood objective and its reduction.",
+            "notes": "Kinds: token_margin, token_logprob, continuation_logprob. sum is required for token objectives; continuation supports sum or mean. This does not score generated correctness."
+          },
+          "signature": "Objective(kind: str = 'token_margin', reduction: str = 'sum')",
+          "parameters": [
+            {
+              "name": "kind",
+              "kind": "positional-or-keyword",
+              "annotation": "str",
+              "default": "'token_margin'",
+              "factory": null
+            },
+            {
+              "name": "reduction",
+              "kind": "positional-or-keyword",
+              "annotation": "str",
+              "default": "'sum'",
+              "factory": null
+            }
+          ],
+          "fields": [
+            {
+              "name": "kind",
+              "annotation": "str",
+              "default": "'token_margin'",
+              "factory": null
+            },
+            {
+              "name": "reduction",
+              "annotation": "str",
+              "default": "'sum'",
+              "factory": null
+            }
+          ],
+          "instance_attributes": [],
+          "bases": [
+            "JsonSpec"
+          ],
+          "decorators": [
+            "dataclass"
+          ]
+        },
+        {
+          "name": "lfm3lab.research.schema.Objective.validate",
+          "short_name": "Objective.validate",
+          "kind": "method",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 111,
+          "summary": "Validate this object; returns the same instance or raises for invalid fields.",
+          "docstring": null,
+          "contract": {},
+          "signature": "Objective.validate()",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Objective.from_dict",
+          "short_name": "Objective.from_dict",
+          "kind": "classmethod",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 30,
+          "summary": "Inherited schema from_dict; see JsonSpec serialization/validation contract.",
+          "docstring": null,
+          "contract": {},
+          "signature": "Objective.from_dict(value)",
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": "lfm3lab.research.schema.JsonSpec"
+        },
+        {
+          "name": "lfm3lab.research.schema.Objective.to_dict",
+          "short_name": "Objective.to_dict",
+          "kind": "method",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 41,
+          "summary": "Inherited schema to_dict; see JsonSpec serialization/validation contract.",
+          "docstring": null,
+          "contract": {},
+          "signature": "Objective.to_dict()",
+          "parameters": [],
+          "inherited_from": "lfm3lab.research.schema.JsonSpec"
+        },
+        {
+          "name": "lfm3lab.research.schema.Objective.kind",
+          "short_name": "Objective.kind",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 108,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "kind: str",
+          "annotation": "str",
+          "default": "'token_margin'",
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Objective.reduction",
+          "short_name": "Objective.reduction",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 109,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "reduction: str",
+          "annotation": "str",
+          "default": "'sum'",
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Budget",
+          "short_name": "Budget",
+          "kind": "class",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 121,
+          "summary": "Durable limits shared by every requested split.",
+          "docstring": null,
+          "contract": {
+            "summary": "Durable limits shared by every requested split.",
+            "notes": "max_trials is 1..100000 attempted trials. max_input_tokens is 1..4096 predictor tokens; primitive limits can be lower. max_seconds must be positive and finite. Interrupted attempts charge the remaining time reservation."
+          },
+          "signature": "Budget(max_trials: int = 128, max_seconds: float = 600, max_input_tokens: int = 256)",
+          "parameters": [
+            {
+              "name": "max_trials",
+              "kind": "positional-or-keyword",
+              "annotation": "int",
+              "default": "128",
+              "factory": null
+            },
+            {
+              "name": "max_seconds",
+              "kind": "positional-or-keyword",
+              "annotation": "float",
+              "default": "600",
+              "factory": null
+            },
+            {
+              "name": "max_input_tokens",
+              "kind": "positional-or-keyword",
+              "annotation": "int",
+              "default": "256",
+              "factory": null
+            }
+          ],
+          "fields": [
+            {
+              "name": "max_trials",
+              "annotation": "int",
+              "default": "128",
+              "factory": null
+            },
+            {
+              "name": "max_seconds",
+              "annotation": "float",
+              "default": "600",
+              "factory": null
+            },
+            {
+              "name": "max_input_tokens",
+              "annotation": "int",
+              "default": "256",
+              "factory": null
+            }
+          ],
+          "instance_attributes": [],
+          "bases": [
+            "JsonSpec"
+          ],
+          "decorators": [
+            "dataclass"
+          ]
+        },
+        {
+          "name": "lfm3lab.research.schema.Budget.validate",
+          "short_name": "Budget.validate",
+          "kind": "method",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 126,
+          "summary": "Validate this object; returns the same instance or raises for invalid fields.",
+          "docstring": null,
+          "contract": {},
+          "signature": "Budget.validate()",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Budget.from_dict",
+          "short_name": "Budget.from_dict",
+          "kind": "classmethod",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 30,
+          "summary": "Inherited schema from_dict; see JsonSpec serialization/validation contract.",
+          "docstring": null,
+          "contract": {},
+          "signature": "Budget.from_dict(value)",
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": "lfm3lab.research.schema.JsonSpec"
+        },
+        {
+          "name": "lfm3lab.research.schema.Budget.to_dict",
+          "short_name": "Budget.to_dict",
+          "kind": "method",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 41,
+          "summary": "Inherited schema to_dict; see JsonSpec serialization/validation contract.",
+          "docstring": null,
+          "contract": {},
+          "signature": "Budget.to_dict()",
+          "parameters": [],
+          "inherited_from": "lfm3lab.research.schema.JsonSpec"
+        },
+        {
+          "name": "lfm3lab.research.schema.Budget.max_trials",
+          "short_name": "Budget.max_trials",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 122,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "max_trials: int",
+          "annotation": "int",
+          "default": "128",
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Budget.max_seconds",
+          "short_name": "Budget.max_seconds",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 123,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "max_seconds: float",
+          "annotation": "float",
+          "default": "600",
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Budget.max_input_tokens",
+          "short_name": "Budget.max_input_tokens",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 124,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "max_input_tokens: int",
+          "annotation": "int",
+          "default": "256",
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Study",
+          "short_name": "Study",
+          "kind": "class",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 138,
+          "summary": "A written question/prediction, fixed cases and conditions, objective, controls and budget.",
+          "docstring": null,
+          "contract": {
+            "summary": "A written question/prediction, fixed cases and conditions, objective, controls and budget.",
+            "notes": "Use from_dict or validate before execution. IDs must be unique; baseline_id must name a condition. Study.__post_init__ converts nested specs but does not validate every outer Study invariant. Native-coordinate and tokenizer validation belongs to the adapter. seed is recorded in the protocol, not a general guarantee that every backend seeds randomness. metadata.secondary_comparisons declares unique distinct [left, right] condition pairs."
+          },
+          "signature": "Study(id: str, question: str, prediction: str, cases: list[Case], conditions: list[Condition], objective: Objective = <factory>, budget: Budget = <factory>, baseline_id: str = 'clean', seed: int = 24, metadata: dict = <factory>)",
+          "parameters": [
+            {
+              "name": "id",
+              "kind": "positional-or-keyword",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "question",
+              "kind": "positional-or-keyword",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "prediction",
+              "kind": "positional-or-keyword",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "cases",
+              "kind": "positional-or-keyword",
+              "annotation": "list[Case]",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "conditions",
+              "kind": "positional-or-keyword",
+              "annotation": "list[Condition]",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "objective",
+              "kind": "positional-or-keyword",
+              "annotation": "Objective",
+              "default": "<factory>",
+              "factory": "Objective"
+            },
+            {
+              "name": "budget",
+              "kind": "positional-or-keyword",
+              "annotation": "Budget",
+              "default": "<factory>",
+              "factory": "Budget"
+            },
+            {
+              "name": "baseline_id",
+              "kind": "positional-or-keyword",
+              "annotation": "str",
+              "default": "'clean'",
+              "factory": null
+            },
+            {
+              "name": "seed",
+              "kind": "positional-or-keyword",
+              "annotation": "int",
+              "default": "24",
+              "factory": null
+            },
+            {
+              "name": "metadata",
+              "kind": "positional-or-keyword",
+              "annotation": "dict",
+              "default": "<factory>",
+              "factory": "dict"
+            }
+          ],
+          "fields": [
+            {
+              "name": "id",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "question",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "prediction",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "cases",
+              "annotation": "list[Case]",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "conditions",
+              "annotation": "list[Condition]",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "objective",
+              "annotation": "Objective",
+              "default": "field(default_factory=Objective)",
+              "factory": "Objective"
+            },
+            {
+              "name": "budget",
+              "annotation": "Budget",
+              "default": "field(default_factory=Budget)",
+              "factory": "Budget"
+            },
+            {
+              "name": "baseline_id",
+              "annotation": "str",
+              "default": "'clean'",
+              "factory": null
+            },
+            {
+              "name": "seed",
+              "annotation": "int",
+              "default": "24",
+              "factory": null
+            },
+            {
+              "name": "metadata",
+              "annotation": "dict",
+              "default": "field(default_factory=dict)",
+              "factory": "dict"
+            }
+          ],
+          "instance_attributes": [],
+          "bases": [
+            "JsonSpec"
+          ],
+          "decorators": [
+            "dataclass"
+          ]
+        },
+        {
+          "name": "lfm3lab.research.schema.Study.fingerprint",
+          "short_name": "Study.fingerprint",
+          "kind": "property",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 159,
+          "summary": "Versioned canonical protocol fingerprint.",
+          "docstring": null,
+          "contract": {
+            "summary": "Versioned canonical protocol fingerprint.",
+            "returns": "SHA-256 hex string. Recomputed from the current fields; this property is not a freeze operation."
+          },
+          "signature": "Study.fingerprint",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Study.validate",
+          "short_name": "Study.validate",
+          "kind": "method",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 162,
+          "summary": "Validate this object; returns the same instance or raises for invalid fields.",
+          "docstring": null,
+          "contract": {},
+          "signature": "Study.validate()",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Study.from_dict",
+          "short_name": "Study.from_dict",
+          "kind": "classmethod",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 30,
+          "summary": "Inherited schema from_dict; see JsonSpec serialization/validation contract.",
+          "docstring": null,
+          "contract": {},
+          "signature": "Study.from_dict(value)",
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": "lfm3lab.research.schema.JsonSpec"
+        },
+        {
+          "name": "lfm3lab.research.schema.Study.to_dict",
+          "short_name": "Study.to_dict",
+          "kind": "method",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 41,
+          "summary": "Inherited schema to_dict; see JsonSpec serialization/validation contract.",
+          "docstring": null,
+          "contract": {},
+          "signature": "Study.to_dict()",
+          "parameters": [],
+          "inherited_from": "lfm3lab.research.schema.JsonSpec"
+        },
+        {
+          "name": "lfm3lab.research.schema.Study.id",
+          "short_name": "Study.id",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 139,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "id: str",
+          "annotation": "str",
+          "default": null,
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Study.question",
+          "short_name": "Study.question",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 140,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "question: str",
+          "annotation": "str",
+          "default": null,
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Study.prediction",
+          "short_name": "Study.prediction",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 141,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "prediction: str",
+          "annotation": "str",
+          "default": null,
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Study.cases",
+          "short_name": "Study.cases",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 142,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "cases: list[Case]",
+          "annotation": "list[Case]",
+          "default": null,
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Study.conditions",
+          "short_name": "Study.conditions",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 143,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "conditions: list[Condition]",
+          "annotation": "list[Condition]",
+          "default": null,
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Study.objective",
+          "short_name": "Study.objective",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 144,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "objective: Objective",
+          "annotation": "Objective",
+          "default": "field(default_factory=Objective)",
+          "factory": "Objective"
+        },
+        {
+          "name": "lfm3lab.research.schema.Study.budget",
+          "short_name": "Study.budget",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 145,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "budget: Budget",
+          "annotation": "Budget",
+          "default": "field(default_factory=Budget)",
+          "factory": "Budget"
+        },
+        {
+          "name": "lfm3lab.research.schema.Study.baseline_id",
+          "short_name": "Study.baseline_id",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 146,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "baseline_id: str",
+          "annotation": "str",
+          "default": "'clean'",
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Study.seed",
+          "short_name": "Study.seed",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 147,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "seed: int",
+          "annotation": "int",
+          "default": "24",
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.research.schema.Study.metadata",
+          "short_name": "Study.metadata",
+          "kind": "field",
+          "source": "src/lfm3lab/research/schema.py",
+          "line": 148,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "metadata: dict",
+          "annotation": "dict",
+          "default": "field(default_factory=dict)",
+          "factory": "dict"
+        }
+      ]
+    },
+    {
+      "name": "lfm3lab.research.session",
+      "overview": "Recommended user entry point. Serializes calls, owns backend close, and supports context management. Operation payloads are documented in agents.md; local run calls can load weights, remote run calls can request real inference.",
+      "source": "src/lfm3lab/research/session.py",
+      "source_sha256": "4896e1cbf242c39fcfd071c1f6e0514f1ff32e7069a6bc1b356a252fa38e6238",
+      "docstring": "Small Python entry point shared by local and HTTP research backends.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "lfm3lab.research.session.ResearchSession",
+          "short_name": "ResearchSession",
+          "kind": "class",
+          "source": "src/lfm3lab/research/session.py",
+          "line": 7,
+          "summary": "A serialized user-facing connection to a backend implementing run, status and close.",
+          "docstring": null,
+          "contract": {
+            "summary": "A serialized user-facing connection to a backend implementing run, status and close.",
+            "notes": "Use a with block or close explicitly. Constructor checks callability, not backend capabilities. backend is public. Close is idempotent; run after close raises RuntimeError. status delegates to the backend, including after session close; backend behavior determines the result."
+          },
+          "signature": "ResearchSession(backend)",
+          "parameters": [
+            {
+              "name": "backend",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "fields": [],
+          "instance_attributes": [
+            "backend"
+          ],
+          "bases": [],
+          "decorators": []
+        },
+        {
+          "name": "lfm3lab.research.session.ResearchSession.local",
+          "short_name": "ResearchSession.local",
+          "kind": "classmethod",
+          "source": "src/lfm3lab/research/session.py",
+          "line": 16,
+          "summary": "Construct an owned lazy local LFM3Backend; no inference yet.",
+          "docstring": null,
+          "contract": {
+            "summary": "Construct an owned lazy local LFM3Backend; no inference yet.",
+            "returns": "ResearchSession",
+            "notes": "kwargs are the LFM3Backend constructor parameters. Real calls require authorized model use; allow_local_model is an additional CPU/MPS check, not compute authorization."
+          },
+          "signature": "ResearchSession.local(**kwargs)",
+          "parameters": [
+            {
+              "name": "kwargs",
+              "kind": "variadic-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.session.ResearchSession.remote",
+          "short_name": "ResearchSession.remote",
+          "kind": "classmethod",
+          "source": "src/lfm3lab/research/session.py",
+          "line": 21,
+          "summary": "Construct a remote proxy session; no HTTP request until status/run.",
+          "docstring": null,
+          "contract": {
+            "summary": "Construct a remote proxy session; no HTTP request until status/run.",
+            "returns": "ResearchSession",
+            "notes": "kwargs are token and timeout from RemoteBackend. An example URL is not an active service."
+          },
+          "signature": "ResearchSession.remote(url, **kwargs)",
+          "parameters": [
+            {
+              "name": "url",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "kwargs",
+              "kind": "variadic-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.session.ResearchSession.__enter__",
+          "short_name": "ResearchSession.__enter__",
+          "kind": "method",
+          "source": "src/lfm3lab/research/session.py",
+          "line": 25,
+          "summary": "Enter an open session; raises RuntimeError if already closed.",
+          "docstring": null,
+          "contract": {
+            "summary": "Enter an open session; raises RuntimeError if already closed.",
+            "returns": "The same ResearchSession"
+          },
+          "signature": "ResearchSession.__enter__()",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.session.ResearchSession.__exit__",
+          "short_name": "ResearchSession.__exit__",
+          "kind": "method",
+          "source": "src/lfm3lab/research/session.py",
+          "line": 30,
+          "summary": "Close the owned backend on context exit, including exceptions.",
+          "docstring": null,
+          "contract": {
+            "summary": "Close the owned backend on context exit, including exceptions.",
+            "returns": "None; does not suppress the exception"
+          },
+          "signature": "ResearchSession.__exit__(*exc)",
+          "parameters": [
+            {
+              "name": "exc",
+              "kind": "variadic-positional",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.session.ResearchSession.run",
+          "short_name": "ResearchSession.run",
+          "kind": "method",
+          "source": "src/lfm3lab/research/session.py",
+          "line": 33,
+          "summary": "Delegate a versioned operation and JSON payload to the backend.",
+          "docstring": null,
+          "contract": {
+            "summary": "Delegate a versioned operation and JSON payload to the backend.",
+            "returns": "Backend-defined JSON dict",
+            "notes": "May load a local model or request remote inference. See the operation payload contract. Exceptions remain visible; no automatic retry."
+          },
+          "signature": "ResearchSession.run(operation, payload)",
+          "parameters": [
+            {
+              "name": "operation",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "payload",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.session.ResearchSession.status",
+          "short_name": "ResearchSession.status",
+          "kind": "method",
+          "source": "src/lfm3lab/research/session.py",
+          "line": 39,
+          "summary": "Read backend state/capabilities without local weight loading.",
+          "docstring": null,
+          "contract": {
+            "summary": "Read backend state/capabilities without local weight loading.",
+            "returns": "Backend status dict; remote sessions perform HTTP"
+          },
+          "signature": "ResearchSession.status()",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.session.ResearchSession.close",
+          "short_name": "ResearchSession.close",
+          "kind": "method",
+          "source": "src/lfm3lab/research/session.py",
+          "line": 43,
+          "summary": "Close the owned backend once, waiting for an active serialized session call.",
+          "docstring": null,
+          "contract": {
+            "summary": "Close the owned backend once, waiting for an active serialized session call.",
+            "returns": "None"
+          },
+          "signature": "ResearchSession.close()",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.session.ResearchSession.score",
+          "short_name": "ResearchSession.score",
+          "kind": "method",
+          "source": "src/lfm3lab/research/session.py",
+          "line": 49,
+          "summary": "Request fixed likelihood scoring.",
+          "docstring": null,
+          "contract": {
+            "summary": "Request fixed likelihood scoring.",
+            "returns": "Score dict with value, objective, input_ids, prompt_length, identity and diagnostics",
+            "notes": "Requires fixed target/foil for token margin, target for token_logprob, or explicit continuation for continuation_logprob. Accepts Objective as a convenience; the wire format is its dict. No telemetry probe is performed by score."
+          },
+          "signature": "ResearchSession.score(**payload)",
+          "parameters": [
+            {
+              "name": "payload",
+              "kind": "variadic-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.session.ResearchSession.probe",
+          "short_name": "ResearchSession.probe",
+          "kind": "method",
+          "source": "src/lfm3lab/research/session.py",
+          "line": 56,
+          "summary": "Request activation/projection telemetry for one sequence.",
+          "docstring": null,
+          "contract": {
+            "summary": "Request activation/projection telemetry for one sequence.",
+            "returns": "Probe JSON dict; see run_glassbox_probe",
+            "notes": "Payload is not the low-level function signature: lm is backend-owned, chat defaults false, and max_input_tokens is accepted. Clean-source donors require explicit donor_prompt."
+          },
+          "signature": "ResearchSession.probe(**payload)",
+          "parameters": [
+            {
+              "name": "payload",
+              "kind": "variadic-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.session.ResearchSession.attribute",
+          "short_name": "ResearchSession.attribute",
+          "kind": "method",
+          "source": "src/lfm3lab/research/session.py",
+          "line": 59,
+          "summary": "Request local activation-times-gradient attribution for a token margin.",
+          "docstring": null,
+          "contract": {
+            "summary": "Request local activation-times-gradient attribution for a token margin.",
+            "returns": "Attribution JSON dict; see run_gradient_attribution",
+            "notes": "No continuation attribution or clean-source donors. Optional target/foil auto-selection is observational, not a fixed study objective."
+          },
+          "signature": "ResearchSession.attribute(**payload)",
+          "parameters": [
+            {
+              "name": "payload",
+              "kind": "variadic-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.session.ResearchSession.generate",
+          "short_name": "ResearchSession.generate",
+          "kind": "method",
+          "source": "src/lfm3lab/research/session.py",
+          "line": 62,
+          "summary": "Request greedy cached decoding plus mechanistic replay.",
+          "docstring": null,
+          "contract": {
+            "summary": "Request greedy cached decoding plus mechanistic replay.",
+            "returns": "Generation JSON dict; see run_glassbox_generate",
+            "notes": "No clean-source donors. A returned continuation is not a correctness or task-benefit measurement."
+          },
+          "signature": "ResearchSession.generate(**payload)",
+          "parameters": [
+            {
+              "name": "payload",
+              "kind": "variadic-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.session.ResearchSession.sweep",
+          "short_name": "ResearchSession.sweep",
+          "kind": "method",
+          "source": "src/lfm3lab/research/session.py",
+          "line": 65,
+          "summary": "Request finite zero-ablation comparisons.",
+          "docstring": null,
+          "contract": {
+            "summary": "Request finite zero-ablation comparisons.",
+            "returns": "Sweep JSON dict; see run_head_ablation_sweep",
+            "notes": "Uses scope/norm_mode, not a patch. units is only allowed for unique head coordinates in heads mode."
+          },
+          "signature": "ResearchSession.sweep(**payload)",
+          "parameters": [
+            {
+              "name": "payload",
+              "kind": "variadic-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        }
+      ]
+    },
+    {
+      "name": "lfm3lab.research.backends",
+      "overview": "Initial pinned LFM3 adapter, not general model support. Construction/status load no weights. The first valid run lazily loads a model and retains the lifetime lock until close. CPU/MPS loading requires an additional opt-in.",
+      "source": "src/lfm3lab/research/backends.py",
+      "source_sha256": "597d59f4bc6e5da21cfadd5bf937d43b26aabe3b7425d1c62e19a79b85b064b3",
+      "docstring": "Lazy, serialized adapter for the verified LFM3-1.7B Glass-Box primitives.\n\nThis module adds no eager torch/model-loader imports and status loads no weights.\nThe Glass-Box root initializer likewise loads no numerical dependencies.\nThe adapter owns every model it loads, and holds the process inference lock until\nclose has released the weights and caches. Public primitives remain unchanged.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "lfm3lab.research.backends.PINNED",
+          "short_name": "PINNED",
+          "kind": "constant",
+          "source": "src/lfm3lab/research/backends.py",
+          "line": 24,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "'40ebe0aa6662c9d40389c2f5d565b6a2c6aebacd'",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.research.backends.REPO_ID",
+          "short_name": "REPO_ID",
+          "kind": "constant",
+          "source": "src/lfm3lab/research/backends.py",
+          "line": 25,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "'LiquidAI/LFM3-1.7B'",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.research.backends.OPERATIONS",
+          "short_name": "OPERATIONS",
+          "kind": "constant",
+          "source": "src/lfm3lab/research/backends.py",
+          "line": 26,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "('score', 'probe', 'attribute', 'generate', 'sweep')",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.research.backends.LFM3Backend",
+          "short_name": "LFM3Backend",
+          "kind": "class",
+          "source": "src/lfm3lab/research/backends.py",
+          "line": 73,
+          "summary": "One lazy, mutex-serialized initial LFM3 instruct adapter.",
+          "docstring": "One lazily loaded pinned instruct checkpoint, not an arbitrary LFM family.\n\nAll calls, including status and close, serialize on a thread mutex. CPU/MPS\nweight loading is refused unless allow_local_model=True; CUDA is permitted.\nExplicit full commit revisions are required for stable unloaded/loaded IDs.",
+          "contract": {
+            "summary": "One lazy, mutex-serialized initial LFM3 instruct adapter.",
+            "notes": "device: cuda/cuda:N/cpu/mps; cuda becomes cuda:0. dtype: bfloat16/float32/float16, optional torch. prefix. revision must be an explicit 40-hex commit; only PINNED is marked verified. status exposes runtime versions and numerical source hashes. close releases loaded weights before dropping the lifetime lock."
+          },
+          "signature": "LFM3Backend(device='cuda', revision=PINNED, dtype='bfloat16', allow_local_model=False)",
+          "parameters": [
+            {
+              "name": "device",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "'cuda'"
+            },
+            {
+              "name": "revision",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "PINNED"
+            },
+            {
+              "name": "dtype",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "'bfloat16'"
+            },
+            {
+              "name": "allow_local_model",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "False"
+            }
+          ],
+          "fields": [],
+          "instance_attributes": [
+            "allow_local_model",
+            "device",
+            "dtype",
+            "revision"
+          ],
+          "bases": [],
+          "decorators": []
+        },
+        {
+          "name": "lfm3lab.research.backends.LFM3Backend.status",
+          "short_name": "LFM3Backend.status",
+          "kind": "method",
+          "source": "src/lfm3lab/research/backends.py",
+          "line": 96,
+          "summary": "Return adapter identity, loaded/closed state, versions, source hashes and explicit capabilities.",
+          "docstring": null,
+          "contract": {
+            "summary": "Return adapter identity, loaded/closed state, versions, source hashes and explicit capabilities.",
+            "returns": "JSON dict; no weights loaded"
+          },
+          "signature": "LFM3Backend.status()",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.backends.LFM3Backend.close",
+          "short_name": "LFM3Backend.close",
+          "kind": "method",
+          "source": "src/lfm3lab/research/backends.py",
+          "line": 169,
+          "summary": "Idempotently release model references, device memory and the lifetime lock under the mutex.",
+          "docstring": null,
+          "contract": {
+            "summary": "Idempotently release model references, device memory and the lifetime lock under the mutex.",
+            "returns": "None"
+          },
+          "signature": "LFM3Backend.close()",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.backends.LFM3Backend.run",
+          "short_name": "LFM3Backend.run",
+          "kind": "method",
+          "source": "src/lfm3lab/research/backends.py",
+          "line": 274,
+          "summary": "Validate a JSON operation, lazily load the owned model, then dispatch a score or primitive.",
+          "docstring": null,
+          "contract": {
+            "summary": "Validate a JSON operation, lazily load the owned model, then dispatch a score or primitive.",
+            "returns": "JSON dict with repository/revision/device/dtype and implementation/runtime identity",
+            "notes": "May perform real inference. Invalid payloads and CPU/MPS opt-in failures are rejected before loading; this is not an authorization mechanism. Calls after close raise RuntimeError."
+          },
+          "signature": "LFM3Backend.run(operation, payload)",
+          "parameters": [
+            {
+              "name": "operation",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "payload",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        }
+      ]
+    },
+    {
+      "name": "lfm3lab.research.runner",
+      "overview": "Sequential fixed likelihood trials. Detaches the protocol, journals attempts, validates receipts and returns a report. Time limits stop new trials, not in-flight calls. Started pairs are never silently retried.",
+      "source": "src/lfm3lab/research/runner.py",
+      "source_sha256": "a2b1850d14a35ccbe86ed5821fa90b77a9537eab733c04eb804c8a259997207f",
+      "docstring": "Deterministic, bounded study execution, with no model imports.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "lfm3lab.research.runner.score_payload",
+          "short_name": "score_payload",
+          "kind": "function",
+          "source": "src/lfm3lab/research/runner.py",
+          "line": 11,
+          "summary": "Build the fixed score request from a Study, Case and Condition.",
+          "docstring": null,
+          "contract": {
+            "summary": "Build the fixed score request from a Study, Case and Condition.",
+            "returns": "JSON dict; includes clean case prompt as donor_prompt for clean-source replacement"
+          },
+          "signature": "score_payload(study, case, condition)",
+          "parameters": [
+            {
+              "name": "study",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "case",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "condition",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.research.runner.run_study",
+          "short_name": "run_study",
+          "kind": "function",
+          "source": "src/lfm3lab/research/runner.py",
+          "line": 46,
+          "summary": "Execute each unstarted case × condition pair in one explicitly named split.",
+          "docstring": "Never retries a started pair; budgets apply across all explicit splits.\n\nTime limits prevent starting another call, not interrupting an in-flight\nbackend operation. Interrupted calls consume their remaining reservation.",
+          "contract": {
+            "summary": "Execute each unstarted case × condition pair in one explicitly named split.",
+            "returns": "Report dict, with run.requested_split, stop_reason, budget_used and resume",
+            "notes": "Writes evidence and derived reports. Does not retry success/failure/interruption. Raises EvidenceError for incompatible/corrupt evidence, OutputLocked for concurrent ownership, ValueError for invalid split/protocol. Ordinary score failures are journaled; KeyboardInterrupt propagates, leaving a pending intent."
+          },
+          "signature": "run_study(study, session, output, *, split='discovery', resume=True)",
+          "parameters": [
+            {
+              "name": "study",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "session",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "output",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "split",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "'discovery'"
+            },
+            {
+              "name": "resume",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "True"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "lfm3lab.research.store",
+      "overview": "Advanced evidence storage API. Hold output_lock for every EvidenceStore read or mutation. Protocol/raw receipts are immutable; reports are replaceable. Hashes verify integrity relative to a recorded chain, not honesty.",
+      "source": "src/lfm3lab/research/store.py",
+      "source_sha256": "e3af110430c419f00c1eb79a7087f64dbe700c8c723f3881c6f5e58d27bdcb0e",
+      "docstring": "Model-free, locked and hash-verified evidence storage (format version 1).",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "lfm3lab.research.store.EvidenceError",
+          "short_name": "EvidenceError",
+          "kind": "class",
+          "source": "src/lfm3lab/research/store.py",
+          "line": 15,
+          "summary": "ValueError subclass for incompatible, damaged or unsafe evidence.",
+          "docstring": "An incompatible or damaged evidence directory must not be reused.",
+          "contract": {
+            "summary": "ValueError subclass for incompatible, damaged or unsafe evidence."
+          },
+          "signature": null,
+          "parameters": [],
+          "fields": [],
+          "instance_attributes": [],
+          "bases": [
+            "ValueError"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "lfm3lab.research.store.OutputLocked",
+          "short_name": "OutputLocked",
+          "kind": "class",
+          "source": "src/lfm3lab/research/store.py",
+          "line": 19,
+          "summary": "RuntimeError subclass for an evidence output already locked by another owner.",
+          "docstring": null,
+          "contract": {
+            "summary": "RuntimeError subclass for an evidence output already locked by another owner."
+          },
+          "signature": null,
+          "parameters": [],
+          "fields": [],
+          "instance_attributes": [],
+          "bases": [
+            "RuntimeError"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "lfm3lab.research.store.backend_identity",
+          "short_name": "backend_identity",
+          "kind": "function",
+          "source": "src/lfm3lab/research/store.py",
+          "line": 23,
+          "summary": "Keep stable scientific identity fields from a backend status.",
+          "docstring": "Keep scientific identity, not loaded state, uptime, URL or transport state.",
+          "contract": {
+            "summary": "Keep stable scientific identity fields from a backend status.",
+            "returns": "JSON dict",
+            "notes": "Requires revision/device/dtype/adapter/implementation; ignores loaded state, uptime, URLs and transport location."
+          },
+          "signature": "backend_identity(status)",
+          "parameters": [
+            {
+              "name": "status",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.research.store.output_lock",
+          "short_name": "output_lock",
+          "kind": "function",
+          "source": "src/lfm3lab/research/store.py",
+          "line": 40,
+          "summary": "Acquire a nonblocking exclusive evidence-directory lock.",
+          "docstring": null,
+          "contract": {
+            "summary": "Acquire a nonblocking exclusive evidence-directory lock.",
+            "returns": "Context manager yielding the output Path",
+            "notes": "Creates the directory if needed. Raises OutputLocked; releases on exit and leaves the lock inode in place."
+          },
+          "signature": "output_lock(output)",
+          "parameters": [
+            {
+              "name": "output",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.research.store.write_new_json",
+          "short_name": "write_new_json",
+          "kind": "function",
+          "source": "src/lfm3lab/research/store.py",
+          "line": 63,
+          "summary": "Create an immutable JSON file exclusively and fsync before journaling.",
+          "docstring": "Exclusive immutable receipt creation; fsync before it is journaled.",
+          "contract": {
+            "summary": "Create an immutable JSON file exclusively and fsync before journaling.",
+            "returns": "SHA-256 hex str of written bytes",
+            "notes": "Existing paths raise FileExistsError; parent directory must already exist."
+          },
+          "signature": "write_new_json(path, value)",
+          "parameters": [
+            {
+              "name": "path",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "value",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.research.store.write_report_json",
+          "short_name": "write_report_json",
+          "kind": "function",
+          "source": "src/lfm3lab/research/store.py",
+          "line": 74,
+          "summary": "Atomically replace a derived JSON report.",
+          "docstring": "Only derived reports may be replaced, never protocol or raw evidence.",
+          "contract": {
+            "summary": "Atomically replace a derived JSON report.",
+            "returns": "None",
+            "notes": "Not for immutable protocols or raw evidence."
+          },
+          "signature": "write_report_json(path, value)",
+          "parameters": [
+            {
+              "name": "path",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "value",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.research.store.trial_key",
+          "short_name": "trial_key",
+          "kind": "function",
+          "source": "src/lfm3lab/research/store.py",
+          "line": 86,
+          "summary": "Encode split/case/condition as a canonical JSON key.",
+          "docstring": null,
+          "contract": {
+            "summary": "Encode split/case/condition as a canonical JSON key.",
+            "returns": "str"
+          },
+          "signature": "trial_key(split, case_id, condition_id)",
+          "parameters": [
+            {
+              "name": "split",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "case_id",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "condition_id",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.research.store.EvidenceStore",
+          "short_name": "EvidenceStore",
+          "kind": "class",
+          "source": "src/lfm3lab/research/store.py",
+          "line": 90,
+          "summary": "Advanced immutable-protocol, journal and raw-receipt storage.",
+          "docstring": "Caller must hold output_lock for every read or mutation.",
+          "contract": {
+            "summary": "Advanced immutable-protocol, journal and raw-receipt storage.",
+            "notes": "Every operation needs output_lock. Public state includes path, events, trials, responses and (after initialize/load) protocol/study. Prefer run_study/build_report for ordinary use. Do not construct successful result events from unaudited raw files."
+          },
+          "signature": "EvidenceStore(output)",
+          "parameters": [
+            {
+              "name": "output",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "fields": [],
+          "instance_attributes": [
+            "events",
+            "path",
+            "responses",
+            "trials"
+          ],
+          "bases": [],
+          "decorators": []
+        },
+        {
+          "name": "lfm3lab.research.store.EvidenceStore.initialize",
+          "short_name": "EvidenceStore.initialize",
+          "kind": "method",
+          "source": "src/lfm3lab/research/store.py",
+          "line": 99,
+          "summary": "Create a new protocol or verify an existing matching output when resume=True.",
+          "docstring": null,
+          "contract": {
+            "summary": "Create a new protocol or verify an existing matching output when resume=True.",
+            "returns": "None",
+            "notes": "Requires an existing locked output directory. Refuses unrelated nonempty output, changed protocol/backend identity or an existing protocol with resume=False."
+          },
+          "signature": "EvidenceStore.initialize(study, identity, *, resume)",
+          "parameters": [
+            {
+              "name": "study",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "identity",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "resume",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.store.EvidenceStore.load",
+          "short_name": "EvidenceStore.load",
+          "kind": "method",
+          "source": "src/lfm3lab/research/store.py",
+          "line": 121,
+          "summary": "Verify protocol, journal chain and referenced raw receipts; populate store state.",
+          "docstring": null,
+          "contract": {
+            "summary": "Verify protocol, journal chain and referenced raw receipts; populate store state.",
+            "returns": "The same EvidenceStore",
+            "notes": "Raises EvidenceError; never repairs truncated journals or accepts orphan receipts as results."
+          },
+          "signature": "EvidenceStore.load()",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.store.EvidenceStore.append",
+          "short_name": "EvidenceStore.append",
+          "kind": "method",
+          "source": "src/lfm3lab/research/store.py",
+          "line": 192,
+          "summary": "Validate and durably append an intent/result/failure event.",
+          "docstring": null,
+          "contract": {
+            "summary": "Validate and durably append an intent/result/failure event.",
+            "returns": "Event dict including sequence, predecessor and event hashes",
+            "notes": "Advanced event details must match the frozen protocol and raw receipt paths. This method is not a schema-free logging API."
+          },
+          "signature": "EvidenceStore.append(kind, key, **details)",
+          "parameters": [
+            {
+              "name": "kind",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "key",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "details",
+              "kind": "variadic-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.store.EvidenceStore.recover_interrupted",
+          "short_name": "EvidenceStore.recover_interrupted",
+          "kind": "method",
+          "source": "src/lfm3lab/research/store.py",
+          "line": 206,
+          "summary": "Journal failure for pending intents without durable completion.",
+          "docstring": null,
+          "contract": {
+            "summary": "Journal failure for pending intents without durable completion.",
+            "returns": "None",
+            "notes": "Charges reserved_seconds and never retries. Mutates the journal."
+          },
+          "signature": "EvidenceStore.recover_interrupted()",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.store.EvidenceStore.budget_used",
+          "short_name": "EvidenceStore.budget_used",
+          "kind": "method",
+          "source": "src/lfm3lab/research/store.py",
+          "line": 213,
+          "summary": "Calculate durable attempts and elapsed charges, including reservations for pending calls.",
+          "docstring": null,
+          "contract": {
+            "summary": "Calculate durable attempts and elapsed charges, including reservations for pending calls.",
+            "returns": "dict with attempts and elapsed_s"
+          },
+          "signature": "EvidenceStore.budget_used()",
+          "parameters": [],
+          "inherited_from": null
+        }
+      ]
+    },
+    {
+      "name": "lfm3lab.research.report",
+      "overview": "Model-free paired reports. build_report verifies evidence and rewrites derived reports, retaining failed/interrupted/missing counts. It does not execute a model or rerun trials.",
+      "source": "src/lfm3lab/research/report.py",
+      "source_sha256": "90dbd1da976047ec65c1e048f7faa035a31aac0c09e26645cdc45548cb02ff46",
+      "docstring": "Paired, model-free descriptive reports with explicit missingness.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "lfm3lab.research.report.build_report",
+          "short_name": "build_report",
+          "kind": "function",
+          "source": "src/lfm3lab/research/report.py",
+          "line": 193,
+          "summary": "Lock and verify saved evidence, then regenerate JSON and Markdown paired reports.",
+          "docstring": "Verify evidence and regenerate both reports without opening any model.",
+          "contract": {
+            "summary": "Lock and verify saved evidence, then regenerate JSON and Markdown paired reports.",
+            "returns": "Report dict",
+            "notes": "Writes derived files only; no model loading. Numeric deltas are condition minus explicit baseline. Missing/failed pairs are not imputed; declared controls are not automatically passed tests."
+          },
+          "signature": "build_report(output)",
+          "parameters": [
+            {
+              "name": "output",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "lfm3lab.glassbox",
+      "overview": "PyTorch instruments and native coordinates. Direct primitives require caller-owned Loaded model and inference_lock throughout load/use/unload. Do not overlap hook contexts. Low-level helpers are documented for completeness, not as a general adapter API.",
+      "source": "src/lfm3lab/glassbox.py",
+      "source_sha256": "69f84704e63dae20b7bebce232cfd8ccf2cc91421439bab86799cb17198f1267",
+      "docstring": "Standalone LFM3 mechanistic primitives. No router dependencies or presets.\n\nAll positions refer to predictor tokens, not the tokens being predicted. Public\nfunctions accept a Loaded model; its owner must hold inference_lock for the whole\nload/use/unload lifetime and serialize hooks. DLA is a frozen-final-norm direct\n projection, not a downstream causal effect. See docs/library-guide.md.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "lfm3lab.glassbox.REVISION",
+          "short_name": "REVISION",
+          "kind": "constant",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 33,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "'40ebe0aa6662c9d40389c2f5d565b6a2c6aebacd'",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.glassbox.REPO_ID",
+          "short_name": "REPO_ID",
+          "kind": "constant",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 34,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "'LiquidAI/LFM3-1.7B'",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.glassbox.LOCK_PATH",
+          "short_name": "LOCK_PATH",
+          "kind": "constant",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 35,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "Path(os.environ.get('LFM3_INFERENCE_LOCK', str(Path(tempfile.gettempdir()) / 'opencode' / 'lfm3-inference.lock')))",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.glassbox.LAYER_TYPES",
+          "short_name": "LAYER_TYPES",
+          "kind": "constant",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 37,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "tuple(('global' if i in (2, 6, 10, 14, 18, 22) else 'swa' if i in (4, 8, 12, 16, 20) else 'conv' for i in range(24)))",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.glassbox.SCOPES",
+          "short_name": "SCOPES",
+          "kind": "constant",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 39,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "{'boundary', 'first4', 'answer', 'prompt', 'all'}",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.glassbox.inference_lock",
+          "short_name": "inference_lock",
+          "kind": "function",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 43,
+          "summary": "Serialize model ownership across cooperating POSIX processes.",
+          "docstring": "Hold until weights, graphs and caches have been released, not just forward.",
+          "contract": {
+            "summary": "Serialize model ownership across cooperating POSIX processes.",
+            "returns": "Context manager yielding None",
+            "notes": "Blocking lock; hold from before loading until weights/graphs/caches are released. Default path is derived from the temporary directory, optionally LFM3_INFERENCE_LOCK. Do not acquire nested lifetime locks on one model."
+          },
+          "signature": "inference_lock(path=LOCK_PATH)",
+          "parameters": [
+            {
+              "name": "path",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "LOCK_PATH"
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.glassbox.release_memory",
+          "short_name": "release_memory",
+          "kind": "function",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 55,
+          "summary": "Collect garbage and synchronize/empty accelerator cache for the selected device.",
+          "docstring": null,
+          "contract": {
+            "summary": "Collect garbage and synchronize/empty accelerator cache for the selected device.",
+            "returns": "None",
+            "notes": "Does not remove live references to a caller-owned model."
+          },
+          "signature": "release_memory(device)",
+          "parameters": [
+            {
+              "name": "device",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.glassbox.Unit",
+          "short_name": "Unit",
+          "kind": "class",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 66,
+          "summary": "Frozen native coordinate: layer, family (h/c/n/res), index.",
+          "docstring": null,
+          "contract": {
+            "summary": "Frozen native coordinate: layer, family (h/c/n/res), index.",
+            "notes": "Use Unit.parse for validation. Direct dataclass construction does not validate coordinates. Residual adjacent out/in names alias a physical checkpoint."
+          },
+          "signature": "Unit(layer: int, family: str, index: int | str)",
+          "parameters": [
+            {
+              "name": "layer",
+              "kind": "positional-or-keyword",
+              "annotation": "int",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "family",
+              "kind": "positional-or-keyword",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "index",
+              "kind": "positional-or-keyword",
+              "annotation": "int | str",
+              "default": null,
+              "factory": null
+            }
+          ],
+          "fields": [
+            {
+              "name": "layer",
+              "annotation": "int",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "family",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "index",
+              "annotation": "int | str",
+              "default": null,
+              "factory": null
+            }
+          ],
+          "instance_attributes": [],
+          "bases": [],
+          "decorators": [
+            "dataclass(frozen=True)"
+          ]
+        },
+        {
+          "name": "lfm3lab.glassbox.Unit.parse",
+          "short_name": "Unit.parse",
+          "kind": "classmethod",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 72,
+          "summary": "Parse and validate a canonical address against config or pinned defaults.",
+          "docstring": null,
+          "contract": {
+            "summary": "Parse and validate a canonical address against config or pinned defaults.",
+            "returns": "Unit; raises ValueError for invalid family/layer/index"
+          },
+          "signature": "Unit.parse(text, config=None)",
+          "parameters": [
+            {
+              "name": "text",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "config",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "None"
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.glassbox.Unit.address",
+          "short_name": "Unit.address",
+          "kind": "property",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 94,
+          "summary": "Canonical unit spelling.",
+          "docstring": null,
+          "contract": {
+            "summary": "Canonical unit spelling.",
+            "returns": "str, for example L2.h0 or L12.res.mid"
+          },
+          "signature": "Unit.address",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.glassbox.Unit.checkpoint",
+          "short_name": "Unit.checkpoint",
+          "kind": "property",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 98,
+          "summary": "Physical residual checkpoint key, including adjacent out/in aliases.",
+          "docstring": null,
+          "contract": {
+            "summary": "Physical residual checkpoint key, including adjacent out/in aliases.",
+            "returns": "str; raises ValueError for non-residual units"
+          },
+          "signature": "Unit.checkpoint",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.glassbox.Unit.layer",
+          "short_name": "Unit.layer",
+          "kind": "field",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 67,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "layer: int",
+          "annotation": "int",
+          "default": null,
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.glassbox.Unit.family",
+          "short_name": "Unit.family",
+          "kind": "field",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 68,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "family: str",
+          "annotation": "str",
+          "default": null,
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.glassbox.Unit.index",
+          "short_name": "Unit.index",
+          "kind": "field",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 69,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "index: int | str",
+          "annotation": "int | str",
+          "default": null,
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.glassbox.PatchSpec",
+          "short_name": "PatchSpec",
+          "kind": "class",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 105,
+          "summary": "Ordered rules plus native/frozen normalization mode.",
+          "docstring": "Ordered rules. Later rules win on overlapping coordinates.\n\n{\"rules\": [{\"unit\":\"L2.h0\", \"op\":\"gate_clamp\", \"value\":0,\n            \"scope\":\"boundary\"}], \"norm_mode\":\"native\"}\n\nOps: heads gate_clamp/logit_offset/scale/zero; conv clamp/scale/zero;\nMLP clamp/scale/zero/mean_scale (requires explicit calibrated mu);\nresidual replace (source='clean', or explicit value vector), scale/zero.\nOptional positions narrows scope to absolute positions. row is reserved for\nbatched sweeps. Residual donor sequences must have identical token counts.",
+          "contract": {
+            "summary": "Ordered rules plus native/frozen normalization mode.",
+            "notes": "Constructing the dataclass alone does not validate. Use from_value or validate; at most 4096 rules. Rules accept unit/op/value/mu/scope/positions/source/row. Later overlapping rules win. Native coordinate validation needs PyTorch but no model weights."
+          },
+          "signature": "PatchSpec(rules: list[dict] = <factory>, norm_mode: str = 'native')",
+          "parameters": [
+            {
+              "name": "rules",
+              "kind": "positional-or-keyword",
+              "annotation": "list[dict]",
+              "default": "<factory>",
+              "factory": "list"
+            },
+            {
+              "name": "norm_mode",
+              "kind": "positional-or-keyword",
+              "annotation": "str",
+              "default": "'native'",
+              "factory": null
+            }
+          ],
+          "fields": [
+            {
+              "name": "rules",
+              "annotation": "list[dict]",
+              "default": "field(default_factory=list)",
+              "factory": "list"
+            },
+            {
+              "name": "norm_mode",
+              "annotation": "str",
+              "default": "'native'",
+              "factory": null
+            }
+          ],
+          "instance_attributes": [],
+          "bases": [],
+          "decorators": [
+            "dataclass"
+          ]
+        },
+        {
+          "name": "lfm3lab.glassbox.PatchSpec.from_value",
+          "short_name": "PatchSpec.from_value",
+          "kind": "classmethod",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 121,
+          "summary": "Normalize None/dict/PatchSpec into a validated native patch.",
+          "docstring": null,
+          "contract": {
+            "summary": "Normalize None/dict/PatchSpec into a validated native patch.",
+            "returns": "PatchSpec; raises ValueError for invalid patches"
+          },
+          "signature": "PatchSpec.from_value(value=None, config=None)",
+          "parameters": [
+            {
+              "name": "value",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "config",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "None"
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.glassbox.PatchSpec.validate",
+          "short_name": "PatchSpec.validate",
+          "kind": "method",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 131,
+          "summary": "Validate operations, coordinates, finite values and scope.",
+          "docstring": null,
+          "contract": {
+            "summary": "Validate operations, coordinates, finite values and scope.",
+            "returns": "The same PatchSpec",
+            "notes": "Clean donors require source='clean' on residual replace; explicit vectors must match hidden width. mean_scale requires finite mu. The adapter additionally rejects study-facing row selectors and unsupported donor operations."
+          },
+          "signature": "PatchSpec.validate(config=None)",
+          "parameters": [
+            {
+              "name": "config",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "None"
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.glassbox.PatchSpec.rules",
+          "short_name": "PatchSpec.rules",
+          "kind": "field",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 117,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "rules: list[dict]",
+          "annotation": "list[dict]",
+          "default": "field(default_factory=list)",
+          "factory": "list"
+        },
+        {
+          "name": "lfm3lab.glassbox.PatchSpec.norm_mode",
+          "short_name": "PatchSpec.norm_mode",
+          "kind": "field",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 118,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "norm_mode: str",
+          "annotation": "str",
+          "default": "'native'",
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.glassbox.position_mask",
+          "short_name": "position_mask",
+          "kind": "function",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 172,
+          "summary": "Compute a boolean tensor selecting predictor positions for a scope.",
+          "docstring": null,
+          "contract": {
+            "summary": "Compute a boolean tensor selecting predictor positions for a scope.",
+            "returns": "torch bool tensor shaped like positions"
+          },
+          "signature": "position_mask(positions, prompt_length, scope)",
+          "parameters": [
+            {
+              "name": "positions",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "prompt_length",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "scope",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.glassbox.edit_values",
+          "short_name": "edit_values",
+          "kind": "function",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 187,
+          "summary": "Apply one finite edit to tensor values.",
+          "docstring": null,
+          "contract": {
+            "summary": "Apply one finite edit to tensor values.",
+            "returns": "Tensor of edited values",
+            "notes": "Low-level helper; assumes an already validated rule. gate_clamp maps exact endpoints to infinite gate logits; sigmoid endpoints are exact."
+          },
+          "signature": "edit_values(values, rule, gate=False)",
+          "parameters": [
+            {
+              "name": "values",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "rule",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "gate",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "False"
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.glassbox.GlassboxHooks",
+          "short_name": "GlassboxHooks",
+          "kind": "class",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 206,
+          "summary": "Temporary native activation interventions and optional on-device capture.",
+          "docstring": "Exception-safe intervention/capture hooks, with absolute cached cursors.\n\nGraph tensors stay on-device only for the lifetime of this context. A caller\ndoing cached decoding uses capture=False, so old full activations are not kept.\nNorm and donor references are dictionaries of tensors from a matched clean pass.",
+          "contract": {
+            "summary": "Temporary native activation interventions and optional on-device capture.",
+            "notes": "Use as a context manager under serialized model ownership. Capture dictionaries acts/gates/points/inv/parts/routing hold tensors only until exit. reference_copy detaches copies that survive exit. Cached cursors use absolute predictor positions. Remaining nonprivate methods are low-level hook mechanics, not separate session operations."
+          },
+          "signature": "GlassboxHooks(model, prompt_length, patch=None, *, reference=None, capture=True)",
+          "parameters": [
+            {
+              "name": "model",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "prompt_length",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "patch",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "reference",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "capture",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "True"
+            }
+          ],
+          "fields": [],
+          "instance_attributes": [
+            "acts",
+            "capture",
+            "cursors",
+            "forwards",
+            "gates",
+            "handles",
+            "inv",
+            "model",
+            "parts",
+            "points",
+            "prompt_length",
+            "reference",
+            "routing",
+            "rules",
+            "spec"
+          ],
+          "bases": [],
+          "decorators": []
+        },
+        {
+          "name": "lfm3lab.glassbox.GlassboxHooks.add",
+          "short_name": "GlassboxHooks.add",
+          "kind": "method",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 226,
+          "summary": "Low-level hook mechanic: register a forward/pre-forward callback and retain its handle for cleanup.",
+          "docstring": null,
+          "contract": {
+            "summary": "Low-level hook mechanic: register a forward/pre-forward callback and retain its handle for cleanup.",
+            "returns": "None"
+          },
+          "signature": "GlassboxHooks.add(module, callback, pre=False)",
+          "parameters": [
+            {
+              "name": "module",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "callback",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "pre",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "False"
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.glassbox.GlassboxHooks.positions",
+          "short_name": "GlassboxHooks.positions",
+          "kind": "method",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 229,
+          "summary": "Low-level hook mechanic: advance a keyed cursor by x's sequence width.",
+          "docstring": null,
+          "contract": {
+            "summary": "Low-level hook mechanic: advance a keyed cursor by x's sequence width.",
+            "returns": "Absolute-position arange tensor on x.device"
+          },
+          "signature": "GlassboxHooks.positions(key, x)",
+          "parameters": [
+            {
+              "name": "key",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "x",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.glassbox.GlassboxHooks.apply",
+          "short_name": "GlassboxHooks.apply",
+          "kind": "method",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 234,
+          "summary": "Low-level hook mechanic: apply matching validated rules, masks, row selection and donors to x.",
+          "docstring": null,
+          "contract": {
+            "summary": "Low-level hook mechanic: apply matching validated rules, masks, row selection and donors to x.",
+            "returns": "Activation tensor; unchanged x if no matching rules, otherwise an edited clone"
+          },
+          "signature": "GlassboxHooks.apply(x, key, positions, gate=False)",
+          "parameters": [
+            {
+              "name": "x",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "key",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "positions",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "gate",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "False"
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.glassbox.GlassboxHooks.projection",
+          "short_name": "GlassboxHooks.projection",
+          "kind": "method",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 271,
+          "summary": "Build the pre-projection edit/capture callback for one unit family and layer.",
+          "docstring": null,
+          "contract": {
+            "summary": "Build the pre-projection edit/capture callback for one unit family and layer.",
+            "returns": "Forward-pre-hook callback; install only within owned hook lifetime"
+          },
+          "signature": "GlassboxHooks.projection(family, layer)",
+          "parameters": [
+            {
+              "name": "family",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "layer",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.glassbox.GlassboxHooks.residual",
+          "short_name": "GlassboxHooks.residual",
+          "kind": "method",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 280,
+          "summary": "Build an edit/capture callback for a physical residual checkpoint.",
+          "docstring": null,
+          "contract": {
+            "summary": "Build an edit/capture callback for a physical residual checkpoint.",
+            "returns": "Forward or forward-pre-hook callback according to pre"
+          },
+          "signature": "GlassboxHooks.residual(key, pre=False)",
+          "parameters": [
+            {
+              "name": "key",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "pre",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "False"
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.glassbox.GlassboxHooks.norm",
+          "short_name": "GlassboxHooks.norm",
+          "kind": "method",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 294,
+          "summary": "Build the post-operator/post-FFN denominator capture/frozen-normalization callback.",
+          "docstring": null,
+          "contract": {
+            "summary": "Build the post-operator/post-FFN denominator capture/frozen-normalization callback.",
+            "returns": "Forward-hook callback"
+          },
+          "signature": "GlassboxHooks.norm(layer, kind)",
+          "parameters": [
+            {
+              "name": "layer",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "kind",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.glassbox.GlassboxHooks.mid_forward",
+          "short_name": "GlassboxHooks.mid_forward",
+          "kind": "method",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 313,
+          "summary": "An ffn_norm pre-hook alone edits only the MLP read, NOT its skip path.",
+          "docstring": "An ffn_norm pre-hook alone edits only the MLP read, NOT its skip path.\n\nFor a mid-residual intervention, reproduce the pinned decoder's forward\nand replace the actual residual between the two additions. Native\nsubmodules/hooks and operation order are unchanged. Restore on exit.",
+          "contract": {},
+          "signature": "GlassboxHooks.mid_forward(block, layer)",
+          "parameters": [
+            {
+              "name": "block",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "layer",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.glassbox.GlassboxHooks.__enter__",
+          "short_name": "GlassboxHooks.__enter__",
+          "kind": "method",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 340,
+          "summary": "Install temporary capture/intervention hooks and necessary midpoint forward overrides.",
+          "docstring": null,
+          "contract": {
+            "summary": "Install temporary capture/intervention hooks and necessary midpoint forward overrides.",
+            "returns": "The same GlassboxHooks; partial installation is cleaned up on failure"
+          },
+          "signature": "GlassboxHooks.__enter__()",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.glassbox.GlassboxHooks.reference_copy",
+          "short_name": "GlassboxHooks.reference_copy",
+          "kind": "method",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 378,
+          "summary": "Copy captured denominators and residual points for an explicit reference pass.",
+          "docstring": null,
+          "contract": {
+            "summary": "Copy captured denominators and residual points for an explicit reference pass.",
+            "returns": "dict with inv and points mappings of detached cloned tensors"
+          },
+          "signature": "GlassboxHooks.reference_copy()",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.glassbox.GlassboxHooks.__exit__",
+          "short_name": "GlassboxHooks.__exit__",
+          "kind": "method",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 382,
+          "summary": "Remove hooks, restore forwards and clear captured graph/tensor dictionaries.",
+          "docstring": null,
+          "contract": {
+            "summary": "Remove hooks, restore forwards and clear captured graph/tensor dictionaries.",
+            "returns": "None; does not suppress the exception"
+          },
+          "signature": "GlassboxHooks.__exit__(*exc)",
+          "parameters": [
+            {
+              "name": "exc",
+              "kind": "variadic-positional",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.glassbox.architecture",
+          "short_name": "architecture",
+          "kind": "function",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 396,
+          "summary": "Describe the actual model layout and coordinate counts.",
+          "docstring": null,
+          "contract": {
+            "summary": "Describe the actual model layout and coordinate counts.",
+            "returns": "dict with layers, heads, conv_channels, mlp_neurons, unique_residual_checkpoints and conv_kernel_sizes"
+          },
+          "signature": "architecture(model)",
+          "parameters": [
+            {
+              "name": "model",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.glassbox.prepare_ids",
+          "short_name": "prepare_ids",
+          "kind": "function",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 408,
+          "summary": "Tokenize a prompt, optionally render chat, move IDs to the loaded device and enforce a token budget.",
+          "docstring": null,
+          "contract": {
+            "summary": "Tokenize a prompt, optionally render chat, move IDs to the loaded device and enforce a token budget.",
+            "returns": "int64 tensor [1, sequence_length]",
+            "notes": "No model forward, but requires an existing tokenizer/Loaded object. Low-level chat defaults True, unlike sessions."
+          },
+          "signature": "prepare_ids(lm, prompt, *, chat=True, thinking=False, max_tokens=512)",
+          "parameters": [
+            {
+              "name": "lm",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "prompt",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "chat",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "True"
+            },
+            {
+              "name": "thinking",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "False"
+            },
+            {
+              "name": "max_tokens",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "512"
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.glassbox.explicit_ids",
+          "short_name": "explicit_ids",
+          "kind": "function",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 419,
+          "summary": "Validate one flat list or single-sequence int64 tensor of vocabulary IDs.",
+          "docstring": "Validate JSON/list or tensor token IDs, with no arbitrary tensor uploads.",
+          "contract": {
+            "summary": "Validate one flat list or single-sequence int64 tensor of vocabulary IDs.",
+            "returns": "int64 tensor [1, sequence_length] on lm.device"
+          },
+          "signature": "explicit_ids(lm, value, max_tokens=768)",
+          "parameters": [
+            {
+              "name": "lm",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "value",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "max_tokens",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "768"
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.glassbox.resolve_pair",
+          "short_name": "resolve_pair",
+          "kind": "function",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 434,
+          "summary": "Resolve distinct token IDs from exact one-token texts, IDs or observational top logits.",
+          "docstring": null,
+          "contract": {
+            "summary": "Resolve distinct token IDs from exact one-token texts, IDs or observational top logits.",
+            "returns": "(target_id, foil_id)",
+            "notes": "Auto-selection when omitted is not allowed as a fixed Study scoring objective."
+          },
+          "signature": "resolve_pair(tokenizer, logits, target=None, foil=None)",
+          "parameters": [
+            {
+              "name": "tokenizer",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "logits",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "target",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "foil",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "None"
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.glassbox.token_summary",
+          "short_name": "token_summary",
+          "kind": "function",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 456,
+          "summary": "Summarize a chosen/greedy token and the top logits.",
+          "docstring": null,
+          "contract": {
+            "summary": "Summarize a chosen/greedy token and the top logits.",
+            "returns": "dict with token_id, token, prob, logprob, margin and top5"
+          },
+          "signature": "token_summary(tok, logits, chosen=None)",
+          "parameters": [
+            {
+              "name": "tok",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "logits",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "chosen",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "None"
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.glassbox.attention_mode",
+          "short_name": "attention_mode",
+          "kind": "function",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 506,
+          "summary": "Temporarily select eager attention for routing telemetry.",
+          "docstring": null,
+          "contract": {
+            "summary": "Temporarily select eager attention for routing telemetry.",
+            "returns": "Context manager yielding None and restoring the old implementation on exit"
+          },
+          "signature": "attention_mode(model, eager=False)",
+          "parameters": [
+            {
+              "name": "model",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "eager",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "False"
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.glassbox.run_glassbox_probe",
+          "short_name": "run_glassbox_probe",
+          "kind": "function",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 517,
+          "summary": "Instrument one forward and any required reference/donor pass.",
+          "docstring": "One instrumented forward (+ clean reference only when required).\n\nRouting is opt-in, limited to 128 tokens and 8 pinned heads, to avoid a huge\nT*T JSON payload. Unit rankings are direct projections, NOT proven causality.\nLogit lens is evaluated at the inspected position across every layer.",
+          "contract": {
+            "summary": "Instrument one forward and any required reference/donor pass.",
+            "returns": "JSON dict with kind='probe', input_ids, prompt_length, position, target/foil, margin, architecture, matrices/spine/units, temporal readouts, token_trace, routing, vocabulary and DLA limits",
+            "notes": "One sequence; prompt token limit 512 or explicit IDs <=768. top_k 1..64; <=32 pins; <=4 c/n vocabulary units. Routing requires <=128 tokens and 1..8 pinned heads. DLA is a frozen-final-norm direct projection, not a downstream causal effect."
+          },
+          "signature": "run_glassbox_probe(lm, prompt=None, *, patch=None, target=None, foil=None, position=None, top_k=8, pins=None, routing=False, chat=True, thinking=False, input_ids=None, prompt_length=None, donor_prompt=None, trace_start=None, chosen_ids=None, vocabulary_units=None)",
+          "parameters": [
+            {
+              "name": "lm",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "prompt",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "patch",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "target",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "foil",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "position",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "top_k",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "8"
+            },
+            {
+              "name": "pins",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "routing",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "False"
+            },
+            {
+              "name": "chat",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "True"
+            },
+            {
+              "name": "thinking",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "False"
+            },
+            {
+              "name": "input_ids",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "prompt_length",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "donor_prompt",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "trace_start",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "chosen_ids",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "vocabulary_units",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.glassbox.run_gradient_attribution",
+          "short_name": "run_gradient_attribution",
+          "kind": "function",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 677,
+          "summary": "One differentiable forward and autograd.grad for a target-minus-foil token margin.",
+          "docstring": "One differentiable forward + one autograd.grad, no weight gradients.\n\nHead score: sum_d z_d*dmargin/dz_d, with z=g*attention, algebraically\ng*dmargin/dg. Rankings sum over all causal source positions up to position.\nInspected-position and per-position head arrays are also returned.",
+          "contract": {
+            "summary": "One differentiable forward and autograd.grad for a target-minus-foil token margin.",
+            "returns": "JSON dict with kind='attribute', margin, IDs, head_scores/head_timeline, rankings and optional full scores",
+            "notes": "One sequence <=256 tokens, top_k 1..64. No parameter gradients are allocated; prior requires_grad flags are restored. Donor behavior is restricted by the session adapter; use session for supported capabilities."
+          },
+          "signature": "run_gradient_attribution(lm, prompt=None, *, patch=None, target=None, foil=None, position=None, top_k=8, chat=True, thinking=False, input_ids=None, prompt_length=None, full_scores=False)",
+          "parameters": [
+            {
+              "name": "lm",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "prompt",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "patch",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "target",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "foil",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "position",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "top_k",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "8"
+            },
+            {
+              "name": "chat",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "True"
+            },
+            {
+              "name": "thinking",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "False"
+            },
+            {
+              "name": "input_ids",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "prompt_length",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "full_scores",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "False"
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.glassbox.run_head_ablation_sweep",
+          "short_name": "run_head_ablation_sweep",
+          "kind": "function",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 750,
+          "summary": "Batched finite zero ablations with matched batch-shape clean comparisons.",
+          "docstring": "Batched exact leave-one-out effects (patched minus clean logit margin).\n\nmode=layers removes each operator write; mode=mlp_layers each MLP write;\nmode=blocks bypasses the entire decoder block. Clean comparison uses the\nsame batch shape as its intervention, avoiding batch-kernel baseline drift.",
+          "contract": {
+            "summary": "Batched finite zero ablations with matched batch-shape clean comparisons.",
+            "returns": "JSON dict with kind='sweep', rows (unit/margin/clean_margin/delta_margin), baseline_margin, dtype and batch drift",
+            "notes": "<=256 prompt tokens, batch_size 1..16. Modes heads/layers/mlp_layers/blocks. units only for unique heads. MPS additionally limits batch_size × prompt_tokens <=1024."
+          },
+          "signature": "run_head_ablation_sweep(lm, prompt, *, target=None, foil=None, scope='boundary', norm_mode='native', batch_size=4, units=None, mode='heads', chat=True, thinking=False)",
+          "parameters": [
+            {
+              "name": "lm",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "prompt",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "target",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "foil",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "scope",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "'boundary'"
+            },
+            {
+              "name": "norm_mode",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "'native'"
+            },
+            {
+              "name": "batch_size",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "4"
+            },
+            {
+              "name": "units",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "mode",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "'heads'"
+            },
+            {
+              "name": "chat",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "True"
+            },
+            {
+              "name": "thinking",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "False"
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.glassbox.run_glassbox_generate",
+          "short_name": "run_glassbox_generate",
+          "kind": "function",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 833,
+          "summary": "Greedy cached generation followed by full teacher-forced telemetry replay.",
+          "docstring": "Greedy cached generation, then full teacher-forced mechanistic replay.\n\nFrozen norms use a separate clean cache fed exactly the patched trajectory.\nReplay gives synchronized telemetry even after generated tokens diverge.\nClean-vs-patched decision comparison should use fixed A/B IDs.",
+          "contract": {
+            "summary": "Greedy cached generation followed by full teacher-forced telemetry replay.",
+            "returns": "Probe-style JSON dict with kind='generate', text, generated_ids, cached_token_trace, replay error and timing",
+            "notes": "Prompt <=512 tokens; max_new_tokens 1..128. EOS may stop early. Clean-source donors are rejected; explicit vector replacement is allowed. No generated correctness or practical benefit is established."
+          },
+          "signature": "run_glassbox_generate(lm, prompt, *, patch=None, target=None, foil=None, max_new_tokens=32, top_k=8, pins=None, chat=True, thinking=False)",
+          "parameters": [
+            {
+              "name": "lm",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "prompt",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "patch",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "target",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "foil",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "max_new_tokens",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "32"
+            },
+            {
+              "name": "top_k",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "8"
+            },
+            {
+              "name": "pins",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "chat",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "True"
+            },
+            {
+              "name": "thinking",
+              "kind": "keyword-only",
+              "annotation": null,
+              "default": "False"
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.glassbox.probe_pass",
+          "short_name": "probe_pass",
+          "kind": "alias",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 890,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "run_glassbox_probe",
+          "alias_of": "lfm3lab.glassbox.run_glassbox_probe"
+        },
+        {
+          "name": "lfm3lab.glassbox.attribute_gradient",
+          "short_name": "attribute_gradient",
+          "kind": "alias",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 891,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "run_gradient_attribution",
+          "alias_of": "lfm3lab.glassbox.run_gradient_attribution"
+        },
+        {
+          "name": "lfm3lab.glassbox.ablation_sweep",
+          "short_name": "ablation_sweep",
+          "kind": "alias",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 892,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "run_head_ablation_sweep",
+          "alias_of": "lfm3lab.glassbox.run_head_ablation_sweep"
+        },
+        {
+          "name": "lfm3lab.glassbox.synthetic_glassbox_checks",
+          "short_name": "synthetic_glassbox_checks",
+          "kind": "function",
+          "source": "src/lfm3lab/glassbox.py",
+          "line": 895,
+          "summary": "Run the 24-layer tiny float32 hybrid CPU fixture with real hooks.",
+          "docstring": "Offline CPU tests with real modules/hooks, all 24 hybrid layers, no weights download.",
+          "contract": {
+            "summary": "Run the 24-layer tiny float32 hybrid CPU fixture with real hooks.",
+            "returns": "dict with passed/checks/fixture; raises AssertionError on contract failures",
+            "notes": "No real weights, tokenizer or native attention kernels. Requires instruments extra."
+          },
+          "signature": "synthetic_glassbox_checks()",
+          "parameters": []
+        }
+      ]
+    },
+    {
+      "name": "lfm3lab.research.worker",
+      "overview": "Advanced JSON transport. Connects to existing hardware, never provisions it. Remote close closes only the proxy. Server owners must shutdown, drain server_close, then close the backend. Use SSH/TLS and authentication as appropriate; not a multi-tenant production service.",
+      "source": "src/lfm3lab/research/worker.py",
+      "source_sha256": "f552037566853f87560bbacfd42bff6869b90f49dccc491c493226d356b7f603",
+      "docstring": "JSON-only, serialized research transport. The server does not own its backend.\n\nCall shutdown() from another thread, then server_close(), before backend.close().\nSocket and queue timeouts bound waiting, not an already-running model operation.\nFor nonloopback deployment use TLS at a trusted reverse proxy or an SSH tunnel.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "lfm3lab.research.worker.OPERATIONS",
+          "short_name": "OPERATIONS",
+          "kind": "constant",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 23,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "frozenset({'score', 'probe', 'attribute', 'generate', 'sweep'})",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.research.worker.MAX_BODY_BYTES",
+          "short_name": "MAX_BODY_BYTES",
+          "kind": "constant",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 24,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "1024 * 1024",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.research.worker.MAX_RESPONSE_BYTES",
+          "short_name": "MAX_RESPONSE_BYTES",
+          "kind": "constant",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 25,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "32 * 1024 * 1024",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.research.worker.SOCKET_TIMEOUT",
+          "short_name": "SOCKET_TIMEOUT",
+          "kind": "constant",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 26,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "15",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.research.worker.QUEUE_TIMEOUT",
+          "short_name": "QUEUE_TIMEOUT",
+          "kind": "constant",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 27,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "600",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.research.worker.MAX_CONNECTIONS",
+          "short_name": "MAX_CONNECTIONS",
+          "kind": "constant",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 28,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "16",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.research.worker.STATUS_PATH",
+          "short_name": "STATUS_PATH",
+          "kind": "constant",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 29,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "'/api/research/status'",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.research.worker.RUN_PATH",
+          "short_name": "RUN_PATH",
+          "kind": "constant",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 30,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "'/api/research/run'",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.research.worker.RemoteError",
+          "short_name": "RemoteError",
+          "kind": "class",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 65,
+          "summary": "RuntimeError preserving worker HTTP failure information.",
+          "docstring": "A worker rejected a request; preserve HTTP status and backend error type.",
+          "contract": {
+            "summary": "RuntimeError preserving worker HTTP failure information.",
+            "notes": "Public attributes: status_code and error_type. Invalid worker envelopes/connection failures may raise ordinary RuntimeError instead."
+          },
+          "signature": "RemoteError(status, error_type, message)",
+          "parameters": [
+            {
+              "name": "status",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "error_type",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "message",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "fields": [],
+          "instance_attributes": [
+            "error_type",
+            "status_code"
+          ],
+          "bases": [
+            "RuntimeError"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "lfm3lab.research.worker.RemoteBackend",
+          "short_name": "RemoteBackend",
+          "kind": "class",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 79,
+          "summary": "HTTP/HTTPS JSON client for an existing worker origin.",
+          "docstring": null,
+          "contract": {
+            "summary": "HTTP/HTTPS JSON client for an existing worker origin.",
+            "notes": "URL must have no credentials/query/fragment/extra path. timeout is >0 and <=3600 seconds. token is nonempty printable ASCII without spaces. Proxies and redirects are disabled. close never unloads the remote worker."
+          },
+          "signature": "RemoteBackend(url, token=None, timeout=600)",
+          "parameters": [
+            {
+              "name": "url",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "token",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "None"
+            },
+            {
+              "name": "timeout",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "600"
+            }
+          ],
+          "fields": [],
+          "instance_attributes": [
+            "timeout",
+            "token",
+            "url"
+          ],
+          "bases": [],
+          "decorators": []
+        },
+        {
+          "name": "lfm3lab.research.worker.RemoteBackend.run",
+          "short_name": "RemoteBackend.run",
+          "kind": "method",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 132,
+          "summary": "POST a bounded versioned JSON operation to the existing worker.",
+          "docstring": null,
+          "contract": {
+            "summary": "POST a bounded versioned JSON operation to the existing worker.",
+            "returns": "Worker result dict; RemoteError for HTTP failures",
+            "notes": "May request real inference. Unsupported operations/payload shape are rejected locally; adapter-specific validation happens at the worker. No automatic retries."
+          },
+          "signature": "RemoteBackend.run(operation, payload)",
+          "parameters": [
+            {
+              "name": "operation",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "payload",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.worker.RemoteBackend.status",
+          "short_name": "RemoteBackend.status",
+          "kind": "method",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 135,
+          "summary": "GET the worker's status through the authenticated client.",
+          "docstring": null,
+          "contract": {
+            "summary": "GET the worker's status through the authenticated client.",
+            "returns": "Worker status dict; performs HTTP but status does not load local weights"
+          },
+          "signature": "RemoteBackend.status()",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.worker.RemoteBackend.close",
+          "short_name": "RemoteBackend.close",
+          "kind": "method",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 138,
+          "summary": "Mark the proxy closed without stopping/unloading the shared worker.",
+          "docstring": null,
+          "contract": {
+            "summary": "Mark the proxy closed without stopping/unloading the shared worker.",
+            "returns": "None"
+          },
+          "signature": "RemoteBackend.close()",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.worker.RemoteBackend.__enter__",
+          "short_name": "RemoteBackend.__enter__",
+          "kind": "method",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 142,
+          "summary": "Enter an open remote proxy; rejects a previously closed proxy.",
+          "docstring": null,
+          "contract": {
+            "summary": "Enter an open remote proxy; rejects a previously closed proxy.",
+            "returns": "The same RemoteBackend"
+          },
+          "signature": "RemoteBackend.__enter__()",
+          "parameters": [],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.worker.RemoteBackend.__exit__",
+          "short_name": "RemoteBackend.__exit__",
+          "kind": "method",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 147,
+          "summary": "Close only the proxy on context exit.",
+          "docstring": null,
+          "contract": {
+            "summary": "Close only the proxy on context exit.",
+            "returns": "None; does not suppress the exception"
+          },
+          "signature": "RemoteBackend.__exit__(*exc)",
+          "parameters": [
+            {
+              "name": "exc",
+              "kind": "variadic-positional",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.worker.ResearchHTTPServer",
+          "short_name": "ResearchHTTPServer",
+          "kind": "class",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 166,
+          "summary": "Advanced standard-library server with serialized backend calls and bounded connections.",
+          "docstring": null,
+          "contract": {
+            "summary": "Advanced standard-library server with serialized backend calls and bounded connections.",
+            "notes": "Constructor/server lifecycle methods are inherited from ThreadingHTTPServer. Prefer create_server. Public backend, token, backend_lock, connection_slots, allowed_hosts and server_address are configured by that factory."
+          },
+          "signature": null,
+          "parameters": [],
+          "fields": [],
+          "instance_attributes": [],
+          "bases": [
+            "ThreadingHTTPServer"
+          ],
+          "decorators": []
+        },
+        {
+          "name": "lfm3lab.research.worker.ResearchHTTPServer.process_request",
+          "short_name": "ResearchHTTPServer.process_request",
+          "kind": "method",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 171,
+          "summary": "Advanced server callback: reserve a connection slot or send bounded JSON 503, then dispatch the handler thread.",
+          "docstring": null,
+          "contract": {
+            "summary": "Advanced server callback: reserve a connection slot or send bounded JSON 503, then dispatch the handler thread.",
+            "returns": "None; normally invoked by the standard-library server"
+          },
+          "signature": "ResearchHTTPServer.process_request(request, client_address)",
+          "parameters": [
+            {
+              "name": "request",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "client_address",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.worker.ResearchHTTPServer.process_request_thread",
+          "short_name": "ResearchHTTPServer.process_request_thread",
+          "kind": "method",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 186,
+          "summary": "Advanced server callback: run a handler and release its reserved connection slot in finally.",
+          "docstring": null,
+          "contract": {
+            "summary": "Advanced server callback: run a handler and release its reserved connection slot in finally.",
+            "returns": "None; normally invoked by the standard-library server"
+          },
+          "signature": "ResearchHTTPServer.process_request_thread(request, client_address)",
+          "parameters": [
+            {
+              "name": "request",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "client_address",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ],
+          "inherited_from": null
+        },
+        {
+          "name": "lfm3lab.research.worker.ResearchHTTPServer.daemon_threads",
+          "short_name": "ResearchHTTPServer.daemon_threads",
+          "kind": "class attribute",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 167,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "False"
+        },
+        {
+          "name": "lfm3lab.research.worker.ResearchHTTPServer.block_on_close",
+          "short_name": "ResearchHTTPServer.block_on_close",
+          "kind": "class attribute",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 168,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "True"
+        },
+        {
+          "name": "lfm3lab.research.worker.ResearchHTTPServer.allow_reuse_address",
+          "short_name": "ResearchHTTPServer.allow_reuse_address",
+          "kind": "class attribute",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 169,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "True"
+        },
+        {
+          "name": "lfm3lab.research.worker.create_server",
+          "short_name": "create_server",
+          "kind": "function",
+          "source": "src/lfm3lab/research/worker.py",
+          "line": 325,
+          "summary": "Bind a JSON server without starting it or taking model ownership.",
+          "docstring": "Bind a worker without starting threads or loading/closing a backend.\n\nOnly the bound authority is accepted in Host (loopback aliases are allowed).\nNonloopback binds require an explicit token. server_close drains handlers.",
+          "contract": {
+            "summary": "Bind a JSON server without starting it or taking model ownership.",
+            "returns": "ResearchHTTPServer",
+            "notes": "port=0 selects an ephemeral port; CLI serve defaults to 8766. Nonloopback binds require a token. Configure exact allowed_hosts if using trusted NAT/proxy. shutdown must be called from another thread before server_close and backend.close."
+          },
+          "signature": "create_server(backend, host='127.0.0.1', port=0, token=None)",
+          "parameters": [
+            {
+              "name": "backend",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "host",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "'127.0.0.1'"
+            },
+            {
+              "name": "port",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "0"
+            },
+            {
+              "name": "token",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "None"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "lfm3lab.model",
+      "overview": "Advanced loading helper. Import needs PyTorch; load additionally imports Hub/Transformers, downloads artifacts and executes checkpoint code. Its old unpinned default/base alias is retained but is not a supported mechanistic adapter. Prefer ResearchSession.local.",
+      "source": "src/lfm3lab/model.py",
+      "source_sha256": "6a808ff0dc2375c0e98b2ad8eb83212ad109e7a489773ea814ba462fe7d7b6c8",
+      "docstring": "Minimal loading helper, not a claim of support for arbitrary architectures.\n\nThe study adapter passes an explicit pinned revision. Calling this low-level\nloader directly downloads weights and executes checkpoint code; its caller must\nhold the inference lock for the entire load/use/unload lifetime.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "lfm3lab.model.MODELS",
+          "short_name": "MODELS",
+          "kind": "constant",
+          "source": "src/lfm3lab/model.py",
+          "line": 13,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "expression": "{'instruct': 'LiquidAI/LFM3-1.7B', 'base': 'LiquidAI/LFM3-1.7B-Base'}",
+          "alias_of": null
+        },
+        {
+          "name": "lfm3lab.model.pick_device",
+          "short_name": "pick_device",
+          "kind": "function",
+          "source": "src/lfm3lab/model.py",
+          "line": 19,
+          "summary": "Choose available MPS, then CUDA, otherwise CPU.",
+          "docstring": null,
+          "contract": {
+            "summary": "Choose available MPS, then CUDA, otherwise CPU.",
+            "returns": "device str",
+            "notes": "Not the session default. Session local defaults to CUDA; explicit CPU/MPS opt-in is still needed."
+          },
+          "signature": "pick_device() -> str",
+          "parameters": []
+        },
+        {
+          "name": "lfm3lab.model.Loaded",
+          "short_name": "Loaded",
+          "kind": "class",
+          "source": "src/lfm3lab/model.py",
+          "line": 28,
+          "summary": "Carrier for a model, tokenizer, repository/revision and device.",
+          "docstring": null,
+          "contract": {
+            "summary": "Carrier for a model, tokenizer, repository/revision and device.",
+            "notes": "Construction does not load weights or acquire locks. Caller owns its lifetime; pass this carrier to low-level primitives only under inference_lock."
+          },
+          "signature": "Loaded(model: torch.nn.Module, tokenizer: object, repo_id: str, revision: str, device: str)",
+          "parameters": [
+            {
+              "name": "model",
+              "kind": "positional-or-keyword",
+              "annotation": "torch.nn.Module",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "tokenizer",
+              "kind": "positional-or-keyword",
+              "annotation": "object",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "repo_id",
+              "kind": "positional-or-keyword",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "revision",
+              "kind": "positional-or-keyword",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "device",
+              "kind": "positional-or-keyword",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            }
+          ],
+          "fields": [
+            {
+              "name": "model",
+              "annotation": "torch.nn.Module",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "tokenizer",
+              "annotation": "object",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "repo_id",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "revision",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            },
+            {
+              "name": "device",
+              "annotation": "str",
+              "default": null,
+              "factory": null
+            }
+          ],
+          "instance_attributes": [],
+          "bases": [],
+          "decorators": [
+            "dataclass"
+          ]
+        },
+        {
+          "name": "lfm3lab.model.Loaded.model",
+          "short_name": "Loaded.model",
+          "kind": "field",
+          "source": "src/lfm3lab/model.py",
+          "line": 29,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "model: torch.nn.Module",
+          "annotation": "torch.nn.Module",
+          "default": null,
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.model.Loaded.tokenizer",
+          "short_name": "Loaded.tokenizer",
+          "kind": "field",
+          "source": "src/lfm3lab/model.py",
+          "line": 30,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "tokenizer: object",
+          "annotation": "object",
+          "default": null,
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.model.Loaded.repo_id",
+          "short_name": "Loaded.repo_id",
+          "kind": "field",
+          "source": "src/lfm3lab/model.py",
+          "line": 31,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "repo_id: str",
+          "annotation": "str",
+          "default": null,
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.model.Loaded.revision",
+          "short_name": "Loaded.revision",
+          "kind": "field",
+          "source": "src/lfm3lab/model.py",
+          "line": 32,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "revision: str",
+          "annotation": "str",
+          "default": null,
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.model.Loaded.device",
+          "short_name": "Loaded.device",
+          "kind": "field",
+          "source": "src/lfm3lab/model.py",
+          "line": 33,
+          "summary": "",
+          "docstring": null,
+          "contract": {},
+          "signature": "device: str",
+          "annotation": "str",
+          "default": null,
+          "factory": null
+        },
+        {
+          "name": "lfm3lab.model.load",
+          "short_name": "load",
+          "kind": "function",
+          "source": "src/lfm3lab/model.py",
+          "line": 36,
+          "summary": "Load checkpoint artifacts and execute its custom code on the chosen device.",
+          "docstring": "Load a checkpoint. Direct calls without a revision resolve the current head.\n\nUse ResearchSession.local for pinned identity and serialized ownership.",
+          "contract": {
+            "summary": "Load checkpoint artifacts and execute its custom code on the chosen device.",
+            "returns": "Loaded",
+            "notes": "Requires explicit compute authorization and an external lifetime lock. revision=None resolves repository head. The base alias/arbitrary repo string is legacy loader behavior, not verified Glass-Box model support."
+          },
+          "signature": "load(which: str='instruct', revision: str | None=None, device: str | None=None, dtype: torch.dtype=torch.bfloat16, attn_implementation: str='sdpa') -> Loaded",
+          "parameters": [
+            {
+              "name": "which",
+              "kind": "positional-or-keyword",
+              "annotation": "str",
+              "default": "'instruct'"
+            },
+            {
+              "name": "revision",
+              "kind": "positional-or-keyword",
+              "annotation": "str | None",
+              "default": "None"
+            },
+            {
+              "name": "device",
+              "kind": "positional-or-keyword",
+              "annotation": "str | None",
+              "default": "None"
+            },
+            {
+              "name": "dtype",
+              "kind": "positional-or-keyword",
+              "annotation": "torch.dtype",
+              "default": "torch.bfloat16"
+            },
+            {
+              "name": "attn_implementation",
+              "kind": "positional-or-keyword",
+              "annotation": "str",
+              "default": "'sdpa'"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "lfm3lab.jacobian_lens",
+      "overview": "Two retained PyTorch numerical helpers. No Jacobian fitter or calibration API is included.",
+      "source": "src/lfm3lab/jacobian_lens.py",
+      "source_sha256": "7461de8819ddf863164fa357669b932b14ba8fc190c2eede449756a9dd1f93e0",
+      "docstring": "Numerical helpers retained at their original import path for compatibility.\n\nOnly the Glass-Box dependency closure is included, not the Jacobian fitter.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "lfm3lab.jacobian_lens.sync",
+          "short_name": "sync",
+          "kind": "function",
+          "source": "src/lfm3lab/jacobian_lens.py",
+          "line": 8,
+          "summary": "Synchronize the selected accelerator; CPU is a no-op.",
+          "docstring": null,
+          "contract": {
+            "summary": "Synchronize the selected accelerator; CPU is a no-op.",
+            "returns": "None"
+          },
+          "signature": "sync(device)",
+          "parameters": [
+            {
+              "name": "device",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ]
+        },
+        {
+          "name": "lfm3lab.jacobian_lens.unembed",
+          "short_name": "unembed",
+          "kind": "function",
+          "source": "src/lfm3lab/jacobian_lens.py",
+          "line": 15,
+          "summary": "Apply embedding_norm then lm_head to a residual state.",
+          "docstring": "LFM3's final normalization is embedding_norm, not norm.",
+          "contract": {
+            "summary": "Apply embedding_norm then lm_head to a residual state.",
+            "returns": "Logits tensor with last dimension vocabulary size"
+          },
+          "signature": "unembed(model, state)",
+          "parameters": [
+            {
+              "name": "model",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            },
+            {
+              "name": "state",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "lfm3lab.research.cli",
+      "overview": "Installed glass-box CLI implementation; lfm3-research is a compatibility alias. Prefer the command-line interface over parser internals. check requires the instruments extra; examples/validate/report are dependency-free.",
+      "source": "src/lfm3lab/research/cli.py",
+      "source_sha256": "3b50a3349faf29c9adede6aaf197cb940d858de273cda4d560b341c4717258b2",
+      "docstring": "Model-free defaults and explicit local/remote execution for fixed studies.\n\nRun exits: 0 = requested split complete (including zero cases), 1 = failed or\ninterrupted trials / command error, 3 = incomplete with missing trials. Failed\nor interrupted trials take precedence over missing trials. Reports remain JSON\non stdout; the model-free report command exits 0 even for partial/failed studies.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "lfm3lab.research.cli.parser",
+          "short_name": "parser",
+          "kind": "function",
+          "source": "src/lfm3lab/research/cli.py",
+          "line": 56,
+          "summary": "Construct the CLI argument parser without inference.",
+          "docstring": null,
+          "contract": {
+            "summary": "Construct the CLI argument parser without inference.",
+            "returns": "argparse.ArgumentParser"
+          },
+          "signature": "parser()",
+          "parameters": []
+        },
+        {
+          "name": "lfm3lab.research.cli.main",
+          "short_name": "main",
+          "kind": "function",
+          "source": "src/lfm3lab/research/cli.py",
+          "line": 87,
+          "summary": "Execute CLI arguments and print JSON results/errors.",
+          "docstring": null,
+          "contract": {
+            "summary": "Execute CLI arguments and print JSON results/errors.",
+            "returns": "Exit-code int",
+            "notes": "run exits 0 complete, 1 failed/interrupted/error, 3 incomplete. report exits 0 even when its saved evidence contains failures. run/serve can use real models; validate/report/examples cannot."
+          },
+          "signature": "main(argv=None)",
+          "parameters": [
+            {
+              "name": "argv",
+              "kind": "positional-or-keyword",
+              "annotation": null,
+              "default": "None"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "lfm3lab.research.checks",
+      "overview": "Model-free CPU fixture entry points. run_checks needs PyTorch and starts only tiny synthetic modules and loopback fixture servers; it never rents hardware or loads real weights. Call from a guarded main block when multiprocessing spawn is used.",
+      "source": "src/lfm3lab/research/checks.py",
+      "source_sha256": "2db0b9d3fa8208b39b1648d6421273203daaf76c3de3fde3b55aaba6c2898d54",
+      "docstring": "Focused CPU/fake-backend integration checks. Never downloads model weights.",
+      "exports": [],
+      "symbols": [
+        {
+          "name": "lfm3lab.research.checks.schema_checks",
+          "short_name": "schema_checks",
+          "kind": "function",
+          "source": "src/lfm3lab/research/checks.py",
+          "line": 12,
+          "summary": "Validate protocol roundtrips, fixed objectives and rejection fixtures.",
+          "docstring": null,
+          "contract": {
+            "summary": "Validate protocol roundtrips, fixed objectives and rejection fixtures.",
+            "returns": "Passed-check dict; no PyTorch required"
+          },
+          "signature": "schema_checks()",
+          "parameters": []
+        },
+        {
+          "name": "lfm3lab.research.checks.run_checks",
+          "short_name": "run_checks",
+          "kind": "function",
+          "source": "src/lfm3lab/research/checks.py",
+          "line": 46,
+          "summary": "Run schema, tiny instrument/backend, runner, worker and example contracts.",
+          "docstring": null,
+          "contract": {
+            "summary": "Run schema, tiny instrument/backend, runner, worker and example contracts.",
+            "returns": "dict with passed/mode/checks/elapsed_s",
+            "notes": "Requires instruments extra; failures raise. Never loads real weights. A script caller must use if __name__ == '__main__' because the lock fixture uses multiprocessing spawn."
+          },
+          "signature": "run_checks()",
+          "parameters": []
+        }
+      ]
+    }
+  ]
+}

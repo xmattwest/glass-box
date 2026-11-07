@@ -1,11 +1,18 @@
 # Glass-Box
 
 Public, library-only project. Read README.md and the relevant section of
-docs/library-guide.md. Source provenance and extraction boundaries are in
+docs/library-guide.md. For consumer-agent usage read docs/agents.md, then the
+generated docs/api/reference.md or reference.json. This file is contributor
+guidance, not a replacement for consumer API documentation.
+Source provenance and extraction boundaries are in
 docs/extraction.md; release gates are in docs/release-checklist.md.
 
 - Preserve the existing numerical and wire contracts before adding features.
   `lfm3lab` is the compatibility namespace, not the archive's whole lab.
+- API signatures/fields/constants are generated statically by scripts/build_docs.py.
+  Edit docs/api-contracts.json for semantic notes, not the generated API files.
+  Run the builder and --check after interface/docs changes. Never import a model
+  to build docs; agent references must remain readable from an installed wheel.
 - The research archive is a read-only information source. Do not copy its Git
   history, lab log, results, social assets, cloud helpers, secrets or weights.
 - Default to model-free work. No real inference, paid worker, publication,

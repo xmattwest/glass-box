@@ -34,7 +34,12 @@ packages = ["src/lfm3lab"]
 "examples/mechanistic/code_retrieval.json" = "lfm3lab/research/examples/code_retrieval.json"
 "examples/mechanistic/tool_continuation.json" = "lfm3lab/research/examples/tool_continuation.json"
 "examples/mechanistic/fake_walkthrough.py" = "lfm3lab/research/examples/fake_walkthrough.py"
+"docs/agents.md" = "lfm3lab/docs/agents.md"
+"docs/library-guide.md" = "lfm3lab/docs/library-guide.md"
+"docs/api/reference.md" = "lfm3lab/docs/api/reference.md"
+"docs/api/reference.json" = "lfm3lab/docs/api/reference.json"
+"llms-full.txt" = "lfm3lab/docs/llms-full.txt"
 
 [tool.hatch.build.targets.sdist]
-only-include = ["pyproject.toml", "README.md", "LICENSE", "NOTICE", "AGENTS.md", "src/lfm3lab", "examples/mechanistic", "docs", "tests", "scripts"]
+only-include = ["pyproject.toml", "README.md", "LICENSE", "NOTICE", "AGENTS.md", "llms.txt", "llms-full.txt", "src/lfm3lab", "examples/mechanistic", "docs", "tests", "scripts"]
 exclude = ["**/__pycache__", "**/*.pyc", "docs/verification-local.json"]

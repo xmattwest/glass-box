@@ -1,0 +1,2503 @@
+# Glass-Box API reference
+
+Library version: `0.1.0`. Generated from Python source, without importing the library.
+
+Declared public surface only. Return contracts are editorial, not inferred type annotations. Dataclass <factory> defaults create fresh objects. Private helpers and external inherited APIs are excluded.
+
+Read `docs/agents.md` for operation payloads, safety, workflow and evidence contracts. Most interfaces are unannotated; this reference does not invent static return types. Method signatures omit self/cls: call instance methods on an instance, classmethods on the class, and properties without parentheses.
+
+## Modules
+
+- `lfm3lab`: Lightweight compatibility namespace. Exposes __version__; use submodules, not root model-loading shortcuts.
+- `lfm3lab.research`: Convenience imports for protocols, sessions, study execution and reports. All imports are model-free.
+- `lfm3lab.research.schema`: Versioned JSON protocols. Constructors expose fields; call validate() or from_dict() to validate the full protocol. Schema validation does not validate native coordinates or tokenize text.
+- `lfm3lab.research.session`: Recommended user entry point. Serializes calls, owns backend close, and supports context management. Operation payloads are documented in agents.md; local run calls can load weights, remote run calls can request real inference.
+- `lfm3lab.research.backends`: Initial pinned LFM3 adapter, not general model support. Construction/status load no weights. The first valid run lazily loads a model and retains the lifetime lock until close. CPU/MPS loading requires an additional opt-in.
+- `lfm3lab.research.runner`: Sequential fixed likelihood trials. Detaches the protocol, journals attempts, validates receipts and returns a report. Time limits stop new trials, not in-flight calls. Started pairs are never silently retried.
+- `lfm3lab.research.store`: Advanced evidence storage API. Hold output_lock for every EvidenceStore read or mutation. Protocol/raw receipts are immutable; reports are replaceable. Hashes verify integrity relative to a recorded chain, not honesty.
+- `lfm3lab.research.report`: Model-free paired reports. build_report verifies evidence and rewrites derived reports, retaining failed/interrupted/missing counts. It does not execute a model or rerun trials.
+- `lfm3lab.glassbox`: PyTorch instruments and native coordinates. Direct primitives require caller-owned Loaded model and inference_lock throughout load/use/unload. Do not overlap hook contexts. Low-level helpers are documented for completeness, not as a general adapter API.
+- `lfm3lab.research.worker`: Advanced JSON transport. Connects to existing hardware, never provisions it. Remote close closes only the proxy. Server owners must shutdown, drain server_close, then close the backend. Use SSH/TLS and authentication as appropriate; not a multi-tenant production service.
+- `lfm3lab.model`: Advanced loading helper. Import needs PyTorch; load additionally imports Hub/Transformers, downloads artifacts and executes checkpoint code. Its old unpinned default/base alias is retained but is not a supported mechanistic adapter. Prefer ResearchSession.local.
+- `lfm3lab.jacobian_lens`: Two retained PyTorch numerical helpers. No Jacobian fitter or calibration API is included.
+- `lfm3lab.research.cli`: Installed glass-box CLI implementation; lfm3-research is a compatibility alias. Prefer the command-line interface over parser internals. check requires the instruments extra; examples/validate/report are dependency-free.
+- `lfm3lab.research.checks`: Model-free CPU fixture entry points. run_checks needs PyTorch and starts only tiny synthetic modules and loopback fixture servers; it never rents hardware or loads real weights. Call from a guarded main block when multiprocessing spawn is used.
+
+## Initial LFM3 operation payload fields
+
+Field names come from the adapter source; required values/defaults/limits are in the agent guide. This is not a JSON Schema or a claim that every listed combination is valid. sweep rejects patch.
+
+- `score`: `chat`, `continuation`, `donor_prompt`, `foil`, `max_input_tokens`, `objective`, `patch`, `prompt`, `target`, `thinking`
+- `probe`: `chat`, `chosen_ids`, `donor_prompt`, `foil`, `input_ids`, `max_input_tokens`, `patch`, `pins`, `position`, `prompt`, `prompt_length`, `routing`, `target`, `thinking`, `top_k`, `trace_start`, `vocabulary_units`
+- `attribute`: `chat`, `foil`, `full_scores`, `input_ids`, `max_input_tokens`, `patch`, `position`, `prompt`, `prompt_length`, `target`, `thinking`, `top_k`
+- `generate`: `chat`, `foil`, `max_input_tokens`, `max_new_tokens`, `patch`, `pins`, `prompt`, `target`, `thinking`, `top_k`
+- `sweep`: `batch_size`, `chat`, `foil`, `max_input_tokens`, `mode`, `norm_mode`, `prompt`, `scope`, `target`, `thinking`, `units`
+
+## lfm3lab
+
+Lightweight compatibility namespace. Exposes __version__; use submodules, not root model-loading shortcuts.
+
+Source: [src/lfm3lab/__init__.py](../../src/lfm3lab/__init__.py); SHA-256 `718886bb246078f99afc90a545ce75b241366bb8457a5b64c0caf1fe71548286`.
+
+
+### lfm3lab.__version__
+
+Kind: constant. Source: `src/lfm3lab/__init__.py:7`.
+
+```python
+__version__ = '0.1.0'
+```
+
+
+## lfm3lab.research
+
+Convenience imports for protocols, sessions, study execution and reports. All imports are model-free.
+
+Source: [src/lfm3lab/research/__init__.py](../../src/lfm3lab/research/__init__.py); SHA-256 `6f3485fe3e6dacfbb76c4df0d7d33e58df03e06468f4a9766bd237882cb274ff`.
+
+- Re-export `Budget` from `lfm3lab.research.schema.Budget`.
+- Re-export `Case` from `lfm3lab.research.schema.Case`.
+- Re-export `Condition` from `lfm3lab.research.schema.Condition`.
+- Re-export `Objective` from `lfm3lab.research.schema.Objective`.
+- Re-export `Study` from `lfm3lab.research.schema.Study`.
+- Re-export `ResearchSession` from `lfm3lab.research.session.ResearchSession`.
+- Re-export `run_study` from `lfm3lab.research.runner.run_study`.
+- Re-export `build_report` from `lfm3lab.research.report.build_report`.
+
+## lfm3lab.research.schema
+
+Versioned JSON protocols. Constructors expose fields; call validate() or from_dict() to validate the full protocol. Schema validation does not validate native coordinates or tokenize text.
+
+Source: [src/lfm3lab/research/schema.py](../../src/lfm3lab/research/schema.py); SHA-256 `aae1aec3b98817544ef1649bd899071479b2147a172ed3d4b073b19149f4ad19`.
+
+
+### lfm3lab.research.schema.SCHEMA_VERSION
+
+Kind: constant. Source: `src/lfm3lab/research/schema.py:10`.
+
+```python
+SCHEMA_VERSION = 1
+```
+
+
+### lfm3lab.research.schema.SPLITS
+
+Kind: constant. Source: `src/lfm3lab/research/schema.py:11`.
+
+```python
+SPLITS = ('discovery', 'validation', 'holdout')
+```
+
+
+### lfm3lab.research.schema.OBJECTIVES
+
+Kind: constant. Source: `src/lfm3lab/research/schema.py:12`.
+
+```python
+OBJECTIVES = ('token_margin', 'token_logprob', 'continuation_logprob')
+```
+
+
+### lfm3lab.research.schema.canonical_json
+
+Kind: function. Source: `src/lfm3lab/research/schema.py:15`.
+
+```python
+canonical_json(value)
+```
+
+Serialize canonical sorted-key JSON with compact separators and nonfinite values forbidden.
+
+Documented return contract: str.
+
+Raises ValueError for nonfinite numbers and TypeError for unsupported objects.
+
+
+### lfm3lab.research.schema.fingerprint
+
+Kind: function. Source: `src/lfm3lab/research/schema.py:19`.
+
+```python
+fingerprint(value)
+```
+
+Hash canonical JSON for a JSON-compatible value.
+
+Documented return contract: 64-character SHA-256 hex str.
+
+
+### lfm3lab.research.schema.identifier
+
+Kind: function. Source: `src/lfm3lab/research/schema.py:23`.
+
+```python
+identifier(value)
+```
+
+Validate a safe protocol identifier.
+
+Documented return contract: None; raises ValueError for invalid IDs.
+
+
+### lfm3lab.research.schema.JsonSpec
+
+Kind: class. Source: `src/lfm3lab/research/schema.py:28`.
+
+Serialization/validation mixin for the schema dataclasses; not a standalone study.
+
+from_dict accepts a JSON dict or the same schema class, rejects unknown fields and returns a validated object. to_dict returns dataclass fields recursively. validate returns self after validation; failures normally raise ValueError (invalid non-JSON values can also raise TypeError).
+
+
+### lfm3lab.research.schema.JsonSpec.from_dict
+
+Kind: classmethod. Source: `src/lfm3lab/research/schema.py:30`.
+
+```python
+JsonSpec.from_dict(value)
+```
+
+Construct a validated schema instance from a dict or another instance of the same schema class.
+
+Documented return contract: Validated subclass instance; unknown fields/invalid specifications are rejected.
+
+
+### lfm3lab.research.schema.JsonSpec.to_dict
+
+Kind: method. Source: `src/lfm3lab/research/schema.py:41`.
+
+```python
+JsonSpec.to_dict()
+```
+
+Recursively serialize schema dataclass fields.
+
+Documented return contract: dict.
+
+
+### lfm3lab.research.schema.JsonSpec.validate
+
+Kind: method. Source: `src/lfm3lab/research/schema.py:44`.
+
+```python
+JsonSpec.validate()
+```
+
+Validate this object; returns the same instance or raises for invalid fields.
+
+
+### lfm3lab.research.schema.Case
+
+Kind: class. Source: `src/lfm3lab/research/schema.py:50`.
+
+```python
+Case(id: str, prompt: str, target: int | str | None = None, foil: int | str | None = None, continuation: str | None = None, corrupt_prompt: str | None = None, split: str = 'discovery', metadata: dict = <factory>)
+```
+
+One clean prompt and a fixed target/foil or supplied continuation, assigned to an explicit split.
+
+Fields (defaults are source expressions; factories create fresh values):
+
+| Field | Annotation | Default |
+| --- | --- | --- |
+| `id` | `str` | `required` |
+| `prompt` | `str` | `required` |
+| `target` | `int \| str \| None` | `None` |
+| `foil` | `int \| str \| None` | `None` |
+| `continuation` | `str \| None` | `None` |
+| `corrupt_prompt` | `str \| None` | `None` |
+| `split` | `str` | `'discovery'` |
+| `metadata` | `dict` | `field(default_factory=dict)` |
+
+IDs use safe 1–96-character names. Token texts are exact and whitespace-sensitive. A Case alone may omit target/foil; Study validation requires them according to the objective. metadata must be a JSON dict.
+
+
+### lfm3lab.research.schema.Case.validate
+
+Kind: method. Source: `src/lfm3lab/research/schema.py:60`.
+
+```python
+Case.validate()
+```
+
+Validate this object; returns the same instance or raises for invalid fields.
+
+
+### lfm3lab.research.schema.Case.from_dict
+
+Kind: classmethod. Source: `src/lfm3lab/research/schema.py:30`.
+
+```python
+Case.from_dict(value)
+```
+
+Inherited schema from_dict; see JsonSpec serialization/validation contract.
+
+Inherited from `lfm3lab.research.schema.JsonSpec`.
+
+
+### lfm3lab.research.schema.Case.to_dict
+
+Kind: method. Source: `src/lfm3lab/research/schema.py:41`.
+
+```python
+Case.to_dict()
+```
+
+Inherited schema to_dict; see JsonSpec serialization/validation contract.
+
+Inherited from `lfm3lab.research.schema.JsonSpec`.
+
+
+### lfm3lab.research.schema.Case.id
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:51`.
+
+```python
+id: str
+```
+
+
+### lfm3lab.research.schema.Case.prompt
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:52`.
+
+```python
+prompt: str
+```
+
+
+### lfm3lab.research.schema.Case.target
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:53`.
+
+```python
+target: int | str | None
+```
+
+
+### lfm3lab.research.schema.Case.foil
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:54`.
+
+```python
+foil: int | str | None
+```
+
+
+### lfm3lab.research.schema.Case.continuation
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:55`.
+
+```python
+continuation: str | None
+```
+
+
+### lfm3lab.research.schema.Case.corrupt_prompt
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:56`.
+
+```python
+corrupt_prompt: str | None
+```
+
+
+### lfm3lab.research.schema.Case.split
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:57`.
+
+```python
+split: str
+```
+
+
+### lfm3lab.research.schema.Case.metadata
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:58`.
+
+```python
+metadata: dict
+```
+
+
+### lfm3lab.research.schema.Condition
+
+Kind: class. Source: `src/lfm3lab/research/schema.py:79`.
+
+```python
+Condition(id: str, patch: dict = <factory>, input_variant: str = 'clean', description: str = '')
+```
+
+An input variant and an ordered patch for one fixed condition.
+
+Fields (defaults are source expressions; factories create fresh values):
+
+| Field | Annotation | Default |
+| --- | --- | --- |
+| `id` | `str` | `required` |
+| `patch` | `dict` | `field(default_factory=dict)` |
+| `input_variant` | `str` | `'clean'` |
+| `description` | `str` | `''` |
+
+input_variant is clean or corrupt. patch accepts only rules and norm_mode; schema validation checks structure, not native unit/op bounds. Internal row coordinates are forbidden in studies.
+
+
+### lfm3lab.research.schema.Condition.validate
+
+Kind: method. Source: `src/lfm3lab/research/schema.py:85`.
+
+```python
+Condition.validate()
+```
+
+Validate this object; returns the same instance or raises for invalid fields.
+
+
+### lfm3lab.research.schema.Condition.from_dict
+
+Kind: classmethod. Source: `src/lfm3lab/research/schema.py:30`.
+
+```python
+Condition.from_dict(value)
+```
+
+Inherited schema from_dict; see JsonSpec serialization/validation contract.
+
+Inherited from `lfm3lab.research.schema.JsonSpec`.
+
+
+### lfm3lab.research.schema.Condition.to_dict
+
+Kind: method. Source: `src/lfm3lab/research/schema.py:41`.
+
+```python
+Condition.to_dict()
+```
+
+Inherited schema to_dict; see JsonSpec serialization/validation contract.
+
+Inherited from `lfm3lab.research.schema.JsonSpec`.
+
+
+### lfm3lab.research.schema.Condition.id
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:80`.
+
+```python
+id: str
+```
+
+
+### lfm3lab.research.schema.Condition.patch
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:81`.
+
+```python
+patch: dict
+```
+
+
+### lfm3lab.research.schema.Condition.input_variant
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:82`.
+
+```python
+input_variant: str
+```
+
+
+### lfm3lab.research.schema.Condition.description
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:83`.
+
+```python
+description: str
+```
+
+
+### lfm3lab.research.schema.Objective
+
+Kind: class. Source: `src/lfm3lab/research/schema.py:107`.
+
+```python
+Objective(kind: str = 'token_margin', reduction: str = 'sum')
+```
+
+A fixed likelihood objective and its reduction.
+
+Fields (defaults are source expressions; factories create fresh values):
+
+| Field | Annotation | Default |
+| --- | --- | --- |
+| `kind` | `str` | `'token_margin'` |
+| `reduction` | `str` | `'sum'` |
+
+Kinds: token_margin, token_logprob, continuation_logprob. sum is required for token objectives; continuation supports sum or mean. This does not score generated correctness.
+
+
+### lfm3lab.research.schema.Objective.validate
+
+Kind: method. Source: `src/lfm3lab/research/schema.py:111`.
+
+```python
+Objective.validate()
+```
+
+Validate this object; returns the same instance or raises for invalid fields.
+
+
+### lfm3lab.research.schema.Objective.from_dict
+
+Kind: classmethod. Source: `src/lfm3lab/research/schema.py:30`.
+
+```python
+Objective.from_dict(value)
+```
+
+Inherited schema from_dict; see JsonSpec serialization/validation contract.
+
+Inherited from `lfm3lab.research.schema.JsonSpec`.
+
+
+### lfm3lab.research.schema.Objective.to_dict
+
+Kind: method. Source: `src/lfm3lab/research/schema.py:41`.
+
+```python
+Objective.to_dict()
+```
+
+Inherited schema to_dict; see JsonSpec serialization/validation contract.
+
+Inherited from `lfm3lab.research.schema.JsonSpec`.
+
+
+### lfm3lab.research.schema.Objective.kind
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:108`.
+
+```python
+kind: str
+```
+
+
+### lfm3lab.research.schema.Objective.reduction
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:109`.
+
+```python
+reduction: str
+```
+
+
+### lfm3lab.research.schema.Budget
+
+Kind: class. Source: `src/lfm3lab/research/schema.py:121`.
+
+```python
+Budget(max_trials: int = 128, max_seconds: float = 600, max_input_tokens: int = 256)
+```
+
+Durable limits shared by every requested split.
+
+Fields (defaults are source expressions; factories create fresh values):
+
+| Field | Annotation | Default |
+| --- | --- | --- |
+| `max_trials` | `int` | `128` |
+| `max_seconds` | `float` | `600` |
+| `max_input_tokens` | `int` | `256` |
+
+max_trials is 1..100000 attempted trials. max_input_tokens is 1..4096 predictor tokens; primitive limits can be lower. max_seconds must be positive and finite. Interrupted attempts charge the remaining time reservation.
+
+
+### lfm3lab.research.schema.Budget.validate
+
+Kind: method. Source: `src/lfm3lab/research/schema.py:126`.
+
+```python
+Budget.validate()
+```
+
+Validate this object; returns the same instance or raises for invalid fields.
+
+
+### lfm3lab.research.schema.Budget.from_dict
+
+Kind: classmethod. Source: `src/lfm3lab/research/schema.py:30`.
+
+```python
+Budget.from_dict(value)
+```
+
+Inherited schema from_dict; see JsonSpec serialization/validation contract.
+
+Inherited from `lfm3lab.research.schema.JsonSpec`.
+
+
+### lfm3lab.research.schema.Budget.to_dict
+
+Kind: method. Source: `src/lfm3lab/research/schema.py:41`.
+
+```python
+Budget.to_dict()
+```
+
+Inherited schema to_dict; see JsonSpec serialization/validation contract.
+
+Inherited from `lfm3lab.research.schema.JsonSpec`.
+
+
+### lfm3lab.research.schema.Budget.max_trials
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:122`.
+
+```python
+max_trials: int
+```
+
+
+### lfm3lab.research.schema.Budget.max_seconds
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:123`.
+
+```python
+max_seconds: float
+```
+
+
+### lfm3lab.research.schema.Budget.max_input_tokens
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:124`.
+
+```python
+max_input_tokens: int
+```
+
+
+### lfm3lab.research.schema.Study
+
+Kind: class. Source: `src/lfm3lab/research/schema.py:138`.
+
+```python
+Study(id: str, question: str, prediction: str, cases: list[Case], conditions: list[Condition], objective: Objective = <factory>, budget: Budget = <factory>, baseline_id: str = 'clean', seed: int = 24, metadata: dict = <factory>)
+```
+
+A written question/prediction, fixed cases and conditions, objective, controls and budget.
+
+Fields (defaults are source expressions; factories create fresh values):
+
+| Field | Annotation | Default |
+| --- | --- | --- |
+| `id` | `str` | `required` |
+| `question` | `str` | `required` |
+| `prediction` | `str` | `required` |
+| `cases` | `list[Case]` | `required` |
+| `conditions` | `list[Condition]` | `required` |
+| `objective` | `Objective` | `field(default_factory=Objective)` |
+| `budget` | `Budget` | `field(default_factory=Budget)` |
+| `baseline_id` | `str` | `'clean'` |
+| `seed` | `int` | `24` |
+| `metadata` | `dict` | `field(default_factory=dict)` |
+
+Use from_dict or validate before execution. IDs must be unique; baseline_id must name a condition. Study.__post_init__ converts nested specs but does not validate every outer Study invariant. Native-coordinate and tokenizer validation belongs to the adapter. seed is recorded in the protocol, not a general guarantee that every backend seeds randomness. metadata.secondary_comparisons declares unique distinct [left, right] condition pairs.
+
+
+### lfm3lab.research.schema.Study.fingerprint
+
+Kind: property. Source: `src/lfm3lab/research/schema.py:159`.
+
+```python
+Study.fingerprint
+```
+
+Versioned canonical protocol fingerprint.
+
+Documented return contract: SHA-256 hex string. Recomputed from the current fields; this property is not a freeze operation..
+
+
+### lfm3lab.research.schema.Study.validate
+
+Kind: method. Source: `src/lfm3lab/research/schema.py:162`.
+
+```python
+Study.validate()
+```
+
+Validate this object; returns the same instance or raises for invalid fields.
+
+
+### lfm3lab.research.schema.Study.from_dict
+
+Kind: classmethod. Source: `src/lfm3lab/research/schema.py:30`.
+
+```python
+Study.from_dict(value)
+```
+
+Inherited schema from_dict; see JsonSpec serialization/validation contract.
+
+Inherited from `lfm3lab.research.schema.JsonSpec`.
+
+
+### lfm3lab.research.schema.Study.to_dict
+
+Kind: method. Source: `src/lfm3lab/research/schema.py:41`.
+
+```python
+Study.to_dict()
+```
+
+Inherited schema to_dict; see JsonSpec serialization/validation contract.
+
+Inherited from `lfm3lab.research.schema.JsonSpec`.
+
+
+### lfm3lab.research.schema.Study.id
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:139`.
+
+```python
+id: str
+```
+
+
+### lfm3lab.research.schema.Study.question
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:140`.
+
+```python
+question: str
+```
+
+
+### lfm3lab.research.schema.Study.prediction
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:141`.
+
+```python
+prediction: str
+```
+
+
+### lfm3lab.research.schema.Study.cases
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:142`.
+
+```python
+cases: list[Case]
+```
+
+
+### lfm3lab.research.schema.Study.conditions
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:143`.
+
+```python
+conditions: list[Condition]
+```
+
+
+### lfm3lab.research.schema.Study.objective
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:144`.
+
+```python
+objective: Objective
+```
+
+
+### lfm3lab.research.schema.Study.budget
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:145`.
+
+```python
+budget: Budget
+```
+
+
+### lfm3lab.research.schema.Study.baseline_id
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:146`.
+
+```python
+baseline_id: str
+```
+
+
+### lfm3lab.research.schema.Study.seed
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:147`.
+
+```python
+seed: int
+```
+
+
+### lfm3lab.research.schema.Study.metadata
+
+Kind: field. Source: `src/lfm3lab/research/schema.py:148`.
+
+```python
+metadata: dict
+```
+
+
+## lfm3lab.research.session
+
+Recommended user entry point. Serializes calls, owns backend close, and supports context management. Operation payloads are documented in agents.md; local run calls can load weights, remote run calls can request real inference.
+
+Source: [src/lfm3lab/research/session.py](../../src/lfm3lab/research/session.py); SHA-256 `4896e1cbf242c39fcfd071c1f6e0514f1ff32e7069a6bc1b356a252fa38e6238`.
+
+
+### lfm3lab.research.session.ResearchSession
+
+Kind: class. Source: `src/lfm3lab/research/session.py:7`.
+
+```python
+ResearchSession(backend)
+```
+
+A serialized user-facing connection to a backend implementing run, status and close.
+
+Public instance attributes assigned by the constructor: `backend`. These are state, not extra constructor keywords.
+
+Use a with block or close explicitly. Constructor checks callability, not backend capabilities. backend is public. Close is idempotent; run after close raises RuntimeError. status delegates to the backend, including after session close; backend behavior determines the result.
+
+
+### lfm3lab.research.session.ResearchSession.local
+
+Kind: classmethod. Source: `src/lfm3lab/research/session.py:16`.
+
+```python
+ResearchSession.local(**kwargs)
+```
+
+Construct an owned lazy local LFM3Backend; no inference yet.
+
+Documented return contract: ResearchSession.
+
+kwargs are the LFM3Backend constructor parameters. Real calls require authorized model use; allow_local_model is an additional CPU/MPS check, not compute authorization.
+
+
+### lfm3lab.research.session.ResearchSession.remote
+
+Kind: classmethod. Source: `src/lfm3lab/research/session.py:21`.
+
+```python
+ResearchSession.remote(url, **kwargs)
+```
+
+Construct a remote proxy session; no HTTP request until status/run.
+
+Documented return contract: ResearchSession.
+
+kwargs are token and timeout from RemoteBackend. An example URL is not an active service.
+
+
+### lfm3lab.research.session.ResearchSession.__enter__
+
+Kind: method. Source: `src/lfm3lab/research/session.py:25`.
+
+```python
+ResearchSession.__enter__()
+```
+
+Enter an open session; raises RuntimeError if already closed.
+
+Documented return contract: The same ResearchSession.
+
+
+### lfm3lab.research.session.ResearchSession.__exit__
+
+Kind: method. Source: `src/lfm3lab/research/session.py:30`.
+
+```python
+ResearchSession.__exit__(*exc)
+```
+
+Close the owned backend on context exit, including exceptions.
+
+Documented return contract: None; does not suppress the exception.
+
+
+### lfm3lab.research.session.ResearchSession.run
+
+Kind: method. Source: `src/lfm3lab/research/session.py:33`.
+
+```python
+ResearchSession.run(operation, payload)
+```
+
+Delegate a versioned operation and JSON payload to the backend.
+
+Documented return contract: Backend-defined JSON dict.
+
+May load a local model or request remote inference. See the operation payload contract. Exceptions remain visible; no automatic retry.
+
+
+### lfm3lab.research.session.ResearchSession.status
+
+Kind: method. Source: `src/lfm3lab/research/session.py:39`.
+
+```python
+ResearchSession.status()
+```
+
+Read backend state/capabilities without local weight loading.
+
+Documented return contract: Backend status dict; remote sessions perform HTTP.
+
+
+### lfm3lab.research.session.ResearchSession.close
+
+Kind: method. Source: `src/lfm3lab/research/session.py:43`.
+
+```python
+ResearchSession.close()
+```
+
+Close the owned backend once, waiting for an active serialized session call.
+
+Documented return contract: None.
+
+
+### lfm3lab.research.session.ResearchSession.score
+
+Kind: method. Source: `src/lfm3lab/research/session.py:49`.
+
+```python
+ResearchSession.score(**payload)
+```
+
+Request fixed likelihood scoring.
+
+Documented return contract: Score dict with value, objective, input_ids, prompt_length, identity and diagnostics.
+
+Requires fixed target/foil for token margin, target for token_logprob, or explicit continuation for continuation_logprob. Accepts Objective as a convenience; the wire format is its dict. No telemetry probe is performed by score.
+
+
+### lfm3lab.research.session.ResearchSession.probe
+
+Kind: method. Source: `src/lfm3lab/research/session.py:56`.
+
+```python
+ResearchSession.probe(**payload)
+```
+
+Request activation/projection telemetry for one sequence.
+
+Documented return contract: Probe JSON dict; see run_glassbox_probe.
+
+Payload is not the low-level function signature: lm is backend-owned, chat defaults false, and max_input_tokens is accepted. Clean-source donors require explicit donor_prompt.
+
+
+### lfm3lab.research.session.ResearchSession.attribute
+
+Kind: method. Source: `src/lfm3lab/research/session.py:59`.
+
+```python
+ResearchSession.attribute(**payload)
+```
+
+Request local activation-times-gradient attribution for a token margin.
+
+Documented return contract: Attribution JSON dict; see run_gradient_attribution.
+
+No continuation attribution or clean-source donors. Optional target/foil auto-selection is observational, not a fixed study objective.
+
+
+### lfm3lab.research.session.ResearchSession.generate
+
+Kind: method. Source: `src/lfm3lab/research/session.py:62`.
+
+```python
+ResearchSession.generate(**payload)
+```
+
+Request greedy cached decoding plus mechanistic replay.
+
+Documented return contract: Generation JSON dict; see run_glassbox_generate.
+
+No clean-source donors. A returned continuation is not a correctness or task-benefit measurement.
+
+
+### lfm3lab.research.session.ResearchSession.sweep
+
+Kind: method. Source: `src/lfm3lab/research/session.py:65`.
+
+```python
+ResearchSession.sweep(**payload)
+```
+
+Request finite zero-ablation comparisons.
+
+Documented return contract: Sweep JSON dict; see run_head_ablation_sweep.
+
+Uses scope/norm_mode, not a patch. units is only allowed for unique head coordinates in heads mode.
+
+
+## lfm3lab.research.backends
+
+Initial pinned LFM3 adapter, not general model support. Construction/status load no weights. The first valid run lazily loads a model and retains the lifetime lock until close. CPU/MPS loading requires an additional opt-in.
+
+Source: [src/lfm3lab/research/backends.py](../../src/lfm3lab/research/backends.py); SHA-256 `597d59f4bc6e5da21cfadd5bf937d43b26aabe3b7425d1c62e19a79b85b064b3`.
+
+
+### lfm3lab.research.backends.PINNED
+
+Kind: constant. Source: `src/lfm3lab/research/backends.py:24`.
+
+```python
+PINNED = '40ebe0aa6662c9d40389c2f5d565b6a2c6aebacd'
+```
+
+
+### lfm3lab.research.backends.REPO_ID
+
+Kind: constant. Source: `src/lfm3lab/research/backends.py:25`.
+
+```python
+REPO_ID = 'LiquidAI/LFM3-1.7B'
+```
+
+
+### lfm3lab.research.backends.OPERATIONS
+
+Kind: constant. Source: `src/lfm3lab/research/backends.py:26`.
+
+```python
+OPERATIONS = ('score', 'probe', 'attribute', 'generate', 'sweep')
+```
+
+
+### lfm3lab.research.backends.LFM3Backend
+
+Kind: class. Source: `src/lfm3lab/research/backends.py:73`.
+
+```python
+LFM3Backend(device='cuda', revision=PINNED, dtype='bfloat16', allow_local_model=False)
+```
+
+One lazy, mutex-serialized initial LFM3 instruct adapter.
+
+Public instance attributes assigned by the constructor: `allow_local_model`, `device`, `dtype`, `revision`. These are state, not extra constructor keywords.
+
+device: cuda/cuda:N/cpu/mps; cuda becomes cuda:0. dtype: bfloat16/float32/float16, optional torch. prefix. revision must be an explicit 40-hex commit; only PINNED is marked verified. status exposes runtime versions and numerical source hashes. close releases loaded weights before dropping the lifetime lock.
+
+Source docstring:
+
+```text
+One lazily loaded pinned instruct checkpoint, not an arbitrary LFM family.
+
+All calls, including status and close, serialize on a thread mutex. CPU/MPS
+weight loading is refused unless allow_local_model=True; CUDA is permitted.
+Explicit full commit revisions are required for stable unloaded/loaded IDs.
+```
+
+
+### lfm3lab.research.backends.LFM3Backend.status
+
+Kind: method. Source: `src/lfm3lab/research/backends.py:96`.
+
+```python
+LFM3Backend.status()
+```
+
+Return adapter identity, loaded/closed state, versions, source hashes and explicit capabilities.
+
+Documented return contract: JSON dict; no weights loaded.
+
+
+### lfm3lab.research.backends.LFM3Backend.close
+
+Kind: method. Source: `src/lfm3lab/research/backends.py:169`.
+
+```python
+LFM3Backend.close()
+```
+
+Idempotently release model references, device memory and the lifetime lock under the mutex.
+
+Documented return contract: None.
+
+
+### lfm3lab.research.backends.LFM3Backend.run
+
+Kind: method. Source: `src/lfm3lab/research/backends.py:274`.
+
+```python
+LFM3Backend.run(operation, payload)
+```
+
+Validate a JSON operation, lazily load the owned model, then dispatch a score or primitive.
+
+Documented return contract: JSON dict with repository/revision/device/dtype and implementation/runtime identity.
+
+May perform real inference. Invalid payloads and CPU/MPS opt-in failures are rejected before loading; this is not an authorization mechanism. Calls after close raise RuntimeError.
+
+
+## lfm3lab.research.runner
+
+Sequential fixed likelihood trials. Detaches the protocol, journals attempts, validates receipts and returns a report. Time limits stop new trials, not in-flight calls. Started pairs are never silently retried.
+
+Source: [src/lfm3lab/research/runner.py](../../src/lfm3lab/research/runner.py); SHA-256 `a2b1850d14a35ccbe86ed5821fa90b77a9537eab733c04eb804c8a259997207f`.
+
+
+### lfm3lab.research.runner.score_payload
+
+Kind: function. Source: `src/lfm3lab/research/runner.py:11`.
+
+```python
+score_payload(study, case, condition)
+```
+
+Build the fixed score request from a Study, Case and Condition.
+
+Documented return contract: JSON dict; includes clean case prompt as donor_prompt for clean-source replacement.
+
+
+### lfm3lab.research.runner.run_study
+
+Kind: function. Source: `src/lfm3lab/research/runner.py:46`.
+
+```python
+run_study(study, session, output, *, split='discovery', resume=True)
+```
+
+Execute each unstarted case × condition pair in one explicitly named split.
+
+Documented return contract: Report dict, with run.requested_split, stop_reason, budget_used and resume.
+
+Writes evidence and derived reports. Does not retry success/failure/interruption. Raises EvidenceError for incompatible/corrupt evidence, OutputLocked for concurrent ownership, ValueError for invalid split/protocol. Ordinary score failures are journaled; KeyboardInterrupt propagates, leaving a pending intent.
+
+Source docstring:
+
+```text
+Never retries a started pair; budgets apply across all explicit splits.
+
+Time limits prevent starting another call, not interrupting an in-flight
+backend operation. Interrupted calls consume their remaining reservation.
+```
+
+
+## lfm3lab.research.store
+
+Advanced evidence storage API. Hold output_lock for every EvidenceStore read or mutation. Protocol/raw receipts are immutable; reports are replaceable. Hashes verify integrity relative to a recorded chain, not honesty.
+
+Source: [src/lfm3lab/research/store.py](../../src/lfm3lab/research/store.py); SHA-256 `e3af110430c419f00c1eb79a7087f64dbe700c8c723f3881c6f5e58d27bdcb0e`.
+
+
+### lfm3lab.research.store.EvidenceError
+
+Kind: class. Source: `src/lfm3lab/research/store.py:15`.
+
+ValueError subclass for incompatible, damaged or unsafe evidence.
+
+Source docstring:
+
+```text
+An incompatible or damaged evidence directory must not be reused.
+```
+
+
+### lfm3lab.research.store.OutputLocked
+
+Kind: class. Source: `src/lfm3lab/research/store.py:19`.
+
+RuntimeError subclass for an evidence output already locked by another owner.
+
+
+### lfm3lab.research.store.backend_identity
+
+Kind: function. Source: `src/lfm3lab/research/store.py:23`.
+
+```python
+backend_identity(status)
+```
+
+Keep stable scientific identity fields from a backend status.
+
+Documented return contract: JSON dict.
+
+Requires revision/device/dtype/adapter/implementation; ignores loaded state, uptime, URLs and transport location.
+
+Source docstring:
+
+```text
+Keep scientific identity, not loaded state, uptime, URL or transport state.
+```
+
+
+### lfm3lab.research.store.output_lock
+
+Kind: function. Source: `src/lfm3lab/research/store.py:40`.
+
+```python
+output_lock(output)
+```
+
+Acquire a nonblocking exclusive evidence-directory lock.
+
+Documented return contract: Context manager yielding the output Path.
+
+Creates the directory if needed. Raises OutputLocked; releases on exit and leaves the lock inode in place.
+
+
+### lfm3lab.research.store.write_new_json
+
+Kind: function. Source: `src/lfm3lab/research/store.py:63`.
+
+```python
+write_new_json(path, value)
+```
+
+Create an immutable JSON file exclusively and fsync before journaling.
+
+Documented return contract: SHA-256 hex str of written bytes.
+
+Existing paths raise FileExistsError; parent directory must already exist.
+
+Source docstring:
+
+```text
+Exclusive immutable receipt creation; fsync before it is journaled.
+```
+
+
+### lfm3lab.research.store.write_report_json
+
+Kind: function. Source: `src/lfm3lab/research/store.py:74`.
+
+```python
+write_report_json(path, value)
+```
+
+Atomically replace a derived JSON report.
+
+Documented return contract: None.
+
+Not for immutable protocols or raw evidence.
+
+Source docstring:
+
+```text
+Only derived reports may be replaced, never protocol or raw evidence.
+```
+
+
+### lfm3lab.research.store.trial_key
+
+Kind: function. Source: `src/lfm3lab/research/store.py:86`.
+
+```python
+trial_key(split, case_id, condition_id)
+```
+
+Encode split/case/condition as a canonical JSON key.
+
+Documented return contract: str.
+
+
+### lfm3lab.research.store.EvidenceStore
+
+Kind: class. Source: `src/lfm3lab/research/store.py:90`.
+
+```python
+EvidenceStore(output)
+```
+
+Advanced immutable-protocol, journal and raw-receipt storage.
+
+Public instance attributes assigned by the constructor: `events`, `path`, `responses`, `trials`. These are state, not extra constructor keywords.
+
+Every operation needs output_lock. Public state includes path, events, trials, responses and (after initialize/load) protocol/study. Prefer run_study/build_report for ordinary use. Do not construct successful result events from unaudited raw files.
+
+Source docstring:
+
+```text
+Caller must hold output_lock for every read or mutation.
+```
+
+
+### lfm3lab.research.store.EvidenceStore.initialize
+
+Kind: method. Source: `src/lfm3lab/research/store.py:99`.
+
+```python
+EvidenceStore.initialize(study, identity, *, resume)
+```
+
+Create a new protocol or verify an existing matching output when resume=True.
+
+Documented return contract: None.
+
+Requires an existing locked output directory. Refuses unrelated nonempty output, changed protocol/backend identity or an existing protocol with resume=False.
+
+
+### lfm3lab.research.store.EvidenceStore.load
+
+Kind: method. Source: `src/lfm3lab/research/store.py:121`.
+
+```python
+EvidenceStore.load()
+```
+
+Verify protocol, journal chain and referenced raw receipts; populate store state.
+
+Documented return contract: The same EvidenceStore.
+
+Raises EvidenceError; never repairs truncated journals or accepts orphan receipts as results.
+
+
+### lfm3lab.research.store.EvidenceStore.append
+
+Kind: method. Source: `src/lfm3lab/research/store.py:192`.
+
+```python
+EvidenceStore.append(kind, key, **details)
+```
+
+Validate and durably append an intent/result/failure event.
+
+Documented return contract: Event dict including sequence, predecessor and event hashes.
+
+Advanced event details must match the frozen protocol and raw receipt paths. This method is not a schema-free logging API.
+
+
+### lfm3lab.research.store.EvidenceStore.recover_interrupted
+
+Kind: method. Source: `src/lfm3lab/research/store.py:206`.
+
+```python
+EvidenceStore.recover_interrupted()
+```
+
+Journal failure for pending intents without durable completion.
+
+Documented return contract: None.
+
+Charges reserved_seconds and never retries. Mutates the journal.
+
+
+### lfm3lab.research.store.EvidenceStore.budget_used
+
+Kind: method. Source: `src/lfm3lab/research/store.py:213`.
+
+```python
+EvidenceStore.budget_used()
+```
+
+Calculate durable attempts and elapsed charges, including reservations for pending calls.
+
+Documented return contract: dict with attempts and elapsed_s.
+
+
+## lfm3lab.research.report
+
+Model-free paired reports. build_report verifies evidence and rewrites derived reports, retaining failed/interrupted/missing counts. It does not execute a model or rerun trials.
+
+Source: [src/lfm3lab/research/report.py](../../src/lfm3lab/research/report.py); SHA-256 `90dbd1da976047ec65c1e048f7faa035a31aac0c09e26645cdc45548cb02ff46`.
+
+
+### lfm3lab.research.report.build_report
+
+Kind: function. Source: `src/lfm3lab/research/report.py:193`.
+
+```python
+build_report(output)
+```
+
+Lock and verify saved evidence, then regenerate JSON and Markdown paired reports.
+
+Documented return contract: Report dict.
+
+Writes derived files only; no model loading. Numeric deltas are condition minus explicit baseline. Missing/failed pairs are not imputed; declared controls are not automatically passed tests.
+
+Source docstring:
+
+```text
+Verify evidence and regenerate both reports without opening any model.
+```
+
+
+## lfm3lab.glassbox
+
+PyTorch instruments and native coordinates. Direct primitives require caller-owned Loaded model and inference_lock throughout load/use/unload. Do not overlap hook contexts. Low-level helpers are documented for completeness, not as a general adapter API.
+
+Source: [src/lfm3lab/glassbox.py](../../src/lfm3lab/glassbox.py); SHA-256 `69f84704e63dae20b7bebce232cfd8ccf2cc91421439bab86799cb17198f1267`.
+
+
+### lfm3lab.glassbox.REVISION
+
+Kind: constant. Source: `src/lfm3lab/glassbox.py:33`.
+
+```python
+REVISION = '40ebe0aa6662c9d40389c2f5d565b6a2c6aebacd'
+```
+
+
+### lfm3lab.glassbox.REPO_ID
+
+Kind: constant. Source: `src/lfm3lab/glassbox.py:34`.
+
+```python
+REPO_ID = 'LiquidAI/LFM3-1.7B'
+```
+
+
+### lfm3lab.glassbox.LOCK_PATH
+
+Kind: constant. Source: `src/lfm3lab/glassbox.py:35`.
+
+```python
+LOCK_PATH = Path(os.environ.get('LFM3_INFERENCE_LOCK', str(Path(tempfile.gettempdir()) / 'opencode' / 'lfm3-inference.lock')))
+```
+
+
+### lfm3lab.glassbox.LAYER_TYPES
+
+Kind: constant. Source: `src/lfm3lab/glassbox.py:37`.
+
+```python
+LAYER_TYPES = tuple(('global' if i in (2, 6, 10, 14, 18, 22) else 'swa' if i in (4, 8, 12, 16, 20) else 'conv' for i in range(24)))
+```
+
+
+### lfm3lab.glassbox.SCOPES
+
+Kind: constant. Source: `src/lfm3lab/glassbox.py:39`.
+
+```python
+SCOPES = {'boundary', 'first4', 'answer', 'prompt', 'all'}
+```
+
+
+### lfm3lab.glassbox.inference_lock
+
+Kind: function. Source: `src/lfm3lab/glassbox.py:43`.
+
+```python
+inference_lock(path=LOCK_PATH)
+```
+
+Serialize model ownership across cooperating POSIX processes.
+
+Documented return contract: Context manager yielding None.
+
+Blocking lock; hold from before loading until weights/graphs/caches are released. Default path is derived from the temporary directory, optionally LFM3_INFERENCE_LOCK. Do not acquire nested lifetime locks on one model.
+
+Source docstring:
+
+```text
+Hold until weights, graphs and caches have been released, not just forward.
+```
+
+
+### lfm3lab.glassbox.release_memory
+
+Kind: function. Source: `src/lfm3lab/glassbox.py:55`.
+
+```python
+release_memory(device)
+```
+
+Collect garbage and synchronize/empty accelerator cache for the selected device.
+
+Documented return contract: None.
+
+Does not remove live references to a caller-owned model.
+
+
+### lfm3lab.glassbox.Unit
+
+Kind: class. Source: `src/lfm3lab/glassbox.py:66`.
+
+```python
+Unit(layer: int, family: str, index: int | str)
+```
+
+Frozen native coordinate: layer, family (h/c/n/res), index.
+
+Fields (defaults are source expressions; factories create fresh values):
+
+| Field | Annotation | Default |
+| --- | --- | --- |
+| `layer` | `int` | `required` |
+| `family` | `str` | `required` |
+| `index` | `int \| str` | `required` |
+
+Use Unit.parse for validation. Direct dataclass construction does not validate coordinates. Residual adjacent out/in names alias a physical checkpoint.
+
+
+### lfm3lab.glassbox.Unit.parse
+
+Kind: classmethod. Source: `src/lfm3lab/glassbox.py:72`.
+
+```python
+Unit.parse(text, config=None)
+```
+
+Parse and validate a canonical address against config or pinned defaults.
+
+Documented return contract: Unit; raises ValueError for invalid family/layer/index.
+
+
+### lfm3lab.glassbox.Unit.address
+
+Kind: property. Source: `src/lfm3lab/glassbox.py:94`.
+
+```python
+Unit.address
+```
+
+Canonical unit spelling.
+
+Documented return contract: str, for example L2.h0 or L12.res.mid.
+
+
+### lfm3lab.glassbox.Unit.checkpoint
+
+Kind: property. Source: `src/lfm3lab/glassbox.py:98`.
+
+```python
+Unit.checkpoint
+```
+
+Physical residual checkpoint key, including adjacent out/in aliases.
+
+Documented return contract: str; raises ValueError for non-residual units.
+
+
+### lfm3lab.glassbox.Unit.layer
+
+Kind: field. Source: `src/lfm3lab/glassbox.py:67`.
+
+```python
+layer: int
+```
+
+
+### lfm3lab.glassbox.Unit.family
+
+Kind: field. Source: `src/lfm3lab/glassbox.py:68`.
+
+```python
+family: str
+```
+
+
+### lfm3lab.glassbox.Unit.index
+
+Kind: field. Source: `src/lfm3lab/glassbox.py:69`.
+
+```python
+index: int | str
+```
+
+
+### lfm3lab.glassbox.PatchSpec
+
+Kind: class. Source: `src/lfm3lab/glassbox.py:105`.
+
+```python
+PatchSpec(rules: list[dict] = <factory>, norm_mode: str = 'native')
+```
+
+Ordered rules plus native/frozen normalization mode.
+
+Fields (defaults are source expressions; factories create fresh values):
+
+| Field | Annotation | Default |
+| --- | --- | --- |
+| `rules` | `list[dict]` | `field(default_factory=list)` |
+| `norm_mode` | `str` | `'native'` |
+
+Constructing the dataclass alone does not validate. Use from_value or validate; at most 4096 rules. Rules accept unit/op/value/mu/scope/positions/source/row. Later overlapping rules win. Native coordinate validation needs PyTorch but no model weights.
+
+Source docstring:
+
+```text
+Ordered rules. Later rules win on overlapping coordinates.
+
+{"rules": [{"unit":"L2.h0", "op":"gate_clamp", "value":0,
+            "scope":"boundary"}], "norm_mode":"native"}
+
+Ops: heads gate_clamp/logit_offset/scale/zero; conv clamp/scale/zero;
+MLP clamp/scale/zero/mean_scale (requires explicit calibrated mu);
+residual replace (source='clean', or explicit value vector), scale/zero.
+Optional positions narrows scope to absolute positions. row is reserved for
+batched sweeps. Residual donor sequences must have identical token counts.
+```
+
+
+### lfm3lab.glassbox.PatchSpec.from_value
+
+Kind: classmethod. Source: `src/lfm3lab/glassbox.py:121`.
+
+```python
+PatchSpec.from_value(value=None, config=None)
+```
+
+Normalize None/dict/PatchSpec into a validated native patch.
+
+Documented return contract: PatchSpec; raises ValueError for invalid patches.
+
+
+### lfm3lab.glassbox.PatchSpec.validate
+
+Kind: method. Source: `src/lfm3lab/glassbox.py:131`.
+
+```python
+PatchSpec.validate(config=None)
+```
+
+Validate operations, coordinates, finite values and scope.
+
+Documented return contract: The same PatchSpec.
+
+Clean donors require source='clean' on residual replace; explicit vectors must match hidden width. mean_scale requires finite mu. The adapter additionally rejects study-facing row selectors and unsupported donor operations.
+
+
+### lfm3lab.glassbox.PatchSpec.rules
+
+Kind: field. Source: `src/lfm3lab/glassbox.py:117`.
+
+```python
+rules: list[dict]
+```
+
+
+### lfm3lab.glassbox.PatchSpec.norm_mode
+
+Kind: field. Source: `src/lfm3lab/glassbox.py:118`.
+
+```python
+norm_mode: str
+```
+
+
+### lfm3lab.glassbox.position_mask
+
+Kind: function. Source: `src/lfm3lab/glassbox.py:172`.
+
+```python
+position_mask(positions, prompt_length, scope)
+```
+
+Compute a boolean tensor selecting predictor positions for a scope.
+
+Documented return contract: torch bool tensor shaped like positions.
+
+
+### lfm3lab.glassbox.edit_values
+
+Kind: function. Source: `src/lfm3lab/glassbox.py:187`.
+
+```python
+edit_values(values, rule, gate=False)
+```
+
+Apply one finite edit to tensor values.
+
+Documented return contract: Tensor of edited values.
+
+Low-level helper; assumes an already validated rule. gate_clamp maps exact endpoints to infinite gate logits; sigmoid endpoints are exact.
+
+
+### lfm3lab.glassbox.GlassboxHooks
+
+Kind: class. Source: `src/lfm3lab/glassbox.py:206`.
+
+```python
+GlassboxHooks(model, prompt_length, patch=None, *, reference=None, capture=True)
+```
+
+Temporary native activation interventions and optional on-device capture.
+
+Public instance attributes assigned by the constructor: `acts`, `capture`, `cursors`, `forwards`, `gates`, `handles`, `inv`, `model`, `parts`, `points`, `prompt_length`, `reference`, `routing`, `rules`, `spec`. These are state, not extra constructor keywords.
+
+Use as a context manager under serialized model ownership. Capture dictionaries acts/gates/points/inv/parts/routing hold tensors only until exit. reference_copy detaches copies that survive exit. Cached cursors use absolute predictor positions. Remaining nonprivate methods are low-level hook mechanics, not separate session operations.
+
+Source docstring:
+
+```text
+Exception-safe intervention/capture hooks, with absolute cached cursors.
+
+Graph tensors stay on-device only for the lifetime of this context. A caller
+doing cached decoding uses capture=False, so old full activations are not kept.
+Norm and donor references are dictionaries of tensors from a matched clean pass.
+```
+
+
+### lfm3lab.glassbox.GlassboxHooks.add
+
+Kind: method. Source: `src/lfm3lab/glassbox.py:226`.
+
+```python
+GlassboxHooks.add(module, callback, pre=False)
+```
+
+Low-level hook mechanic: register a forward/pre-forward callback and retain its handle for cleanup.
+
+Documented return contract: None.
+
+
+### lfm3lab.glassbox.GlassboxHooks.positions
+
+Kind: method. Source: `src/lfm3lab/glassbox.py:229`.
+
+```python
+GlassboxHooks.positions(key, x)
+```
+
+Low-level hook mechanic: advance a keyed cursor by x's sequence width.
+
+Documented return contract: Absolute-position arange tensor on x.device.
+
+
+### lfm3lab.glassbox.GlassboxHooks.apply
+
+Kind: method. Source: `src/lfm3lab/glassbox.py:234`.
+
+```python
+GlassboxHooks.apply(x, key, positions, gate=False)
+```
+
+Low-level hook mechanic: apply matching validated rules, masks, row selection and donors to x.
+
+Documented return contract: Activation tensor; unchanged x if no matching rules, otherwise an edited clone.
+
+
+### lfm3lab.glassbox.GlassboxHooks.projection
+
+Kind: method. Source: `src/lfm3lab/glassbox.py:271`.
+
+```python
+GlassboxHooks.projection(family, layer)
+```
+
+Build the pre-projection edit/capture callback for one unit family and layer.
+
+Documented return contract: Forward-pre-hook callback; install only within owned hook lifetime.
+
+
+### lfm3lab.glassbox.GlassboxHooks.residual
+
+Kind: method. Source: `src/lfm3lab/glassbox.py:280`.
+
+```python
+GlassboxHooks.residual(key, pre=False)
+```
+
+Build an edit/capture callback for a physical residual checkpoint.
+
+Documented return contract: Forward or forward-pre-hook callback according to pre.
+
+
+### lfm3lab.glassbox.GlassboxHooks.norm
+
+Kind: method. Source: `src/lfm3lab/glassbox.py:294`.
+
+```python
+GlassboxHooks.norm(layer, kind)
+```
+
+Build the post-operator/post-FFN denominator capture/frozen-normalization callback.
+
+Documented return contract: Forward-hook callback.
+
+
+### lfm3lab.glassbox.GlassboxHooks.mid_forward
+
+Kind: method. Source: `src/lfm3lab/glassbox.py:313`.
+
+```python
+GlassboxHooks.mid_forward(block, layer)
+```
+
+An ffn_norm pre-hook alone edits only the MLP read, NOT its skip path.
+
+Source docstring:
+
+```text
+An ffn_norm pre-hook alone edits only the MLP read, NOT its skip path.
+
+For a mid-residual intervention, reproduce the pinned decoder's forward
+and replace the actual residual between the two additions. Native
+submodules/hooks and operation order are unchanged. Restore on exit.
+```
+
+
+### lfm3lab.glassbox.GlassboxHooks.__enter__
+
+Kind: method. Source: `src/lfm3lab/glassbox.py:340`.
+
+```python
+GlassboxHooks.__enter__()
+```
+
+Install temporary capture/intervention hooks and necessary midpoint forward overrides.
+
+Documented return contract: The same GlassboxHooks; partial installation is cleaned up on failure.
+
+
+### lfm3lab.glassbox.GlassboxHooks.reference_copy
+
+Kind: method. Source: `src/lfm3lab/glassbox.py:378`.
+
+```python
+GlassboxHooks.reference_copy()
+```
+
+Copy captured denominators and residual points for an explicit reference pass.
+
+Documented return contract: dict with inv and points mappings of detached cloned tensors.
+
+
+### lfm3lab.glassbox.GlassboxHooks.__exit__
+
+Kind: method. Source: `src/lfm3lab/glassbox.py:382`.
+
+```python
+GlassboxHooks.__exit__(*exc)
+```
+
+Remove hooks, restore forwards and clear captured graph/tensor dictionaries.
+
+Documented return contract: None; does not suppress the exception.
+
+
+### lfm3lab.glassbox.architecture
+
+Kind: function. Source: `src/lfm3lab/glassbox.py:396`.
+
+```python
+architecture(model)
+```
+
+Describe the actual model layout and coordinate counts.
+
+Documented return contract: dict with layers, heads, conv_channels, mlp_neurons, unique_residual_checkpoints and conv_kernel_sizes.
+
+
+### lfm3lab.glassbox.prepare_ids
+
+Kind: function. Source: `src/lfm3lab/glassbox.py:408`.
+
+```python
+prepare_ids(lm, prompt, *, chat=True, thinking=False, max_tokens=512)
+```
+
+Tokenize a prompt, optionally render chat, move IDs to the loaded device and enforce a token budget.
+
+Documented return contract: int64 tensor [1, sequence_length].
+
+No model forward, but requires an existing tokenizer/Loaded object. Low-level chat defaults True, unlike sessions.
+
+
+### lfm3lab.glassbox.explicit_ids
+
+Kind: function. Source: `src/lfm3lab/glassbox.py:419`.
+
+```python
+explicit_ids(lm, value, max_tokens=768)
+```
+
+Validate one flat list or single-sequence int64 tensor of vocabulary IDs.
+
+Documented return contract: int64 tensor [1, sequence_length] on lm.device.
+
+Source docstring:
+
+```text
+Validate JSON/list or tensor token IDs, with no arbitrary tensor uploads.
+```
+
+
+### lfm3lab.glassbox.resolve_pair
+
+Kind: function. Source: `src/lfm3lab/glassbox.py:434`.
+
+```python
+resolve_pair(tokenizer, logits, target=None, foil=None)
+```
+
+Resolve distinct token IDs from exact one-token texts, IDs or observational top logits.
+
+Documented return contract: (target_id, foil_id).
+
+Auto-selection when omitted is not allowed as a fixed Study scoring objective.
+
+
+### lfm3lab.glassbox.token_summary
+
+Kind: function. Source: `src/lfm3lab/glassbox.py:456`.
+
+```python
+token_summary(tok, logits, chosen=None)
+```
+
+Summarize a chosen/greedy token and the top logits.
+
+Documented return contract: dict with token_id, token, prob, logprob, margin and top5.
+
+
+### lfm3lab.glassbox.attention_mode
+
+Kind: function. Source: `src/lfm3lab/glassbox.py:506`.
+
+```python
+attention_mode(model, eager=False)
+```
+
+Temporarily select eager attention for routing telemetry.
+
+Documented return contract: Context manager yielding None and restoring the old implementation on exit.
+
+
+### lfm3lab.glassbox.run_glassbox_probe
+
+Kind: function. Source: `src/lfm3lab/glassbox.py:517`.
+
+```python
+run_glassbox_probe(lm, prompt=None, *, patch=None, target=None, foil=None, position=None, top_k=8, pins=None, routing=False, chat=True, thinking=False, input_ids=None, prompt_length=None, donor_prompt=None, trace_start=None, chosen_ids=None, vocabulary_units=None)
+```
+
+Instrument one forward and any required reference/donor pass.
+
+Documented return contract: JSON dict with kind='probe', input_ids, prompt_length, position, target/foil, margin, architecture, matrices/spine/units, temporal readouts, token_trace, routing, vocabulary and DLA limits.
+
+One sequence; prompt token limit 512 or explicit IDs <=768. top_k 1..64; <=32 pins; <=4 c/n vocabulary units. Routing requires <=128 tokens and 1..8 pinned heads. DLA is a frozen-final-norm direct projection, not a downstream causal effect.
+
+Source docstring:
+
+```text
+One instrumented forward (+ clean reference only when required).
+
+Routing is opt-in, limited to 128 tokens and 8 pinned heads, to avoid a huge
+T*T JSON payload. Unit rankings are direct projections, NOT proven causality.
+Logit lens is evaluated at the inspected position across every layer.
+```
+
+
+### lfm3lab.glassbox.run_gradient_attribution
+
+Kind: function. Source: `src/lfm3lab/glassbox.py:677`.
+
+```python
+run_gradient_attribution(lm, prompt=None, *, patch=None, target=None, foil=None, position=None, top_k=8, chat=True, thinking=False, input_ids=None, prompt_length=None, full_scores=False)
+```
+
+One differentiable forward and autograd.grad for a target-minus-foil token margin.
+
+Documented return contract: JSON dict with kind='attribute', margin, IDs, head_scores/head_timeline, rankings and optional full scores.
+
+One sequence <=256 tokens, top_k 1..64. No parameter gradients are allocated; prior requires_grad flags are restored. Donor behavior is restricted by the session adapter; use session for supported capabilities.
+
+Source docstring:
+
+```text
+One differentiable forward + one autograd.grad, no weight gradients.
+
+Head score: sum_d z_d*dmargin/dz_d, with z=g*attention, algebraically
+g*dmargin/dg. Rankings sum over all causal source positions up to position.
+Inspected-position and per-position head arrays are also returned.
+```
+
+
+### lfm3lab.glassbox.run_head_ablation_sweep
+
+Kind: function. Source: `src/lfm3lab/glassbox.py:750`.
+
+```python
+run_head_ablation_sweep(lm, prompt, *, target=None, foil=None, scope='boundary', norm_mode='native', batch_size=4, units=None, mode='heads', chat=True, thinking=False)
+```
+
+Batched finite zero ablations with matched batch-shape clean comparisons.
+
+Documented return contract: JSON dict with kind='sweep', rows (unit/margin/clean_margin/delta_margin), baseline_margin, dtype and batch drift.
+
+<=256 prompt tokens, batch_size 1..16. Modes heads/layers/mlp_layers/blocks. units only for unique heads. MPS additionally limits batch_size × prompt_tokens <=1024.
+
+Source docstring:
+
+```text
+Batched exact leave-one-out effects (patched minus clean logit margin).
+
+mode=layers removes each operator write; mode=mlp_layers each MLP write;
+mode=blocks bypasses the entire decoder block. Clean comparison uses the
+same batch shape as its intervention, avoiding batch-kernel baseline drift.
+```
+
+
+### lfm3lab.glassbox.run_glassbox_generate
+
+Kind: function. Source: `src/lfm3lab/glassbox.py:833`.
+
+```python
+run_glassbox_generate(lm, prompt, *, patch=None, target=None, foil=None, max_new_tokens=32, top_k=8, pins=None, chat=True, thinking=False)
+```
+
+Greedy cached generation followed by full teacher-forced telemetry replay.
+
+Documented return contract: Probe-style JSON dict with kind='generate', text, generated_ids, cached_token_trace, replay error and timing.
+
+Prompt <=512 tokens; max_new_tokens 1..128. EOS may stop early. Clean-source donors are rejected; explicit vector replacement is allowed. No generated correctness or practical benefit is established.
+
+Source docstring:
+
+```text
+Greedy cached generation, then full teacher-forced mechanistic replay.
+
+Frozen norms use a separate clean cache fed exactly the patched trajectory.
+Replay gives synchronized telemetry even after generated tokens diverge.
+Clean-vs-patched decision comparison should use fixed A/B IDs.
+```
+
+
+### lfm3lab.glassbox.probe_pass
+
+Kind: alias. Source: `src/lfm3lab/glassbox.py:890`.
+
+```python
+probe_pass = run_glassbox_probe
+```
+
+
+### lfm3lab.glassbox.attribute_gradient
+
+Kind: alias. Source: `src/lfm3lab/glassbox.py:891`.
+
+```python
+attribute_gradient = run_gradient_attribution
+```
+
+
+### lfm3lab.glassbox.ablation_sweep
+
+Kind: alias. Source: `src/lfm3lab/glassbox.py:892`.
+
+```python
+ablation_sweep = run_head_ablation_sweep
+```
+
+
+### lfm3lab.glassbox.synthetic_glassbox_checks
+
+Kind: function. Source: `src/lfm3lab/glassbox.py:895`.
+
+```python
+synthetic_glassbox_checks()
+```
+
+Run the 24-layer tiny float32 hybrid CPU fixture with real hooks.
+
+Documented return contract: dict with passed/checks/fixture; raises AssertionError on contract failures.
+
+No real weights, tokenizer or native attention kernels. Requires instruments extra.
+
+Source docstring:
+
+```text
+Offline CPU tests with real modules/hooks, all 24 hybrid layers, no weights download.
+```
+
+
+## lfm3lab.research.worker
+
+Advanced JSON transport. Connects to existing hardware, never provisions it. Remote close closes only the proxy. Server owners must shutdown, drain server_close, then close the backend. Use SSH/TLS and authentication as appropriate; not a multi-tenant production service.
+
+Source: [src/lfm3lab/research/worker.py](../../src/lfm3lab/research/worker.py); SHA-256 `f552037566853f87560bbacfd42bff6869b90f49dccc491c493226d356b7f603`.
+
+
+### lfm3lab.research.worker.OPERATIONS
+
+Kind: constant. Source: `src/lfm3lab/research/worker.py:23`.
+
+```python
+OPERATIONS = frozenset({'score', 'probe', 'attribute', 'generate', 'sweep'})
+```
+
+
+### lfm3lab.research.worker.MAX_BODY_BYTES
+
+Kind: constant. Source: `src/lfm3lab/research/worker.py:24`.
+
+```python
+MAX_BODY_BYTES = 1024 * 1024
+```
+
+
+### lfm3lab.research.worker.MAX_RESPONSE_BYTES
+
+Kind: constant. Source: `src/lfm3lab/research/worker.py:25`.
+
+```python
+MAX_RESPONSE_BYTES = 32 * 1024 * 1024
+```
+
+
+### lfm3lab.research.worker.SOCKET_TIMEOUT
+
+Kind: constant. Source: `src/lfm3lab/research/worker.py:26`.
+
+```python
+SOCKET_TIMEOUT = 15
+```
+
+
+### lfm3lab.research.worker.QUEUE_TIMEOUT
+
+Kind: constant. Source: `src/lfm3lab/research/worker.py:27`.
+
+```python
+QUEUE_TIMEOUT = 600
+```
+
+
+### lfm3lab.research.worker.MAX_CONNECTIONS
+
+Kind: constant. Source: `src/lfm3lab/research/worker.py:28`.
+
+```python
+MAX_CONNECTIONS = 16
+```
+
+
+### lfm3lab.research.worker.STATUS_PATH
+
+Kind: constant. Source: `src/lfm3lab/research/worker.py:29`.
+
+```python
+STATUS_PATH = '/api/research/status'
+```
+
+
+### lfm3lab.research.worker.RUN_PATH
+
+Kind: constant. Source: `src/lfm3lab/research/worker.py:30`.
+
+```python
+RUN_PATH = '/api/research/run'
+```
+
+
+### lfm3lab.research.worker.RemoteError
+
+Kind: class. Source: `src/lfm3lab/research/worker.py:65`.
+
+```python
+RemoteError(status, error_type, message)
+```
+
+RuntimeError preserving worker HTTP failure information.
+
+Public instance attributes assigned by the constructor: `error_type`, `status_code`. These are state, not extra constructor keywords.
+
+Public attributes: status_code and error_type. Invalid worker envelopes/connection failures may raise ordinary RuntimeError instead.
+
+Source docstring:
+
+```text
+A worker rejected a request; preserve HTTP status and backend error type.
+```
+
+
+### lfm3lab.research.worker.RemoteBackend
+
+Kind: class. Source: `src/lfm3lab/research/worker.py:79`.
+
+```python
+RemoteBackend(url, token=None, timeout=600)
+```
+
+HTTP/HTTPS JSON client for an existing worker origin.
+
+Public instance attributes assigned by the constructor: `timeout`, `token`, `url`. These are state, not extra constructor keywords.
+
+URL must have no credentials/query/fragment/extra path. timeout is >0 and <=3600 seconds. token is nonempty printable ASCII without spaces. Proxies and redirects are disabled. close never unloads the remote worker.
+
+
+### lfm3lab.research.worker.RemoteBackend.run
+
+Kind: method. Source: `src/lfm3lab/research/worker.py:132`.
+
+```python
+RemoteBackend.run(operation, payload)
+```
+
+POST a bounded versioned JSON operation to the existing worker.
+
+Documented return contract: Worker result dict; RemoteError for HTTP failures.
+
+May request real inference. Unsupported operations/payload shape are rejected locally; adapter-specific validation happens at the worker. No automatic retries.
+
+
+### lfm3lab.research.worker.RemoteBackend.status
+
+Kind: method. Source: `src/lfm3lab/research/worker.py:135`.
+
+```python
+RemoteBackend.status()
+```
+
+GET the worker's status through the authenticated client.
+
+Documented return contract: Worker status dict; performs HTTP but status does not load local weights.
+
+
+### lfm3lab.research.worker.RemoteBackend.close
+
+Kind: method. Source: `src/lfm3lab/research/worker.py:138`.
+
+```python
+RemoteBackend.close()
+```
+
+Mark the proxy closed without stopping/unloading the shared worker.
+
+Documented return contract: None.
+
+
+### lfm3lab.research.worker.RemoteBackend.__enter__
+
+Kind: method. Source: `src/lfm3lab/research/worker.py:142`.
+
+```python
+RemoteBackend.__enter__()
+```
+
+Enter an open remote proxy; rejects a previously closed proxy.
+
+Documented return contract: The same RemoteBackend.
+
+
+### lfm3lab.research.worker.RemoteBackend.__exit__
+
+Kind: method. Source: `src/lfm3lab/research/worker.py:147`.
+
+```python
+RemoteBackend.__exit__(*exc)
+```
+
+Close only the proxy on context exit.
+
+Documented return contract: None; does not suppress the exception.
+
+
+### lfm3lab.research.worker.ResearchHTTPServer
+
+Kind: class. Source: `src/lfm3lab/research/worker.py:166`.
+
+Advanced standard-library server with serialized backend calls and bounded connections.
+
+Constructor/server lifecycle methods are inherited from ThreadingHTTPServer. Prefer create_server. Public backend, token, backend_lock, connection_slots, allowed_hosts and server_address are configured by that factory.
+
+
+### lfm3lab.research.worker.ResearchHTTPServer.process_request
+
+Kind: method. Source: `src/lfm3lab/research/worker.py:171`.
+
+```python
+ResearchHTTPServer.process_request(request, client_address)
+```
+
+Advanced server callback: reserve a connection slot or send bounded JSON 503, then dispatch the handler thread.
+
+Documented return contract: None; normally invoked by the standard-library server.
+
+
+### lfm3lab.research.worker.ResearchHTTPServer.process_request_thread
+
+Kind: method. Source: `src/lfm3lab/research/worker.py:186`.
+
+```python
+ResearchHTTPServer.process_request_thread(request, client_address)
+```
+
+Advanced server callback: run a handler and release its reserved connection slot in finally.
+
+Documented return contract: None; normally invoked by the standard-library server.
+
+
+### lfm3lab.research.worker.ResearchHTTPServer.daemon_threads
+
+Kind: class attribute. Source: `src/lfm3lab/research/worker.py:167`.
+
+```python
+ResearchHTTPServer.daemon_threads = False
+```
+
+
+### lfm3lab.research.worker.ResearchHTTPServer.block_on_close
+
+Kind: class attribute. Source: `src/lfm3lab/research/worker.py:168`.
+
+```python
+ResearchHTTPServer.block_on_close = True
+```
+
+
+### lfm3lab.research.worker.ResearchHTTPServer.allow_reuse_address
+
+Kind: class attribute. Source: `src/lfm3lab/research/worker.py:169`.
+
+```python
+ResearchHTTPServer.allow_reuse_address = True
+```
+
+
+### lfm3lab.research.worker.create_server
+
+Kind: function. Source: `src/lfm3lab/research/worker.py:325`.
+
+```python
+create_server(backend, host='127.0.0.1', port=0, token=None)
+```
+
+Bind a JSON server without starting it or taking model ownership.
+
+Documented return contract: ResearchHTTPServer.
+
+port=0 selects an ephemeral port; CLI serve defaults to 8766. Nonloopback binds require a token. Configure exact allowed_hosts if using trusted NAT/proxy. shutdown must be called from another thread before server_close and backend.close.
+
+Source docstring:
+
+```text
+Bind a worker without starting threads or loading/closing a backend.
+
+Only the bound authority is accepted in Host (loopback aliases are allowed).
+Nonloopback binds require an explicit token. server_close drains handlers.
+```
+
+
+## lfm3lab.model
+
+Advanced loading helper. Import needs PyTorch; load additionally imports Hub/Transformers, downloads artifacts and executes checkpoint code. Its old unpinned default/base alias is retained but is not a supported mechanistic adapter. Prefer ResearchSession.local.
+
+Source: [src/lfm3lab/model.py](../../src/lfm3lab/model.py); SHA-256 `6a808ff0dc2375c0e98b2ad8eb83212ad109e7a489773ea814ba462fe7d7b6c8`.
+
+
+### lfm3lab.model.MODELS
+
+Kind: constant. Source: `src/lfm3lab/model.py:13`.
+
+```python
+MODELS = {'instruct': 'LiquidAI/LFM3-1.7B', 'base': 'LiquidAI/LFM3-1.7B-Base'}
+```
+
+
+### lfm3lab.model.pick_device
+
+Kind: function. Source: `src/lfm3lab/model.py:19`.
+
+```python
+pick_device() -> str
+```
+
+Choose available MPS, then CUDA, otherwise CPU.
+
+Documented return contract: device str.
+
+Not the session default. Session local defaults to CUDA; explicit CPU/MPS opt-in is still needed.
+
+
+### lfm3lab.model.Loaded
+
+Kind: class. Source: `src/lfm3lab/model.py:28`.
+
+```python
+Loaded(model: torch.nn.Module, tokenizer: object, repo_id: str, revision: str, device: str)
+```
+
+Carrier for a model, tokenizer, repository/revision and device.
+
+Fields (defaults are source expressions; factories create fresh values):
+
+| Field | Annotation | Default |
+| --- | --- | --- |
+| `model` | `torch.nn.Module` | `required` |
+| `tokenizer` | `object` | `required` |
+| `repo_id` | `str` | `required` |
+| `revision` | `str` | `required` |
+| `device` | `str` | `required` |
+
+Construction does not load weights or acquire locks. Caller owns its lifetime; pass this carrier to low-level primitives only under inference_lock.
+
+
+### lfm3lab.model.Loaded.model
+
+Kind: field. Source: `src/lfm3lab/model.py:29`.
+
+```python
+model: torch.nn.Module
+```
+
+
+### lfm3lab.model.Loaded.tokenizer
+
+Kind: field. Source: `src/lfm3lab/model.py:30`.
+
+```python
+tokenizer: object
+```
+
+
+### lfm3lab.model.Loaded.repo_id
+
+Kind: field. Source: `src/lfm3lab/model.py:31`.
+
+```python
+repo_id: str
+```
+
+
+### lfm3lab.model.Loaded.revision
+
+Kind: field. Source: `src/lfm3lab/model.py:32`.
+
+```python
+revision: str
+```
+
+
+### lfm3lab.model.Loaded.device
+
+Kind: field. Source: `src/lfm3lab/model.py:33`.
+
+```python
+device: str
+```
+
+
+### lfm3lab.model.load
+
+Kind: function. Source: `src/lfm3lab/model.py:36`.
+
+```python
+load(which: str='instruct', revision: str | None=None, device: str | None=None, dtype: torch.dtype=torch.bfloat16, attn_implementation: str='sdpa') -> Loaded
+```
+
+Load checkpoint artifacts and execute its custom code on the chosen device.
+
+Documented return contract: Loaded.
+
+Requires explicit compute authorization and an external lifetime lock. revision=None resolves repository head. The base alias/arbitrary repo string is legacy loader behavior, not verified Glass-Box model support.
+
+Source docstring:
+
+```text
+Load a checkpoint. Direct calls without a revision resolve the current head.
+
+Use ResearchSession.local for pinned identity and serialized ownership.
+```
+
+
+## lfm3lab.jacobian_lens
+
+Two retained PyTorch numerical helpers. No Jacobian fitter or calibration API is included.
+
+Source: [src/lfm3lab/jacobian_lens.py](../../src/lfm3lab/jacobian_lens.py); SHA-256 `7461de8819ddf863164fa357669b932b14ba8fc190c2eede449756a9dd1f93e0`.
+
+
+### lfm3lab.jacobian_lens.sync
+
+Kind: function. Source: `src/lfm3lab/jacobian_lens.py:8`.
+
+```python
+sync(device)
+```
+
+Synchronize the selected accelerator; CPU is a no-op.
+
+Documented return contract: None.
+
+
+### lfm3lab.jacobian_lens.unembed
+
+Kind: function. Source: `src/lfm3lab/jacobian_lens.py:15`.
+
+```python
+unembed(model, state)
+```
+
+Apply embedding_norm then lm_head to a residual state.
+
+Documented return contract: Logits tensor with last dimension vocabulary size.
+
+Source docstring:
+
+```text
+LFM3's final normalization is embedding_norm, not norm.
+```
+
+
+## lfm3lab.research.cli
+
+Installed glass-box CLI implementation; lfm3-research is a compatibility alias. Prefer the command-line interface over parser internals. check requires the instruments extra; examples/validate/report are dependency-free.
+
+Source: [src/lfm3lab/research/cli.py](../../src/lfm3lab/research/cli.py); SHA-256 `3b50a3349faf29c9adede6aaf197cb940d858de273cda4d560b341c4717258b2`.
+
+
+### lfm3lab.research.cli.parser
+
+Kind: function. Source: `src/lfm3lab/research/cli.py:56`.
+
+```python
+parser()
+```
+
+Construct the CLI argument parser without inference.
+
+Documented return contract: argparse.ArgumentParser.
+
+
+### lfm3lab.research.cli.main
+
+Kind: function. Source: `src/lfm3lab/research/cli.py:87`.
+
+```python
+main(argv=None)
+```
+
+Execute CLI arguments and print JSON results/errors.
+
+Documented return contract: Exit-code int.
+
+run exits 0 complete, 1 failed/interrupted/error, 3 incomplete. report exits 0 even when its saved evidence contains failures. run/serve can use real models; validate/report/examples cannot.
+
+
+## lfm3lab.research.checks
+
+Model-free CPU fixture entry points. run_checks needs PyTorch and starts only tiny synthetic modules and loopback fixture servers; it never rents hardware or loads real weights. Call from a guarded main block when multiprocessing spawn is used.
+
+Source: [src/lfm3lab/research/checks.py](../../src/lfm3lab/research/checks.py); SHA-256 `2db0b9d3fa8208b39b1648d6421273203daaf76c3de3fde3b55aaba6c2898d54`.
+
+
+### lfm3lab.research.checks.schema_checks
+
+Kind: function. Source: `src/lfm3lab/research/checks.py:12`.
+
+```python
+schema_checks()
+```
+
+Validate protocol roundtrips, fixed objectives and rejection fixtures.
+
+Documented return contract: Passed-check dict; no PyTorch required.
+
+
+### lfm3lab.research.checks.run_checks
+
+Kind: function. Source: `src/lfm3lab/research/checks.py:46`.
+
+```python
+run_checks()
+```
+
+Run schema, tiny instrument/backend, runner, worker and example contracts.
+
+Documented return contract: dict with passed/mode/checks/elapsed_s.
+
+Requires instruments extra; failures raise. Never loads real weights. A script caller must use if __name__ == '__main__' because the lock fixture uses multiprocessing spawn.

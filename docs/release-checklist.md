@@ -17,6 +17,9 @@ uploading to a package index requires a separate owner decision.
   transport verified. No real inference or paid worker used.
 - [x] Owner selected Apache-2.0. LICENSE/NOTICE included in package metadata.
 - [x] Concise README, Python guide, visual explainer and provenance report.
+- [x] Human API module pages and consumer-agent guide; source-derived Markdown/JSON
+  API and combined agent reference bundled in the wheel. Docs freshness and safe
+  protocol examples are tested without model imports.
 - [x] Final staged-file and distribution audit passes for the exact release build.
 - [x] Installed-wheel smoke passes outside the checkout in fresh base and
   instrument environments. Re-run after changes affecting package contents.
@@ -25,12 +28,13 @@ uploading to a package index requires a separate owner decision.
 
 ```sh
 uv sync --extra instruments
+uv run python scripts/build_docs.py --check
 uv run glass-box check
 uv run python -m unittest discover -s tests -v
 uv build
 uv run python scripts/wheel_smoke.py dist/glass_box-0.1.0-py3-none-any.whl
 # Stage only the intended library, docs, tests, guidance and build metadata.
-git add .gitignore .python-version AGENTS.md README.md LICENSE NOTICE pyproject.toml src examples docs tests scripts
+git add .gitignore .python-version AGENTS.md README.md LICENSE NOTICE pyproject.toml llms.txt llms-full.txt src examples docs tests scripts
 uv run python scripts/release_audit.py dist/glass_box-0.1.0-py3-none-any.whl dist/glass_box-0.1.0.tar.gz
 git diff --cached --check
 git diff --cached --stat

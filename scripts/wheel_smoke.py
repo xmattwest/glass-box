@@ -59,11 +59,19 @@ from lfm3lab.research.backends import LFM3Backend
 from lfm3lab.research.report import build_report
 from lfm3lab.research.runner import run_study
 from lfm3lab.research.worker import RemoteBackend
+from importlib.resources import files
+docs = files('lfm3lab').joinpath('docs')
+assert 'Glass-Box for agents' in docs.joinpath('agents.md').read_text()
+assert 'ResearchSession.score' in docs.joinpath('api', 'reference.md').read_text()
+inventory = json.loads(docs.joinpath('api', 'reference.json').read_text())
+assert inventory['version'] == lfm3lab.__version__
+assert 'donor_prompt' in inventory['lfm3_operation_payload_fields']['score']
+assert 'Glass-Box API reference' in docs.joinpath('llms-full.txt').read_text()
 backend = LFM3Backend(device='cpu')
 assert not backend.status()['loaded']
 backend.close()
 assert 'site-packages' in lfm3lab.__file__
-print(json.dumps({'installed_package': lfm3lab.__file__, 'no_numerical_imports': True}))
+print(json.dumps({'installed_package': lfm3lab.__file__, 'no_numerical_imports': True, 'installed_agent_and_api_docs': True}))
 ''']))
         cli = root / "base" / "bin" / "glass-box"
         run([str(cli), "--help"])

@@ -13,9 +13,10 @@ from pathlib import Path, PurePosixPath
 import re
 import subprocess
 import tarfile
+import tomllib
 import zipfile
 
-ROOT_FILES = {".gitignore", ".python-version", "AGENTS.md", "README.md", "LICENSE", "NOTICE", "pyproject.toml"}
+ROOT_FILES = {".gitignore", ".python-version", "AGENTS.md", "README.md", "LICENSE", "NOTICE", "pyproject.toml", "llms.txt", "llms-full.txt"}
 TOP_DIRS = {"src", "docs", "examples", "tests", "scripts"}
 FORBIDDEN_PARTS = {"__pycache__", ".venv", ".git", "results", "evidence", "weights", "cloud", "posts", "figures", "notebooks", "data", "social", "archive"}
 MACHINE = re.compile(r"/(?:Users|home)/[^\s/]+|/private" + r"/var/|/var" + r"/folders/|[A-Za-z]:\\Users\\|~/(?:lfm3-research|warm-precision)")
@@ -50,11 +51,12 @@ def main():
         assert data == (root / name).read_bytes(), f"Staged/working mismatch: {name}"
 
     package = {str(p.relative_to(root / "src")) for p in (root / "src" / "lfm3lab").rglob("*.py") if "__pycache__" not in p.parts}
-    resources = {f"lfm3lab/research/examples/{n}" for n in ("code_retrieval.json", "tool_continuation.json", "fake_walkthrough.py")}
+    includes = tomllib.loads((root / "pyproject.toml").read_text())["tool"]["hatch"]["build"]["targets"]["wheel"]["force-include"]
+    resources = {destination: root / source for source, destination in includes.items()}
     allowed_metadata = {"METADATA", "WHEEL", "entry_points.txt", "RECORD", "licenses/LICENSE", "licenses/NOTICE"}
     with zipfile.ZipFile(args.wheel) as wheel:
         wheel_names = wheel.namelist()
-        expected = set(package) | resources
+        expected = set(package) | set(resources)
         actual = {n for n in wheel_names if ".dist-info/" not in n}
         assert actual == expected, f"Wheel package mismatch: {actual ^ expected}"
         for name in wheel_names:
@@ -67,7 +69,7 @@ def main():
             elif name in package:
                 assert wheel.read(name) == (root / "src" / name).read_bytes(), f"Wheel/source mismatch: {name}"
             else:
-                assert wheel.read(name) == (root / "examples" / "mechanistic" / PurePosixPath(name).name).read_bytes()
+                assert wheel.read(name) == resources[name].read_bytes(), f"Wheel/resource mismatch: {name}"
         metadata_name = next(n for n in wheel_names if n.endswith(".dist-info/METADATA"))
         metadata = email.message_from_bytes(wheel.read(metadata_name))
         assert metadata["Name"] == "glass-box" and metadata["License-Expression"] == "Apache-2.0"
